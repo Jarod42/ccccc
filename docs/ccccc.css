@@ -1,0 +1,20 @@
+em {padding: 2px; background-color: #6cf; color: #FFF;}
+
+table {
+	width:100%;
+	border: 1px solid;
+}
+
+table td, table th {
+// width: 30px;
+// padding: 1px;
+ border: #000 1px solid;
+}
+
+th { background:aqua}
+
+table.tablesorter tbody td.bad { background: red; font-weight:bold;}
+table.tablesorter tbody td.warning { background: yellow; font-weight:bold;}
+
+span.bad {background: red; font-weight:bold; }
+span.warning {background: yellow; font-weight:bold; }
