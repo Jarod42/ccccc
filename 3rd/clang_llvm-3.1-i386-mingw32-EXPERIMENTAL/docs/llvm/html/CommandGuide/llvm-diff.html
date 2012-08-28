@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>llvm-diff</title>
+<link rel="stylesheet" href="manpage.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:asl@anton-korobeynikovs-mac-pro.local" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#exit_status">EXIT STATUS</a></li>
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>llvm-diff - LLVM structural 'diff'</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>llvm-diff</strong> [<em>options</em>] <em>module 1</em> <em>module 2</em> [<em>global name ...</em>]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>llvm-diff</strong> compares the structure of two LLVM modules, primarily
+focusing on differences in function definitions.  Insignificant
+differences, such as changes in the ordering of globals or in the
+names of local values, are ignored.</p>
+<p>An input module will be interpreted as an assembly file if its name
+ends in '.ll';  otherwise it will be read in as a bitcode file.</p>
+<p>If a list of global names is given, just the values with those names
+are compared; otherwise, all global values are compared, and
+diagnostics are produced for globals which only appear in one module
+or the other.</p>
+<p><strong>llvm-diff</strong> compares two functions by comparing their basic blocks,
+beginning with the entry blocks.  If the terminators seem to match,
+then the corresponding successors are compared; otherwise they are
+ignored.  This algorithm is very sensitive to changes in control flow,
+which tend to stop any downstream changes from being detected.</p>
+<p><strong>llvm-diff</strong> is intended as a debugging tool for writers of LLVM
+passes and frontends.  It does not have a stable output format.</p>
+<p>
+</p>
+<hr />
+<h1><a name="exit_status">EXIT STATUS</a></h1>
+<p>If <strong>llvm-diff</strong> finds no differences between the modules, it will exit
+with 0 and produce no output.  Otherwise it will exit with a non-zero
+value.</p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Many important differences, like changes in linkage or function
+attributes, are not diagnosed.</p>
+<p>Changes in memory behavior (for example, coalescing loads) can cause
+massive detected differences in blocks.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Maintained by the LLVM Team (<a href="http://llvm.org/">http://llvm.org/</a>).</p>
+
+</body>
+
+</html>
