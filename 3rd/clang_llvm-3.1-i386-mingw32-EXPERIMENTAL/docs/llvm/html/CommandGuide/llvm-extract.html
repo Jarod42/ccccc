@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>llvm-extract</title>
+<link rel="stylesheet" href="manpage.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:asl@anton-korobeynikovs-mac-pro.local" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#exit_status">EXIT STATUS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>llvm-extract - extract a function from an LLVM module</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>llvm-extract</strong> [<em>options</em>] <strong>--func</strong> <em>function-name</em> [<em>filename</em>]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The <strong>llvm-extract</strong> command takes the name of a function and extracts it from
+the specified LLVM bitcode file.  It is primarily used as a debugging tool to
+reduce test cases from larger programs that are triggering a bug.</p>
+<p>In addition to extracting the bitcode of the specified function,
+<strong>llvm-extract</strong> will also remove unreachable global variables, prototypes, and
+unused types.</p>
+<p>The <strong>llvm-extract</strong> command reads its input from standard input if filename is
+omitted or if filename is -.  The output is always written to standard output,
+unless the <strong>-o</strong> option is specified (see below).</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="f" class="item"><strong>-f</strong></a></strong></dt>
+
+<dd>
+<p>Enable binary output on terminals.  Normally, <strong>llvm-extract</strong> will refuse to
+write raw bitcode output if the output stream is a terminal. With this option,
+<strong>llvm-extract</strong> will write raw bitcode regardless of the output device.</p>
+</dd>
+<dt><strong><a name="func_function_name" class="item"><strong>--func</strong> <em>function-name</em></a></strong></dt>
+
+<dd>
+<p>Extract the function named <em>function-name</em> from the LLVM bitcode. May be
+specified multiple times to extract multiple functions at once.</p>
+</dd>
+<dt><strong><a name="rfunc_function_regular_expr" class="item"><strong>--rfunc</strong> <em>function-regular-expr</em></a></strong></dt>
+
+<dd>
+<p>Extract the function(s) matching <em>function-regular-expr</em> from the LLVM bitcode.
+All functions matching the regular expression will be extracted.  May be 
+specified multiple times.</p>
+</dd>
+<dt><strong><a name="glob_global_name" class="item"><strong>--glob</strong> <em>global-name</em></a></strong></dt>
+
+<dd>
+<p>Extract the global variable named <em>global-name</em> from the LLVM bitcode. May be
+specified multiple times to extract multiple global variables at once.</p>
+</dd>
+<dt><strong><a name="rglob_glob_regular_expr" class="item"><strong>--rglob</strong> <em>glob-regular-expr</em></a></strong></dt>
+
+<dd>
+<p>Extract the global variable(s) matching <em>global-regular-expr</em> from the LLVM
+bitcode. All global variables matching the regular expression will be extracted.
+May be specified multiple times.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print a summary of command line options.</p>
+</dd>
+<dt><strong><a name="o_filename" class="item"><strong>-o</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>Specify the output filename.  If filename is &quot;-&quot; (the default), then
+<strong>llvm-extract</strong> sends its output to standard output.</p>
+</dd>
+<dt><strong><a name="s" class="item"><strong>-S</strong></a></strong></dt>
+
+<dd>
+<p>Write output in LLVM intermediate language (instead of bitcode).</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="exit_status">EXIT STATUS</a></h1>
+<p>If <strong>llvm-extract</strong> succeeds, it will exit with 0.  Otherwise, if an error
+occurs, it will exit with a non-zero value.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="././bugpoint.html">bugpoint</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Maintained by the LLVM Team (<a href="http://llvm.org/">http://llvm.org/</a>).</p>
+
+</body>
+
+</html>

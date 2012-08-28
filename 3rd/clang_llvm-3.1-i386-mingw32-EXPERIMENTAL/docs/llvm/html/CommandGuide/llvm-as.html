@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>llvm-as</title>
+<link rel="stylesheet" href="manpage.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:asl@anton-korobeynikovs-mac-pro.local" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#exit_status">EXIT STATUS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>llvm-as - LLVM assembler</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>llvm-as</strong> [<em>options</em>] [<em>filename</em>]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>llvm-as</strong> is the LLVM assembler.  It reads a file containing human-readable
+LLVM assembly language, translates it to LLVM bitcode, and writes the result
+into a file or to standard output.</p>
+<p>If <em class="file">filename</em> is omitted or is <code>-</code>, then <strong>llvm-as</strong> reads its input from
+standard input.</p>
+<p>If an output file is not specified with the <strong>-o</strong> option, then
+<strong>llvm-as</strong> sends its output to a file or standard output by following
+these rules:</p>
+<ul>
+<li>
+<p>If the input is standard input, then the output is standard output.</p>
+</li>
+<li>
+<p>If the input is a file that ends with <code>.ll</code>, then the output file is of
+the same name, except that the suffix is changed to <code>.bc</code>.</p>
+</li>
+<li>
+<p>If the input is a file that does not end with the <code>.ll</code> suffix, then the
+output file has the same name as the input file, except that the <code>.bc</code>
+suffix is appended.</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="f" class="item"><strong>-f</strong></a></strong></dt>
+
+<dd>
+<p>Enable binary output on terminals.  Normally, <strong>llvm-as</strong> will refuse to
+write raw bitcode output if the output stream is a terminal. With this option,
+<strong>llvm-as</strong> will write raw bitcode regardless of the output device.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print a summary of command line options.</p>
+</dd>
+<dt><strong><a name="o_filename" class="item"><strong>-o</strong> <em class="file">filename</em></a></strong></dt>
+
+<dd>
+<p>Specify the output file name.  If <em class="file">filename</em> is <code>-</code>, then <strong>llvm-as</strong>
+sends its output to standard output.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="exit_status">EXIT STATUS</a></h1>
+<p>If <strong>llvm-as</strong> succeeds, it will exit with 0.  Otherwise, if an error
+occurs, it will exit with a non-zero value.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>llvm-dis</em>, <em>gccas</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Maintained by the LLVM Team (<a href="http://llvm.org/">http://llvm.org/</a>).</p>
+
+</body>
+
+</html>
