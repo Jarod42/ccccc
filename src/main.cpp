@@ -9,7 +9,8 @@
 template <typename STREAM>
 STREAM & operator << (STREAM& s, const LocalStat& localStat)
 {
-	return s << "LOCphy=" << localStat.getLineOfCode_physic()
+	return s << localStat.getModuleName() << ":"
+			<< "LOCphy=" << localStat.getLineOfCode_physic()
 			<< "|LOCpro=" << localStat.getLineOfCode_program()
 			<< "|LOCcom=" << localStat.getLineOfCode_comment()
 			<< "|LOCbl="  << localStat.getLineOfCode_blank()
@@ -51,26 +52,21 @@ void output(CXSourceRange range)
 
 void output(CXCursor cursor)
 {
-//	CXString kind = clang_getCursorKindSpelling(clang_getCursorKind(cursor));
-//	CXString usr = clang_getCursorUSR(cursor);
-//	CXString spelling = clang_getCursorSpelling(cursor);
-	CXString displayName = clang_getCursorDisplayName(cursor);
+//	std::string kind = getStringAndDispose(clang_getCursorKindSpelling(clang_getCursorKind(cursor)));
+//	std::string usr = getStringAndDispose(clang_getCursorUSR(cursor));
+//	std::string spelling = getStringAndDispose(clang_getCursorSpelling(cursor));
+	std::string displayName = getStringAndDispose(clang_getCursorDisplayName(cursor));
 
-	std::cout //<< clang_getCString(kind) << "("
-//		<< clang_getCString(usr) << " - "
-//		<< clang_getCString(spelling)
+	std::cout //<< kind << "("
+//		<< usr << " - "
+//		<< spelling
 //		<< ":"
-		<< clang_getCString(displayName)
+		<< displayName
 //		<< ")"
 	;
 
 //	CXSourceRange range = clang_getCursorExtent(cursor);
 //	output(range);
-
-	clang_disposeString(displayName);
-//	clang_disposeString(spelling);
-//	clang_disposeString(usr);
-//	clang_disposeString(kind);
 }
 
 enum CXChildVisitResult MyCursorVisitor(CXCursor cursor,
@@ -81,11 +77,10 @@ enum CXChildVisitResult MyCursorVisitor(CXCursor cursor,
 		&& clang_isCursorDefinition(cursor)) {
 		ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
 
-		output(cursor);
-		LocalStat localStat;
+		//output(cursor);
+		LocalStat localStat(getStringAndDispose(clang_getCursorDisplayName(cursor)));
 		localStat.Compute(client_data->getCXTranslationUnit(), cursor);
-		std::cout << ":" << localStat;
-		std::cout << std::endl;
+		std::cout << localStat << std::endl;
 	}
 	return CXChildVisit_Recurse;
 }
@@ -94,8 +89,17 @@ void dummyTest(const char* filename)
 {
 	CXIndex index = clang_createIndex(1, 1);
 
-	// Support Microsoft extensions
-	const char *args[] = {"-fms-extensions"};
+	// Hard coded system headersHard coded
+	#define MINGWPATH "d:/Programs/mingw-4.6.1"
+	#define MINGWPATH2 MINGWPATH"/lib/gcc/mingw32/4.6.1"
+	const char *args[] = {
+		"-I"MINGWPATH"/include",
+		"-I"MINGWPATH2"/include/c++",
+		"-I"MINGWPATH2"/include/c++/mingw32",
+		"-I"MINGWPATH2"/include/c++/backward",
+		"-I"MINGWPATH2"/include",
+		"-I"MINGWPATH2"/include-fixed",
+	};
 
 	CXTranslationUnit tu = clang_parseTranslationUnit(index, filename, args, ARRAY_SIZE(args), 0, 0, 0);
 
@@ -103,21 +107,23 @@ void dummyTest(const char* filename)
 	{
 		CXCursor cursor = clang_getTranslationUnitCursor(tu);
 
+		LocalStat localStat(filename);
+		localStat.Compute(tu, cursor);
+		std::cout << localStat << std::endl;
+
 		ClientData clientData(tu);
 		clang_visitChildren(cursor, MyCursorVisitor, &clientData);
-
-		LocalStat localStat;
-		localStat.Compute(tu, cursor);
-		std::cout << localStat;
 	}
 	clang_disposeTranslationUnit(tu);
 	clang_disposeIndex(index);
 }
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	dummyTest("test.c");
+	if (argc > 1) {
+		dummyTest(argv[1]);
+	}
 	return 0;
 }
 

@@ -51,9 +51,9 @@ solution "cccc_clang"
 		kind "StaticLib"
 		language "C++"
 		files { path.join(ClangIncludeDir, "**.h") }
-	
+
 		DefaultConfiguration()
-	
+
 	project "cccc_clang"
 		kind "ConsoleApp"
 		language "C++"
@@ -65,6 +65,11 @@ solution "cccc_clang"
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
 		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+
+		if (_PREMAKE_VERSION >= "4.4") then
+			debugdir(Root)
+			debugargs {"samples/test.c"}
+		end
 		
 		DefaultConfiguration()
 
@@ -76,5 +81,14 @@ solution "cccc_clang"
 		flags { "ExtraWarnings", "FatalWarnings"}
 
 		links { "clang" }
+
+		DefaultConfiguration()
+
+	project "sample"
+		kind "StaticLib"
+		language "C++"
+		--flags "WinMain"
+		files { path.join(Root, "samples/**.*") }
+		flags { "ExtraWarnings", "FatalWarnings"}
 
 		DefaultConfiguration()
