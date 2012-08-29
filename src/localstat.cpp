@@ -7,6 +7,15 @@
 #include <string>
 #include <assert.h>
 
+LocalStat::LocalStat(const std::string& moduleName) :
+	moduleName(moduleName),
+	lineOfCode_program(0),
+	lineOfCode_comment(0),
+	lineOfCode_blank(0),
+	lineOfCode_physic(0),
+	mcCabeCyclomaticNumber(1)
+{}
+
 void LocalStat::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token)
 {
 	if (clang_getTokenKind(token) == CXToken_Keyword) {

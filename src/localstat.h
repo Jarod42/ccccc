@@ -4,13 +4,16 @@
 
 #include <clang-c/Index.h>
 
+#include <string>
+
 class LocalStat
 {
 public:
-	LocalStat() : lineOfCode_program(0), lineOfCode_comment(0), lineOfCode_blank(0), lineOfCode_physic(0), mcCabeCyclomaticNumber(1) {}
+	explicit LocalStat(const std::string& moduleName);
 
 	void Compute(const CXTranslationUnit& tu, const CXCursor& cursor);
 
+	const std::string& getModuleName() const { return moduleName; }
 	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
 	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
 	unsigned int getLineOfCode_blank() const { return lineOfCode_blank; }
@@ -21,6 +24,7 @@ private:
 	void UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token);
 
 private:
+	std::string moduleName;
 	unsigned int lineOfCode_program;     // LOCpro
 	unsigned int lineOfCode_comment;     // LOCcom
 	unsigned int lineOfCode_blank;       // LOCbl
