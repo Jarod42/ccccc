@@ -29,6 +29,10 @@ ClangBinDir = path.join(ClangRoot, "bin")
 ClangIncludeDir = path.join(ClangRoot, "include")
 ClangLibDir = path.join(ClangRoot, "lib")
 
+UnitTestPPRoot = "d:/UnitTest++-1.3"
+UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
+UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
+
 
 function DefaultConfiguration()
 	for config,data in pairs(ConfigurationsData) do
@@ -47,32 +51,40 @@ solution "cccc_clang"
 	libdirs(ClangLibDir)
 	includedirs(ClangIncludeDir)
 
-	project "3rd"
-		kind "StaticLib"
-		language "C++"
-		files { path.join(ClangIncludeDir, "**.h") }
-
-		DefaultConfiguration()
-
 	project "cccc_clang"
-		kind "ConsoleApp"
+		kind "StaticLib"
 		language "C++"
 		--flags "WinMain"
 		files { path.join(Root, "src/**.*") }
+		excludes { path.join(Root, "src/main.cpp") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
+		--links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+		--links { "psapi", "imagehlp" }
+		--linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+
+		DefaultConfiguration()
+
+	project "cccc_clang_app"
+		kind "ConsoleApp"
+		language "C++"
+		--flags "WinMain"
+		files { path.join(Root, "src/main.cpp") }
+		flags { "ExtraWarnings", "FatalWarnings"}
+
+		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
+		links { "cccc_clang"}
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
 		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
 
 		if (_PREMAKE_VERSION >= "4.4") then
-			debugdir(Root)
-			debugargs {"samples/test.c"}
+			--debugdir(Root)
+			debugargs {"../../../samples/test.c"}
 		end
-		
-		DefaultConfiguration()
 
+		DefaultConfiguration()
 	project "test"
 		kind "ConsoleApp"
 		language "C++"
@@ -80,7 +92,24 @@ solution "cccc_clang"
 		files { path.join(Root, "test/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
-		links { "clang" }
+		includedirs { path.join(Root, "src") }
+		includedirs {UnitTestPPIncludeDir}
+		libdirs {UnitTestPPLibDir}
+
+		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
+		buildoptions { "-fexceptions" } -- llvm seem to disable exceptions, but UnitTest++ uses them
+
+
+		links { "cccc_clang" }
+		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+		links { "psapi", "imagehlp" }
+		links { "unittest++" }
+
+		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+
+		if (_PREMAKE_VERSION >= "4.4") then
+			--debugdir(Root)
+		end
 
 		DefaultConfiguration()
 
@@ -90,5 +119,12 @@ solution "cccc_clang"
 		--flags "WinMain"
 		files { path.join(Root, "samples/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
+
+		DefaultConfiguration()
+
+	project "3rd"
+		kind "StaticLib"
+		language "C++"
+		files { path.join(ClangIncludeDir, "**.h") }
 
 		DefaultConfiguration()
