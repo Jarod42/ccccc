@@ -12,5 +12,6 @@ void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine
 
 std::string getStringAndDispose(CXString cxStr);
 
+bool isInFile(const char* filename, CXCursor cursor);
 
 #endif // UTILS_H
