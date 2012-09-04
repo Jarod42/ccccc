@@ -2,9 +2,11 @@
 #include <clang-c/Index.h>
 #include <assert.h>
 #include <iostream>
+#include <vector>
 
 #include "localstat.h"
 #include "utils.h"
+#include "cccc_clang_api.h"
 
 template <typename STREAM>
 STREAM & operator << (STREAM& s, const LocalStat& localStat)
@@ -16,18 +18,6 @@ STREAM & operator << (STREAM& s, const LocalStat& localStat)
 			<< "|LOCbl="  << localStat.getLineOfCode_blank()
 			<< "|mvg=" << localStat.getMcCabeCyclomaticNumber();
 }
-
-
-class ClientData
-{
-public:
-	explicit ClientData(CXTranslationUnit tu) : m_tu(tu) {}
-
-	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
-
-private:
-	CXTranslationUnit m_tu;
-};
 
 void output(CXSourceLocation loc)
 {
@@ -69,60 +59,16 @@ void output(CXCursor cursor)
 //	output(range);
 }
 
-enum CXChildVisitResult MyCursorVisitor(CXCursor cursor,
-                                        CXCursor parent,
-                                        CXClientData user_data)
-{
-	if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
-		&& clang_isCursorDefinition(cursor)) {
-		ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
-
-		//output(cursor);
-		LocalStat localStat(getStringAndDispose(clang_getCursorDisplayName(cursor)));
-		localStat.Compute(client_data->getCXTranslationUnit(), cursor);
-		std::cout << localStat << std::endl;
-	}
-	return CXChildVisit_Recurse;
-}
-
-void dummyTest(const char* filename)
-{
-	CXIndex index = clang_createIndex(1, 1);
-
-	// Hard coded system headersHard coded
-	#define MINGWPATH "d:/Programs/mingw-4.6.1"
-	#define MINGWPATH2 MINGWPATH"/lib/gcc/mingw32/4.6.1"
-	const char *args[] = {
-		"-I"MINGWPATH"/include",
-		"-I"MINGWPATH2"/include/c++",
-		"-I"MINGWPATH2"/include/c++/mingw32",
-		"-I"MINGWPATH2"/include/c++/backward",
-		"-I"MINGWPATH2"/include",
-		"-I"MINGWPATH2"/include-fixed",
-	};
-
-	CXTranslationUnit tu = clang_parseTranslationUnit(index, filename, args, ARRAY_SIZE(args), 0, 0, 0);
-
-	if (tu)
-	{
-		CXCursor cursor = clang_getTranslationUnitCursor(tu);
-
-		LocalStat localStat(filename);
-		localStat.Compute(tu, cursor);
-		std::cout << localStat << std::endl;
-
-		ClientData clientData(tu);
-		clang_visitChildren(cursor, MyCursorVisitor, &clientData);
-	}
-	clang_disposeTranslationUnit(tu);
-	clang_disposeIndex(index);
-}
-
-
 int main(int argc, char* argv[])
 {
 	if (argc > 1) {
-		dummyTest(argv[1]);
+		std::vector<LocalStat> localStats;
+
+		ComputeStats(argv[1], argc - 2, const_cast<const char**>(argv) + 2, localStats);
+
+		for (size_t i = 0; i != localStats.size(); ++i) {
+			std::cout << localStats[i] << std::endl;
+		}
 	}
 	return 0;
 }
