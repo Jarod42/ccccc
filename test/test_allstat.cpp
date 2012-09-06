@@ -21,7 +21,7 @@ TEST(FILE_TEST_C)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const FileStat& fileStat = stat.getFileStat(0);
-	LocalStat expectedStat(22, 13, 4, 8, 2);
+	LocalStat expectedStat(24, 13, 4, 8, 2);
 	CHECK_EQUAL_STAT(expectedStat, fileStat.getStat());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
