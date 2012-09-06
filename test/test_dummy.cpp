@@ -5,7 +5,7 @@
 #include "localstat.h"
 
 
-TEST(FILE_TEST_C)
+TEST(DUMMY_FILE_TEST_C)
 {
 	std::vector<LocalStat> localStats;
 
@@ -16,7 +16,7 @@ TEST(FILE_TEST_C)
 }
 
 
-TEST(FILE_TEST_H)
+TEST(DUMMY_FILE_TEST_H)
 {
 	std::vector<LocalStat> localStats;
 
@@ -28,7 +28,7 @@ TEST(FILE_TEST_H)
 
 #include <iostream>
 
-TEST(FILE_TEST_INCLUDE_CPP)
+TEST(DUMMY_FILE_TEST_INCLUDE_CPP)
 {
 	std::vector<LocalStat> localStats;
 	const char* argv[] = {"-I../../../samples"};

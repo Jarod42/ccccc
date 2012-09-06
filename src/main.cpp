@@ -5,13 +5,39 @@
 #include <vector>
 
 #include "localstat.h"
-#include "utils.h"
+#include "use_clang/utils.h"
 #include "cccc_clang_api.h"
+
+#if 0
+class namespaceStat
+{
+
+};
+
+class classStat
+{
+
+};
+
+class FunctionStat
+{
+
+};
+
+class allStat
+{
+
+
+	std::vector<FileStat> m_filestats;
+};
+
+#endif
+
 
 template <typename STREAM>
 STREAM & operator << (STREAM& s, const LocalStat& localStat)
 {
-	return s << localStat.getModuleName() << ":"
+	return s //<< localStat.getModuleName() << ":"
 			<< "LOCphy=" << localStat.getLineOfCode_physic()
 			<< "|LOCpro=" << localStat.getLineOfCode_program()
 			<< "|LOCcom=" << localStat.getLineOfCode_comment()

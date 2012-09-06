@@ -8,6 +8,8 @@ int main(int argc, char** argv);
 /* multi
   line
   comment
+
+  Previous line is not a blank line but a comment
 */
 int main(int argc, char** argv)
 {
