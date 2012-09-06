@@ -3,7 +3,8 @@
 #include "cccc_clang_api.h"
 
 #include "localstat.h"
-#include "utils.h"
+#include "use_clang/localstattool.h"
+#include "use_clang/utils.h"
 #include <clang-c/Index.h>
 
 
@@ -35,9 +36,9 @@ enum CXChildVisitResult MyCursorVisitor(CXCursor cursor, CXCursor parent, CXClie
 
 	if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
 		&& clang_isCursorDefinition(cursor)) {
-		client_data->getLocalStats().push_back(LocalStat(getStringAndDispose(clang_getCursorDisplayName(cursor))));
+		client_data->getLocalStats().push_back(LocalStat(/*getStringAndDispose(clang_getCursorDisplayName(cursor))*/));
 		LocalStat &localStat = client_data->getLocalStats().back();
-		localStat.Compute(client_data->getCXTranslationUnit(), cursor);
+		LocalStatTool::Compute(client_data->getCXTranslationUnit(), cursor, &localStat);
 	}
 	return CXChildVisit_Recurse;
 }
@@ -66,9 +67,9 @@ void ComputeStats(const char* filename, int extraArgsCount, const char *extraArg
 	{
 		CXCursor cursor = clang_getTranslationUnitCursor(tu);
 
-		localStats.push_back(LocalStat(filename));
+		localStats.push_back(LocalStat(/*filename*/));
 		LocalStat &localStat = localStats.back();
-		localStat.Compute(tu, cursor);
+		LocalStatTool::Compute(tu, cursor, &localStat);
 
 		ClientData clientData(tu, filename, localStats);
 		clang_visitChildren(cursor, MyCursorVisitor, &clientData);

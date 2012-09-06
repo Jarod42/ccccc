@@ -2,33 +2,31 @@
 #ifndef LOCAL_STAT_H
 #define LOCAL_STAT_H
 
-#include <clang-c/Index.h>
-
-#include <string>
+class LocalStatTool;
 
 class LocalStat
 {
+	friend class LocalStatTool;
 public:
-	explicit LocalStat(const std::string& moduleName);
-
-	void Compute(const CXTranslationUnit& tu, const CXCursor& cursor);
-
-	const std::string& getModuleName() const { return moduleName; }
-	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
-	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
-	unsigned int getLineOfCode_blank() const { return lineOfCode_blank; }
 	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
+	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
+	unsigned int getLineOfCode_blank() const { return lineOfCode_blank; }
+	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
 	unsigned int getMcCabeCyclomaticNumber() const { return mcCabeCyclomaticNumber; }
 
-private:
-	void UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token);
+//private:
+	LocalStat();
+	LocalStat(unsigned int lineOfCode_physic,
+				unsigned int lineOfCode_program,
+				unsigned int lineOfCode_blank,
+				unsigned int lineOfCode_comment,
+				unsigned int mcCabeCyclomaticNumber);
 
 private:
-	std::string moduleName;
-	unsigned int lineOfCode_program;     // LOCpro
-	unsigned int lineOfCode_comment;     // LOCcom
-	unsigned int lineOfCode_blank;       // LOCbl
 	unsigned int lineOfCode_physic;      // LOCphy
+	unsigned int lineOfCode_program;     // LOCpro
+	unsigned int lineOfCode_blank;       // LOCbl
+	unsigned int lineOfCode_comment;     // LOCcom
 	unsigned int mcCabeCyclomaticNumber; // MVG
 };
 
