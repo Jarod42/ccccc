@@ -7,42 +7,12 @@
 #include "use_clang/utils.h"
 #include <clang-c/Index.h>
 
-#if 0
-class ClientData
+AllStat::~AllStat()
 {
-public:
-	explicit ClientData(CXTranslationUnit tu, const char* filename, std::vector<LocalStat>& localStats) :
-		m_localStats(localStats),
-		m_filename(filename),
-		m_tu(tu)
-	{}
-
-	std::vector<LocalStat>& getLocalStats() { return m_localStats; }
-	const char* getFilename() const { return m_filename; }
-	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
-
-private:
-	std::vector<LocalStat>& m_localStats;
-	const char* m_filename;
-	CXTranslationUnit m_tu;
-};
-
-enum CXChildVisitResult MyCursorVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
-{
-	ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
-	if (isInFile(client_data->getFilename(), cursor) == false) {
-		return CXChildVisit_Continue;
+	for (size_t i = 0; i != m_filesStat.size(); ++i) {
+		delete m_filesStat[i];
 	}
-
-	if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
-		&& clang_isCursorDefinition(cursor)) {
-		client_data->getLocalStats().push_back(LocalStat(/*getStringAndDispose(clang_getCursorDisplayName(cursor))*/));
-		LocalStat &localStat = client_data->getLocalStats().back();
-		LocalStatTool::Compute(client_data->getCXTranslationUnit(), cursor, &localStat);
-	}
-	return CXChildVisit_Recurse;
 }
-#endif
 
 void AllStat::Compute(const char* filename, int extraArgsCount, const char *extraArgs[])
 {
@@ -65,12 +35,9 @@ void AllStat::Compute(const char* filename, int extraArgsCount, const char *extr
 	CXTranslationUnit tu = clang_parseTranslationUnit(index, filename, &args[0], args.size(), 0, 0, 0);
 
 	if (tu) {
-		m_filesStat.push_back(FileStat(filename));
-		FileStat &fileStat = m_filesStat.back();
-		FileStatTool::Compute(tu, &fileStat);
-
-//		ClientData clientData(tu, filename, localStats);
-//		clang_visitChildren(cursor, MyCursorVisitor, &clientData);
+		FileStat *fileStat = new FileStat(filename);
+		m_filesStat.push_back(fileStat);
+		FileStatTool::Compute(tu, fileStat);
 	}
 	clang_disposeTranslationUnit(tu);
 	clang_disposeIndex(index);
