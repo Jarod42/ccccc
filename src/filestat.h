@@ -5,22 +5,29 @@
 #define FILE_STAT_H
 
 #include "localstat.h"
+#include "funcstat.h"
+
 #include <string>
+#include <vector>
 
 class FileStat
 {
 	friend class FileStatTool;
 public:
 	explicit FileStat(const std::string& filename);
+	~FileStat();
 
 	const std::string& getFilename() const { return m_filename; }
-	LocalStat getStat() const { return m_stat; }
-//	unsigned int getFunctionCount() const;
+	const LocalStat& getStat() const { return m_stat; }
+	unsigned int getFunctionCount() const { return m_funcStats.size(); }
+	const FuncStat& getFuncStat(unsigned int index) const { return *m_funcStats[index]; }
 
-
+private:
+	FuncStat* AddFuncStat(const std::string& funcname);
 private:
 	std::string m_filename;
 	LocalStat m_stat;
+	std::vector<FuncStat*> m_funcStats;
 };
 
 
