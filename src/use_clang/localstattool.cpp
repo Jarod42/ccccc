@@ -9,6 +9,11 @@
 
 #include <assert.h>
 
+static CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
+{
+	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
+}
+
 void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token, LocalStat* stat)
 {
 	if (clang_getTokenKind(token) == CXToken_Keyword) {
@@ -32,7 +37,11 @@ void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, co
 
 		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {
 			if (str.compare(keywords[i]) == 0) {
-				++stat->mcCabeCyclomaticNumber;
+				CXCursor cursor = getCursor(tu, token);
+
+				if (clang_isDeclaration(clang_getCursorKind(cursor)) == false) { // && can be part of declaration in C++11
+					++stat->mcCabeCyclomaticNumber;
+				}
 				break;
 			}
 		}
