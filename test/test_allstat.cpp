@@ -31,6 +31,9 @@ TEST(FILE_TEST_C)
 	const FuncStat& funcStat = fileStat.getFuncStat(0);
 	LocalStat expectedFuncStat(11, 9, 1, 2, 2);
 	CHECK_EQUAL_STAT(expectedFuncStat, funcStat.getStat());
+
+	const FuncStat* funcStatName = fileStat.getFuncStatByName("main(int, char **)");
+	CHECK_EQUAL(&funcStat, funcStatName);
 }
 
 TEST(FILE_TEST_H)

@@ -21,6 +21,7 @@ public:
 	const LocalStat& getStat() const { return m_stat; }
 	unsigned int getFunctionCount() const { return m_funcStats.size(); }
 	const FuncStat& getFuncStat(unsigned int index) const { return *m_funcStats[index]; }
+	const FuncStat* getFuncStatByName(const char *funcNameId) const;
 
 private:
 	FuncStat* AddFuncStat(const std::string& funcname);
