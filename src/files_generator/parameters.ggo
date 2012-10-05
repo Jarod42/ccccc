@@ -1,0 +1,36 @@
+#if 0 // Hack to be able to include this file into cpp file for dependency
+
+package "ccccc"
+version "0.1"
+#purpose "<purpose>"
+#usage "<usage>"
+#description "<description>"
+
+args "--conf-parser --unamed-opts --output-dir=../../generatedsrc  --c-extension=cpp"
+
+option "include-dir" I "Add the directory dir to the list of directories to be searched for header files." string typestr="dir" multiple optional
+option "define" D "Predefine name as a macro, with definition." string typestr="name" multiple optional
+option "option-file" - "Read option from this file" string typestr="file" optional
+#option "pch" p "compiled header path" string typestr="pch-file" optional
+option "extra-option" e "Extra option directly given to the cccc parser." string typestr="option" multiple optional
+#option "ouput" o ""
+
+#option <long> <short> "<desc>"
+# {details="<detailed description>"}
+# {argtype} {typestr="<type descr>"}
+# {values="<value1>","<value2>",...}
+# {default="<default value>"}
+# {dependon="<other option>"}
+# {required} {argoptional} {multiple}
+# {hidden}
+
+#option <long> <short> "<desc>" flag <on/off>
+
+
+# #option: help, version, include-dir -I, pch, define, others, file, -std=c++0x
+
+#section "section name" {sectiondesc="optional section description"}
+
+#text "a textual sentence"
+
+#endif // Hack to be able to include this file into cpp file for dependency

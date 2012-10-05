@@ -33,6 +33,8 @@ UnitTestPPRoot = "d:/UnitTest++-1.3"
 UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
 UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
 
+GenGetOptExe = "D:\\Programs\\Msys\\msys\\1.0\\local\\bin\\gengetopt.exe"
+
 
 function DefaultConfiguration()
 	for config,data in pairs(ConfigurationsData) do
@@ -44,19 +46,26 @@ function DefaultConfiguration()
 	end
 end
 
-solution "cccc_clang"
+solution "ccccc"
 	location ( LocationDir )
 	configurations { "Debug", "Release" }
 
 	libdirs(ClangLibDir)
 	includedirs(ClangIncludeDir)
 
-	project "cccc_clang"
+	project "files_generator"
+		kind "ConsoleApp"
+		language "C"
+
+		files { path.join(Root, "src/files_generator/**.*") }
+		postbuildcommands { GenGetOptExe .. " -i " .. path.join(Root, "src/files_generator/parameters.ggo") }
+		DefaultConfiguration()
+		
+	project "ccccc_lib"
 		kind "StaticLib"
 		language "C++"
 		--flags "WinMain"
-		files { path.join(Root, "src/**.*") }
-		excludes { path.join(Root, "src/main.cpp") }
+		files { path.join(Root, "src/lib/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
@@ -66,15 +75,17 @@ solution "cccc_clang"
 
 		DefaultConfiguration()
 
-	project "cccc_clang_app"
+	project "ccccc_app"
 		kind "ConsoleApp"
 		language "C++"
 		--flags "WinMain"
-		files { path.join(Root, "src/main.cpp") }
+		files { path.join(Root, "src/app/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
+		includedirs { path.join(Root, "src/lib/") }
+
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
-		links { "cccc_clang"}
+		links { "ccccc_lib"}
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
 		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
@@ -85,22 +96,21 @@ solution "cccc_clang"
 		end
 
 		DefaultConfiguration()
-	project "test"
+	project "ccccc_test"
 		kind "ConsoleApp"
 		language "C++"
 		--flags "WinMain"
 		files { path.join(Root, "test/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
-		includedirs { path.join(Root, "src") }
+		includedirs { path.join(Root, "src/lib/") }
 		includedirs {UnitTestPPIncludeDir}
 		libdirs {UnitTestPPLibDir}
 
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
 		buildoptions { "-fexceptions" } -- llvm seem to disable exceptions, but UnitTest++ uses them
 
-
-		links { "cccc_clang" }
+		links { "ccccc_lib" }
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
 		links { "unittest++" }
