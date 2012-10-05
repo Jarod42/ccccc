@@ -2,3 +2,4 @@ syntax: glob
 bin/
 obj/
 project/
+3rd/gengetopt-2.22.5/
