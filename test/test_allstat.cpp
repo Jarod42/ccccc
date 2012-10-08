@@ -2,6 +2,7 @@
 #include "UnitTest++.h"
 
 #include "allstat.h"
+#include "parameters.h"
 
 #define CHECK_EQUAL_STAT(lhs, rhs)                                                \
 	CHECK_EQUAL(lhs.getLineOfCode_blank(), rhs.getLineOfCode_blank());            \
@@ -13,10 +14,13 @@
 
 TEST(FILE_TEST_C)
 {
-	AllStat stat;
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	param.InitHardCodedMingwPath();
 	const std::string filename = "../../../samples/test.c";
+	param.AddFile(filename);
 
-	stat.Compute(filename.c_str(), 0, NULL);
+	stat.Compute(param);
 
 	const unsigned int expectedFileCount = 1;
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
@@ -38,10 +42,13 @@ TEST(FILE_TEST_C)
 
 TEST(FILE_TEST_H)
 {
-	AllStat stat;
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	param.InitHardCodedMingwPath();
 	const std::string filename = "../../../samples/test.h";
 
-	stat.Compute(filename.c_str(), 0, NULL);
+	param.AddFile(filename);
+	stat.Compute(param);
 
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
@@ -53,11 +60,15 @@ TEST(FILE_TEST_H)
 
 TEST(FILE_TEST_INCLUDE_CPP)
 {
-	const char* argv[] = {"-I../../../samples"};
-	AllStat stat;
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	param.InitHardCodedMingwPath();
 	const std::string filename = "../../../samples/test_include.cpp";
 
-	stat.Compute(filename.c_str(), 1, argv);
+	param.AddInclude("../../../samples");
+	//param.AddExtra("-std=c++0x");
+	param.AddFile(filename);
+	stat.Compute(param);
 
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
