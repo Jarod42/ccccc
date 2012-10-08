@@ -16,6 +16,25 @@ Parameters::Parameters()
 {
 }
 
+void Parameters::InitHardCodedMingwPath(std::string mingwRootPath)
+{
+	// Hard coded system headersHard coded
+	#define MINGWPATH "d:/Programs/mingw-4.6.1"
+	#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.6.1"
+
+	if (mingwRootPath.empty()) {
+		mingwRootPath = MINGWPATH;
+	}
+
+	AddInclude(mingwRootPath + "/include");
+	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include/c++");
+	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include/c++/mingw32");
+	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include/c++/backward");
+	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include");
+	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include-fixed");
+}
+
+
 void Parameters::Parse(int argc, char** argv)
 {
 	gengetopt_args_info args_info;

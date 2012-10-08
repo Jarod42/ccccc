@@ -15,6 +15,8 @@ public:
 public:
 	Parameters();
 
+	void InitHardCodedMingwPath(std::string mingwRootPath = "");
+
 	void Parse(int argc, char** argv);
 
 	void AddFile(const std::string& filename) { m_files.push_back(filename); }
