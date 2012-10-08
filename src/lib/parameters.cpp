@@ -1,24 +1,16 @@
 
 #include "parameters.h"
 
-/* we try to use gengetopt generated file in a C++ program */
-/* we don't use autoconf and automake vars */
-
-#include <iostream>
-#include "stdlib.h"
 
 #include "../../generatedsrc/cmdline.h"
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-
 #include "../../generatedsrc/cmdline.cpp"
-
 #pragma GCC diagnostic pop
 
 
-using std::cout;
-using std::endl;
+namespace ccccc
+{
 
 Parameters::Parameters()
 {
@@ -78,5 +70,4 @@ void Parameters::Parse(int argc, char** argv)
 	cmdline_parser_free (&args_info); /* release allocated memory */
 }
 
-
-
+}
