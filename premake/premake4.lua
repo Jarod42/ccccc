@@ -60,7 +60,7 @@ solution "ccccc"
 		files { path.join(Root, "src/files_generator/**.*") }
 		postbuildcommands { GenGetOptExe .. " -i " .. path.join(Root, "src/files_generator/parameters.ggo") }
 		DefaultConfiguration()
-		
+
 	project "ccccc_lib"
 		kind "StaticLib"
 		language "C++"
