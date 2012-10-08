@@ -11,7 +11,7 @@ args "--conf-parser --unamed-opts --output-dir=../../generatedsrc  --c-extension
 option "include-dir" I "Add the directory dir to the list of directories to be searched for header files." string typestr="dir" multiple optional
 option "define" D "Predefine name as a macro, with definition." string typestr="name" multiple optional
 option "option-file" - "Read option from this file" string typestr="file" optional
-#option "pch" p "compiled header path" string typestr="pch-file" optional
+option "pch" p "compiled header path" string typestr="pch-file" optional
 option "extra-option" e "Extra option directly given to the cccc parser." string typestr="option" multiple optional
 #option "ouput" o ""
 

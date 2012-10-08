@@ -66,14 +66,16 @@ void Parameters::Parse(int argc, char** argv)
 	for (unsigned i = 0; i != args_info.include_dir_given; ++i) {
 		AddInclude(args_info.include_dir_arg[i]);
 	}
-#if 0
-	for (unsigned i = 0; i != args_info.; ++i) {
-		AddExtra(args_info.[i]);
+
+	for (unsigned i = 0; i != args_info.extra_option_given; ++i) {
+		AddExtra(args_info.extra_option_arg[i]);
 	}
-#endif
+
+	if (args_info.pch_given) {
+		SetPch(args_info.pch_arg);
+	}
 
 	cmdline_parser_free (&args_info); /* release allocated memory */
-
 }
 
 
