@@ -1,6 +1,9 @@
 #include <vector>
 #include <string>
 
+namespace ccccc
+{
+
 class Parameters
 {
 public:
@@ -40,3 +43,6 @@ private:
 	std::string m_pch;
 	std::vector<std::string> m_extras;
 };
+
+
+}

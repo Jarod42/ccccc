@@ -26,7 +26,7 @@ static bool IsRangeEq(Iterator1 begin1, Iterator1 end1, Iterator2 begin2, Iterat
 TEST(PARAMETERS_ADD_FILE)
 {
 	std::string files[] = {"a.c", "a.h", "b.c", "b.h"};
-	Parameters param;
+	ccccc::Parameters param;
 
 	for (int i = 0; i != ARRAY_SIZE(files); ++i) {
 		param.AddFile(files[i]);
@@ -37,7 +37,7 @@ TEST(PARAMETERS_ADD_FILE)
 TEST(PARAMETERS_ADD_INCLUDE)
 {
 	std::string includes[] = {"/usr/include", "./", "c:\\foo"};
-	Parameters param;
+	ccccc::Parameters param;
 
 	for (int i = 0; i != ARRAY_SIZE(includes); ++i) {
 		param.AddInclude(includes[i]);
@@ -48,7 +48,7 @@ TEST(PARAMETERS_ADD_INCLUDE)
 TEST(PARAMETERS_ADD_DEFINE)
 {
 	std::string defines[] = {"FOO", "BAR=42"};
-	Parameters param;
+	ccccc::Parameters param;
 
 	for (int i = 0; i != ARRAY_SIZE(defines); ++i) {
 		param.AddDefine(defines[i]);
@@ -59,7 +59,7 @@ TEST(PARAMETERS_ADD_DEFINE)
 TEST(PARAMETERS_ADD_EXTRA)
 {
 	std::string extras[] = {"-std=c++0x"};
-	Parameters param;
+	ccccc::Parameters param;
 
 	for (int i = 0; i != ARRAY_SIZE(extras); ++i) {
 		param.AddExtra(extras[i]);
@@ -70,7 +70,7 @@ TEST(PARAMETERS_ADD_EXTRA)
 TEST(PARAMETERS_ADD_PCH)
 {
 	std::string pchFile = "pchFile";
-	Parameters param;
+	ccccc::Parameters param;
 
 	param.SetPch(pchFile);
 	CHECK_EQUAL(pchFile, param.GetPch());
@@ -93,7 +93,7 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 		pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
 		files[0].c_str(), files[1].c_str()
 	};
-	Parameters param;
+	ccccc::Parameters param;
 
 	param.Parse(ARRAY_SIZE(argv), const_cast<char **>(argv));
 
@@ -121,7 +121,7 @@ TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 		pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
 		files[0].c_str(), files[1].c_str()
 	};
-	Parameters param;
+	ccccc::Parameters param;
 
 	param.Parse(ARRAY_SIZE(argv), const_cast<char **>(argv));
 
