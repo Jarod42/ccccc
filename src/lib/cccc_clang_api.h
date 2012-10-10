@@ -1,11 +1,8 @@
 #ifndef CCCC_CLANG_API_H
 #define CCCC_CLANG_API_H
 
-#include <vector>
-#include "localstat.h"
-class LocalStat;
-
-void ComputeStats(const char* filename, int extraArgsCount, const char *extraArgs[], std::vector<LocalStat>& /* OUT */ localStats);
-
+#include "allstat.h"
+#include "parameters.h"
+#include "funcstat.h"
 
 #endif // CCCC_CLANG_API_H
