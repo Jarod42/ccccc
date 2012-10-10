@@ -18,19 +18,6 @@ class classStat
 {
 
 };
-
-class FunctionStat
-{
-
-};
-
-class allStat
-{
-
-
-	std::vector<FileStat> m_filestats;
-};
-
 #endif
 
 
@@ -44,6 +31,27 @@ STREAM & operator << (STREAM& s, const LocalStat& localStat)
 			<< "|LOCbl="  << localStat.getLineOfCode_blank()
 			<< "|mvg=" << localStat.getMcCabeCyclomaticNumber();
 }
+
+template <typename STREAM>
+STREAM & operator << (STREAM& s, const FuncStat& funcStat)
+{
+	return s << funcStat.getName() << ":" << funcStat.getStat();
+}
+
+template <typename STREAM>
+STREAM & operator << (STREAM& s, const FileStat& fileStat)
+{
+	s << fileStat.getFilename() << std::endl;
+	s << fileStat.getStat() << std::endl;
+
+	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
+		const FuncStat& funcStat = fileStat.getFuncStat(i);
+		s << "\t" << funcStat << std::endl;
+	}
+	return s;
+}
+
+
 
 void output(CXSourceLocation loc)
 {
@@ -88,12 +96,18 @@ void output(CXCursor cursor)
 int main(int argc, char* argv[])
 {
 	if (argc > 1) {
-		std::vector<LocalStat> localStats;
+		ccccc::Parameters params;
 
-		ComputeStats(argv[1], argc - 2, const_cast<const char**>(argv) + 2, localStats);
+		params.InitHardCodedMingwPath();
+		params.Parse(argc, argv);
+		ccccc::AllStat allStat;
 
-		for (size_t i = 0; i != localStats.size(); ++i) {
-			std::cout << localStats[i] << std::endl;
+		allStat.Compute(params);
+
+		for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
+			const FileStat& filestat = allStat.getFileStat(i);
+
+			std::cout << filestat;
 		}
 	}
 	return 0;

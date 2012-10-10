@@ -2,6 +2,9 @@
 
 #include "cccc_clang_api.h"
 
+
+#if 0
+
 #include "localstat.h"
 #include "use_clang/localstattool.h"
 #include "use_clang/utils.h"
@@ -77,3 +80,5 @@ void ComputeStats(const char* filename, int extraArgsCount, const char *extraArg
 	clang_disposeTranslationUnit(tu);
 	clang_disposeIndex(index);
 }
+
+#endif
