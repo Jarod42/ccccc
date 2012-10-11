@@ -5,11 +5,11 @@
 #include "parameters.h"
 
 #define CHECK_EQUAL_STAT(lhs, rhs)                                                \
-	CHECK_EQUAL(lhs.getLineOfCode_blank(), rhs.getLineOfCode_blank());            \
-	CHECK_EQUAL(lhs.getLineOfCode_comment(), rhs.getLineOfCode_comment());        \
-	CHECK_EQUAL(lhs.getLineOfCode_physic(), rhs.getLineOfCode_physic());          \
-	CHECK_EQUAL(lhs.getLineOfCode_program(), rhs.getLineOfCode_program());        \
-	CHECK_EQUAL(lhs.getMcCabeCyclomaticNumber(), rhs.getMcCabeCyclomaticNumber());
+	CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank());            \
+	CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment());        \
+	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());          \
+	CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());        \
+	CHECK_EQUAL((lhs).getMcCabeCyclomaticNumber(), (rhs).getMcCabeCyclomaticNumber());
 
 
 TEST(FILE_TEST_C)
@@ -77,3 +77,25 @@ TEST(FILE_TEST_INCLUDE_CPP)
 	CHECK_EQUAL_STAT(expectedStat, fileStat.getStat());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
+
+TEST(FILE_TEST_NAMESPACE_CPP)
+{
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	param.InitHardCodedMingwPath();
+	const std::string filename = "../../../samples/namespace.cpp";
+
+	//param.AddInclude("../../../samples");
+	//param.AddExtra("-std=c++0x");
+	param.AddFile(filename);
+	stat.Compute(param);
+
+	unsigned int expected = 1;
+	CHECK_EQUAL(expected, stat.getFileCount());
+	const FileStat& fileStat = stat.getFileStat(0);
+	LocalStat expectedStat(4, 4, 0, 0, 1);
+	const FuncStat* funcStat = fileStat.getFuncStatByName("sum(int, int)");
+	CHECK(funcStat != NULL);
+	CHECK_EQUAL_STAT(expectedStat, funcStat->getStat());
+}
+

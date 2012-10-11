@@ -54,18 +54,24 @@ void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor,
 	unsigned numToken;
 	clang_tokenize(tu, clang_getCursorExtent(cursor), &tokens, &numToken);
 
-	unsigned startLine, endLine;
-	getStartEndLine(clang_getCursorExtent(cursor), &startLine, &endLine);
-	stat->lineOfCode_physic = endLine - startLine + 1;
+	unsigned cursorStartLine, cursorEndLine;
+	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
+	stat->lineOfCode_physic = cursorEndLine - cursorStartLine + 1;
 
-	assert(startLine != 0);
+	assert(cursorStartLine != 0);
 	// com, loc, blankLine
-	unsigned int lastLine[2] = {startLine - 1, startLine - 1};
+	unsigned int lastLine[2] = {cursorStartLine - 1, cursorStartLine - 1};
 	unsigned int lineOfCode_physic[3] = {0, 0, 0};
 	for (unsigned i = 0; i != numToken; ++i) {
+		unsigned startLine, endLine;
 		LocalStatTool::UpdateMcCabeCyclomaticNumber(tu, tokens[i], stat);
 		getStartEndLine(clang_getTokenExtent(tu, tokens[i]), &startLine, &endLine);
 		unsigned int type = (clang_getTokenKind(tokens[i]) == CXToken_Comment) ? 0 : 1;
+
+		if (startLine > cursorEndLine) {
+			break;
+		}
+		endLine = std::min(endLine, cursorEndLine);
 
 		if (startLine != lastLine[type]) {
 			lineOfCode_physic[type] += endLine - startLine + 1;
