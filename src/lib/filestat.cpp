@@ -3,31 +3,20 @@
 
 
 FileStat::FileStat(const std::string& filename) :
-	m_filename(filename)
+	m_filename(filename),
+	m_root("", NULL)
 {
 }
 
 FileStat::~FileStat()
 {
-	for (size_t i = 0; i != m_funcStats.size(); ++i) {
-		delete m_funcStats[i];
-	}
 }
 
-FuncStat* FileStat::AddFuncStat(const std::string& funcname)
+FuncStat* FileStat::AddFuncStat(const std::string& funcname, const std::vector<std::string>& namespaceNames)
 {
-	FuncStat* stat = new FuncStat(funcname);
-
-	m_funcStats.push_back(stat);
-	return stat;
-}
-
-const FuncStat* FileStat::getFuncStatByName(const char *funcNameId) const
-{
-	for (size_t i = 0; i != m_funcStats.size(); ++i) {
-		if (m_funcStats[i]->getName().compare(funcNameId) == 0) {
-			return m_funcStats[i];
-		}
+	NamespaceStat* namespaceStat = &m_root;
+	for (size_t i = 0; i != namespaceNames.size(); ++i) {
+		namespaceStat = &namespaceStat->GetOrCreateNamespace(namespaceNames[i]);
 	}
-	return NULL;
+	return namespaceStat->AddFuncStat(funcname);
 }

@@ -94,7 +94,10 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const FileStat& fileStat = stat.getFileStat(0);
 	LocalStat expectedStat(4, 4, 0, 0, 1);
-	const FuncStat* funcStat = fileStat.getFuncStatByName("sum(int, int)");
+	CHECK(fileStat.getFuncStatByName("sum(int, int)") == NULL);
+	const NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
+	CHECK(namespaceStat != NULL);
+	const FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
 	CHECK(funcStat != NULL);
 	CHECK_EQUAL_STAT(expectedStat, funcStat->getStat());
 }
