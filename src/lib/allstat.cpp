@@ -22,6 +22,15 @@ static void GetClangParamFromParam(const Parameters& param, std::vector<const ch
 		args->push_back(it->c_str());
 	}
 
+	for (Parameters::DefineConstIterator it = param.Defines_begin(); it != param.Defines_end(); ++it) {
+		args->push_back("-D");
+		args->push_back(it->c_str());
+	}
+
+	for (Parameters::ExtraConstIterator it = param.Extras_begin(); it != param.Extras_end(); ++it) {
+		args->push_back(it->c_str());
+	}
+
 }
 
 
@@ -45,10 +54,13 @@ void AllStat::Compute(const Parameters& param)
 		const std::string& filename = *it;
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
-		if (tu) {
+		if (tu && isValid(tu)) {
 			FileStat *fileStat = new FileStat(filename);
 			m_filesStat.push_back(fileStat);
 			FileStatTool::Compute(tu, fileStat);
+		} else {
+			// some errors (file not found)
+
 		}
 		clang_disposeTranslationUnit(tu);
 	}

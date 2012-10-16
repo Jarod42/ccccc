@@ -39,3 +39,12 @@ bool isInFile(const char* filename, CXCursor cursor)
 
 	return cursorFilename.compare(filename) == 0;
 }
+
+bool isValid(CXTranslationUnit tu)
+{
+	CXCursor cursor = clang_getTranslationUnitCursor(tu);
+	unsigned cursorStartLine, cursorEndLine;
+	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
+
+	return cursorStartLine != 0 && cursorStartLine <= cursorEndLine;
+}
