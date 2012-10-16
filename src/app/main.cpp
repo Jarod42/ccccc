@@ -20,6 +20,54 @@ class classStat
 };
 #endif
 
+#if 1
+// thank to James Kanze in http://stackoverflow.com/a/9600752
+
+class IndentingOStreambuf : public std::streambuf
+{
+public:
+	explicit IndentingOStreambuf(std::streambuf* dest, int indent = 2) :
+		myDest(dest),
+		myIsAtStartOfLine(true),
+		myIndent(indent, ' '),
+		myOwner(NULL)
+	{
+	}
+	explicit IndentingOStreambuf(std::ostream& dest, int indent = 2) :
+		myDest(dest.rdbuf()),
+		myIsAtStartOfLine(true),
+		myIndent(indent, ' '),
+		myOwner(&dest)
+	{
+		myOwner->rdbuf(this);
+	}
+	virtual ~IndentingOStreambuf()
+	{
+		if (myOwner != NULL) {
+			myOwner->rdbuf(myDest);
+		}
+	}
+
+protected:
+	virtual int overflow(int ch)
+	{
+		if (myIsAtStartOfLine && ch != '\n') {
+			myDest->sputn( myIndent.data(), myIndent.size() );
+		}
+		myIsAtStartOfLine = ch == '\n';
+		return myDest->sputc(ch);
+	}
+
+private:
+	std::streambuf* myDest;
+	bool myIsAtStartOfLine;
+	std::string myIndent;
+	std::ostream* myOwner;
+};
+
+#endif
+
+
 
 template <typename STREAM>
 STREAM & operator << (STREAM& s, const LocalStat& localStat)
@@ -39,19 +87,40 @@ STREAM & operator << (STREAM& s, const FuncStat& funcStat)
 }
 
 template <typename STREAM>
-STREAM & operator << (STREAM& s, const FileStat& fileStat)
+STREAM & operator << (STREAM& s, const NamespaceStat& namespaceStat)
 {
-	s << fileStat.getFilename() << std::endl;
-	s << fileStat.getStat() << std::endl;
+	s << "* " << namespaceStat.getName() << std::endl;
+	//s << fileStat.getStat() << std::endl;
 
-	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
-		const FuncStat& funcStat = fileStat.getFuncStat(i);
-		s << "\t" << funcStat << std::endl;
+	IndentingOStreambuf ts(s);
+	for (unsigned int i = 0; i != namespaceStat.getFunctionCount(); ++i) {
+		const FuncStat& funcStat = namespaceStat.getFuncStat(i);
+		s << funcStat << std::endl;
+	}
+	for (FileStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
+		s << *it->second;
 	}
 	return s;
 }
 
+template <typename STREAM>
+STREAM & operator << (STREAM& s, const FileStat& fileStat)
+{
+	s << fileStat.getFilename() << std::endl;
+	//s << fileStat.getStat() << std::endl;
 
+	{
+		IndentingOStreambuf ts(s);
+		for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
+			const FuncStat& funcStat = fileStat.getFuncStat(i);
+			s << funcStat << std::endl;
+		}
+	}
+	for (FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
+		s << *it->second;
+	}
+	return s;
+}
 
 void output(CXSourceLocation loc)
 {
