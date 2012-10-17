@@ -50,9 +50,26 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 
 			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;
+		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
+		|| clang_getCursorKind(cursor) == CXCursor_Constructor
+		|| clang_getCursorKind(cursor) == CXCursor_Destructor
+		|| clang_getCursorKind(cursor) == CXCursor_ConversionFunction) {
+		//CXCursor_ClassTemplate
+		//CXCursor_ClassTemplatePartialSpecialization
+			CXCursor parent = clang_getCursorSemanticParent(cursor);
+			std::string parentStr = getStringAndDispose(clang_getCursorDisplayName(parent));
+			std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
+
+			// TODO: get ClassStat.
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(parentStr + "::" + cursorStr, client_data->GetNamespaceNames());
+
+			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
+			return CXChildVisit_Continue;
+		} else {
+			return CXChildVisit_Recurse;
 		}
 	}
-	// TODO: namespace, class, template (specialization)...
+	// TODO: class, template (specialization)...
 	return CXChildVisit_Recurse;
 }
 
