@@ -43,14 +43,16 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 	if (clang_getCursorKind(cursor) == CXCursor_Namespace) {
 		VisitNamespace(cursor, client_data);
 		return CXChildVisit_Continue;
-	} else if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
-		&& clang_isCursorDefinition(cursor)) {
-		FuncStat* funcStat = client_data->getFileStat().AddFuncStat(getStringAndDispose(clang_getCursorDisplayName(cursor)), client_data->GetNamespaceNames());
+	} else if (clang_isCursorDefinition(cursor)) {
+		if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
+			|| clang_getCursorKind(cursor) == CXCursor_FunctionTemplate) {
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(getStringAndDispose(clang_getCursorDisplayName(cursor)), client_data->GetNamespaceNames());
 
-		FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
-		return CXChildVisit_Continue;
+			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
+			return CXChildVisit_Continue;
+		}
 	}
-	// TODO: namespace, class, ...
+	// TODO: namespace, class, template (specialization)...
 	return CXChildVisit_Recurse;
 }
 
