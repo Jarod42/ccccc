@@ -16,7 +16,9 @@ if (ActionsData[_ACTION] == nil) then
 end
 
 ConfigurationsData = {["Debug"] = {["Dir"] = "Debug", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
-						["Release"] = {["Dir"] = "Release", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}}
+						["Release"] = {["Dir"] = "Release", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}},
+						["DebugWithDLL"] = {["Dir"] = "DebugWithDLL", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
+						["ReleaseWithDLL"] = {["Dir"] = "ReleaseWithDLL", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}}
 					}
 
 LocationDir = path.join(Root, "project/" .. ActionsData[_ACTION].Dir)
@@ -48,10 +50,14 @@ end
 
 solution "ccccc"
 	location ( LocationDir )
-	configurations { "Debug", "Release" }
+	configurations { "Debug", "Release", "DebugWithDLL", "ReleaseWithDLL" }
 
-	libdirs(ClangLibDir)
 	includedirs(ClangIncludeDir)
+	
+	configuration "*WithDLL"
+		libdirs(ClangBinDir)
+	configuration "not *WithDLL"
+		libdirs(ClangLibDir)
 
 	project "files_generator"
 		kind "ConsoleApp"
@@ -88,10 +94,14 @@ solution "ccccc"
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
 
 		links { "ccccc_lib"}
-		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
-		links { "psapi", "imagehlp" }
-		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+		configuration "*WithDLL"
+			links { "clang" }
+		configuration "not *WithDLL"
+			links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+			links { "psapi", "imagehlp" }
+			linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
 
+		configuration "*"
 		if (_PREMAKE_VERSION >= "4.4") then
 			--debugdir(Root)
 			debugargs {"../../../samples/test.c"}
@@ -112,12 +122,16 @@ solution "ccccc"
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
 		
 		links { "ccccc_lib" }
-		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
-		links { "psapi", "imagehlp" }
 		links { "unittest++" }
+		configuration "*WithDLL"
+			links { "clang" }
+		configuration "not *WithDLL"
+			links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+			links { "psapi", "imagehlp" }
 
-		linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+			linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
 
+		configuration "*"
 		if (_PREMAKE_VERSION >= "4.4") then
 			--debugdir(Root)
 		end
