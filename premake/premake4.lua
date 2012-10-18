@@ -68,7 +68,8 @@ solution "ccccc"
 		files { path.join(Root, "src/lib/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
+		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
+
 		--links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		--links { "psapi", "imagehlp" }
 		--linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
@@ -84,7 +85,8 @@ solution "ccccc"
 
 		includedirs { path.join(Root, "src/lib/") }
 
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
+		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
+
 		links { "ccccc_lib"}
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
@@ -107,9 +109,8 @@ solution "ccccc"
 		includedirs {UnitTestPPIncludeDir}
 		libdirs {UnitTestPPLibDir}
 
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cxxflags" .. ")" }
-		buildoptions { "-fexceptions" } -- llvm seem to disable exceptions, but UnitTest++ uses them
-
+		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
+		
 		links { "ccccc_lib" }
 		links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 		links { "psapi", "imagehlp" }
