@@ -24,7 +24,7 @@ public:
 	const FuncStat& getFuncStat(unsigned int index) const { return *m_funcStats[index]; }
 	const FuncStat* getFuncStatByName(const char *funcNameId) const;
 
-	unsigned int getNamespaceCount() const { return m_funcStats.size(); }
+	unsigned int getNamespaceCount() const { return m_namespaces.size(); }
 	NamespaceStatConstIterator getNamespace_begin() const { return m_namespaces.begin(); }
 	NamespaceStatConstIterator getNamespace_end() const { return m_namespaces.end(); }
 	const NamespaceStat* getNamespaceByName(const char *funcNameId) const;
