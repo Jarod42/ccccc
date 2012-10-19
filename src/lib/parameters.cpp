@@ -67,7 +67,7 @@ void Parameters::Parse(int argc, char** argv)
 		}
 	}
 
-	for (unsigned i = 0 ; i < args_info.inputs_num ; ++i) {
+	for (unsigned i = 0 ; i != args_info.inputs_num ; ++i) {
 		AddFile(args_info.inputs[i]);
 	}
 	for (unsigned i = 0; i != args_info.define_given; ++i) {
