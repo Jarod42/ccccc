@@ -7,6 +7,7 @@
 #include <vector>
 
 class FuncStat;
+class NamespaceStat;
 
 class ClassStat
 {
@@ -16,7 +17,7 @@ public:
 	typedef std::map<std::string, ClassStat*> ClassMap;
 	typedef ClassMap::const_iterator ClassStatConstIterator;
 public:
-	ClassStat(const std::string& name, NamespaceStat* parent);
+	ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent);
 	~ClassStat();
 
 	const std::string& getName() const { return m_name; }
@@ -24,20 +25,20 @@ public:
 	const FuncStat& getMethodStat(unsigned int index) const { return *m_methodStats[index]; }
 	const FuncStat* getMethodStatByName(const char *funcNameId) const;
 
-	unsigned int getNamespaceCount() const { return m_funcStats.size(); }
-	ClassStatConstIterator getClass_begin() const { return m_namespaces.begin(); }
-	ClassStatConstIterator getClass_end() const { return m_namespaces.end(); }
+	unsigned int getClassCount() const { return m_classes.size(); }
+	ClassStatConstIterator getClass_begin() const { return m_classes.begin(); }
+	ClassStatConstIterator getClass_end() const { return m_classes.end(); }
 	const ClassStat* getClassByName(const char *funcNameId) const;
 
 private:
-	FuncStat* AddFuncStat(const std::string& funcname);
-	NamespaceStat& GetOrCreateNamespace(const std::string& funcname);
+	FuncStat* AddMethodStat(const std::string& funcname);
+	ClassStat& GetOrCreateClass(const std::string& funcname);
 private:
 	std::string m_name;
 	std::vector<FuncStat*> m_methodStats;
-	NamespaceMap m_namespaces;
-	NamespaceStat* m_parent;
-	ClassStat* m_parentClass;
+	ClassMap m_classes;
+	NamespaceStat* m_namespaceParent;
+	ClassStat* m_classParent;
 };
 
 

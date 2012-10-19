@@ -3,27 +3,28 @@
 #include "classstat.h"
 #include "funcstat.h"
 
-ClassStat::ClassStat(const std::string& name, NamespaceStat* parent) :
+ClassStat::ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent) :
 	m_name(name),
-	m_parent(parent)
+	m_namespaceParent(namespaceParent),
+	m_classParent(classParent)
 {
 }
 
 ClassStat::~ClassStat()
 {
-	for (size_t i = 0; i != m_funcStats.size(); ++i) {
-		delete m_funcStats[i];
+	for (size_t i = 0; i != m_methodStats.size(); ++i) {
+		delete m_methodStats[i];
 	}
-	for (NamespaceStatConstIterator it = m_namespaces.begin(); it != m_namespaces.end(); ++it) {
+	for (ClassStatConstIterator it = m_classes.begin(); it != m_classes.end(); ++it) {
 		delete it->second;
 	}
 }
 
-const FuncStat* ClassStat::getFuncStatByName(const char *funcNameId) const
+const FuncStat* ClassStat::getMethodStatByName(const char *funcNameId) const
 {
-	for (size_t i = 0; i != m_funcStats.size(); ++i) {
-		if (m_funcStats[i]->getName().compare(funcNameId) == 0) {
-			return m_funcStats[i];
+	for (size_t i = 0; i != m_methodStats.size(); ++i) {
+		if (m_methodStats[i]->getName().compare(funcNameId) == 0) {
+			return m_methodStats[i];
 		}
 	}
 	return NULL;
@@ -31,9 +32,9 @@ const FuncStat* ClassStat::getFuncStatByName(const char *funcNameId) const
 
 const ClassStat* ClassStat::getClassByName(const char *className) const
 {
-	NamespaceStatConstIterator it = m_namespaces.find(namespaceName);
+	ClassStatConstIterator it = m_classes.find(className);
 
-	if (it != m_namespaces.end()) {
+	if (it != m_classes.end()) {
 		return (*it).second;
 	}
 	return NULL;
@@ -41,20 +42,20 @@ const ClassStat* ClassStat::getClassByName(const char *className) const
 
 ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 {
-	NamespaceStatConstIterator it = m_namespaces.find(namespaceName);
+	ClassStatConstIterator it = m_classes.find(className);
 
-	if (it != m_namespaces.end()) {
+	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	ClassStat* namespaceStat = new ClassStat(namespaceName, this);
-	m_namespaces.insert(make_pair(namespaceName, namespaceStat));
-	return *namespaceStat;
+	ClassStat* classStat = new ClassStat(className, this, NULL);
+	m_classes.insert(make_pair(className, classStat));
+	return *classStat;
 }
 
-FuncStat* ClassStat::AddMethodStat(const std::string& methodName)
+FuncStat* ClassStat::AddMethodStat(const std::string& className)
 {
-	FuncStat* stat = new FuncStat(methodName);
+	FuncStat* stat = new FuncStat(className);
 
-	m_funcStats.push_back(stat);
+	m_methodStats.push_back(stat);
 	return stat;
 }
