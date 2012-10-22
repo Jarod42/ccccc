@@ -87,6 +87,20 @@ STREAM & operator << (STREAM& s, const FuncStat& funcStat)
 }
 
 template <typename STREAM>
+STREAM & operator << (STREAM& s, const ClassStat& classStat)
+{
+	s << "+ " << classStat.getName() << std::endl;
+	IndentingOStreambuf ts(s);
+	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
+		s << classStat.getMethodStat(i) << std::endl;
+	}
+	for (ClassStat::ClassStatConstIterator it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
+		s << *it->second;
+	}
+	return s;
+}
+
+template <typename STREAM>
 STREAM & operator << (STREAM& s, const NamespaceStat& namespaceStat)
 {
 	s << "* " << namespaceStat.getName() << std::endl;
@@ -97,7 +111,11 @@ STREAM & operator << (STREAM& s, const NamespaceStat& namespaceStat)
 		const FuncStat& funcStat = namespaceStat.getFuncStat(i);
 		s << funcStat << std::endl;
 	}
-	for (FileStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
+	for (NamespaceStat::ClassStatConstIterator it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
+		s << *it->second;
+	}
+
+	for (NamespaceStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
 		s << *it->second;
 	}
 	return s;
@@ -117,6 +135,9 @@ STREAM & operator << (STREAM& s, const FileStat& fileStat)
 		}
 	}
 	for (FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
+		s << *it->second;
+	}
+	for (FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
 		s << *it->second;
 	}
 	return s;

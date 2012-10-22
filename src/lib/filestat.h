@@ -14,6 +14,7 @@ class FileStat
 	friend class FileStatTool;
 public:
 	typedef NamespaceStat::NamespaceStatConstIterator NamespaceStatConstIterator;
+	typedef NamespaceStat::ClassStatConstIterator ClassStatConstIterator;
 public:
 	explicit FileStat(const std::string& filename);
 	~FileStat();
@@ -29,9 +30,13 @@ public:
 	NamespaceStatConstIterator getNamespace_end() const { return m_root.getNamespace_end(); }
 	const NamespaceStat* getNamespaceByName(const char *name) const { return m_root.getNamespaceByName(name); }
 
+	unsigned int getClassCount() const { return m_root.getClassCount(); }
+	ClassStatConstIterator getClass_begin() const { return m_root.getClass_begin(); }
+	ClassStatConstIterator getClass_end() const { return m_root.getClass_end(); }
+	const ClassStat* getClassByName(const char *name) const { return m_root.getClassByName(name); }
 private:
-	FuncStat* AddFuncStat(const std::string& funcname, const std::vector<std::string>& namespaceNames);
-	NamespaceStat* AddNamespace(const std::string& funcname);
+	FuncStat* AddFuncStat(const std::vector<std::string>& namespaceNames, const std::vector<std::string>& classeNames, const std::string& funcname);
+	NamespaceStat* AddNamespace(const std::string& name);
 private:
 	std::string m_filename;
 	LocalStat m_stat;

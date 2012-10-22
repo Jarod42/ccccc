@@ -1,6 +1,7 @@
 
 
 #include "namespacestat.h"
+#include "classstat.h"
 #include "funcstat.h"
 
 NamespaceStat::NamespaceStat(const std::string& name, NamespaceStat* parent) :
@@ -39,6 +40,16 @@ const NamespaceStat* NamespaceStat::getNamespaceByName(const char *namespaceName
 	return NULL;
 }
 
+const ClassStat* NamespaceStat::getClassByName(const char *ClassName) const
+{
+	ClassStatConstIterator it = m_classes.find(ClassName);
+
+	if (it != m_classes.end()) {
+		return (*it).second;
+	}
+	return NULL;
+}
+
 NamespaceStat& NamespaceStat::GetOrCreateNamespace(const std::string& namespaceName)
 {
 	NamespaceStatConstIterator it = m_namespaces.find(namespaceName);
@@ -51,10 +62,29 @@ NamespaceStat& NamespaceStat::GetOrCreateNamespace(const std::string& namespaceN
 	return *namespaceStat;
 }
 
-FuncStat* NamespaceStat::AddFuncStat(const std::string& funcname)
+ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 {
-	FuncStat* stat = new FuncStat(funcname);
+	ClassStatConstIterator it = m_classes.find(className);
 
-	m_funcStats.push_back(stat);
-	return stat;
+	if (it != m_classes.end()) {
+		return *(*it).second;
+	}
+	ClassStat* classStat = new ClassStat(className, NULL, this);
+	m_classes.insert(make_pair(className, classStat));
+	return *classStat;
+}
+
+FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname)
+{
+	if (classeNames.empty()) {
+		FuncStat* stat = new FuncStat(funcname);
+
+		m_funcStats.push_back(stat);
+		return stat;
+	}
+	ClassStat *classStat = &GetOrCreateClass(classeNames[0]);
+	for (size_t i = 1; i != classeNames.size(); ++i) {
+		classStat = &classStat->GetOrCreateClass(classeNames[i]);
+	}
+	return classStat->AddMethodStat(funcname);
 }
