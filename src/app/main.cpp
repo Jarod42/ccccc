@@ -4,21 +4,8 @@
 #include <iostream>
 #include <vector>
 
-#include "localstat.h"
 #include "use_clang/utils.h"
 #include "cccc_clang_api.h"
-
-#if 0
-class namespaceStat
-{
-
-};
-
-class classStat
-{
-
-};
-#endif
 
 #if 1
 // thank to James Kanze in http://stackoverflow.com/a/9600752
