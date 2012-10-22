@@ -11,8 +11,7 @@ class NamespaceStat;
 
 class ClassStat
 {
-	friend class FuncStatTool;
-	friend class FileStat;
+	friend class NamespaceStat;
 public:
 	typedef std::map<std::string, ClassStat*> ClassMap;
 	typedef ClassMap::const_iterator ClassStatConstIterator;

@@ -4,6 +4,12 @@
 
 class Foo
 {
+	class InnerClass
+	{
+	public:
+		InnerClass() {}
+		~InnerClass() {}
+	};
 public:
 	Foo() : i(42), mem(new char[42]) {}
 
