@@ -172,20 +172,18 @@ void output(CXCursor cursor)
 
 int main(int argc, char* argv[])
 {
-	if (argc > 1) {
-		ccccc::Parameters params;
+	ccccc::Parameters params;
 
-		params.InitHardCodedMingwPath();
-		params.Parse(argc, argv);
-		ccccc::AllStat allStat;
+	params.InitHardCodedMingwPath();
+	params.Parse(argc, argv);
+	ccccc::AllStat allStat;
 
-		allStat.Compute(params);
+	allStat.Compute(params);
 
-		for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
-			const FileStat& filestat = allStat.getFileStat(i);
+	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
+		const FileStat& filestat = allStat.getFileStat(i);
 
-			std::cout << filestat;
-		}
+		std::cout << filestat;
 	}
 	return 0;
 }
