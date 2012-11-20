@@ -35,6 +35,9 @@ UnitTestPPRoot = "d:/UnitTest++-1.3"
 UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
 UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
 
+CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
+
+
 GenGetOptExe = "D:\\Programs\\Msys\\msys\\1.0\\local\\bin\\gengetopt.exe"
 
 
@@ -46,6 +49,12 @@ function DefaultConfiguration()
 			flags (data.Flags)
 			defines(data.Defines)
 	end
+end
+
+function UseCTemplate()
+	includedirs { path.join(CTemplateRoot, "src")}
+	libdirs { path.join(CTemplateRoot, ".libs") }
+	links { "ctemplate_nothreads" }
 end
 
 solution "ccccc"
@@ -90,6 +99,8 @@ solution "ccccc"
 		flags { "ExtraWarnings", "FatalWarnings"}
 
 		includedirs { path.join(Root, "src/lib/") }
+
+		UseCTemplate()
 
 		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
 
