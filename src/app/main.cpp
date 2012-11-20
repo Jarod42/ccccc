@@ -7,6 +7,8 @@
 #include "use_clang/utils.h"
 #include "cccc_clang_api.h"
 
+#include <ctemplate/template.h>
+
 #if 1
 // thank to James Kanze in http://stackoverflow.com/a/9600752
 
@@ -170,6 +172,73 @@ void output(CXCursor cursor)
 //	output(range);
 }
 
+void feedDict(const FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
+{
+	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("InFunctions");
+
+	sectionDict.SetValue("funcName", funcStat.getName());
+	sectionDict.SetIntValue("LOCphy", funcStat.getStat().getLineOfCode_physic());
+	sectionDict.SetIntValue("LOCpro", funcStat.getStat().getLineOfCode_program());
+	sectionDict.SetIntValue("LOCcom", funcStat.getStat().getLineOfCode_comment());
+	sectionDict.SetIntValue("LOCbl", funcStat.getStat().getLineOfCode_blank());
+	sectionDict.SetIntValue("MVG", funcStat.getStat().getMcCabeCyclomaticNumber());
+
+	sectionDict.SetValue("namespacesName", namespacesName);
+	sectionDict.SetValue("classesName", classesName);
+}
+
+
+void feedDict(const ClassStat& classStat, const std::string& namespacesName, std::string classesName, ctemplate::TemplateDictionary* dict)
+{
+	if (classesName.empty() == false) {
+		classesName += "::";
+	}
+	classesName += classStat.getName();
+
+	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
+		feedDict(classStat.getMethodStat(i), namespacesName, classesName, dict);
+	}
+	for (ClassStat::ClassStatConstIterator it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
+		feedDict(*it->second, namespacesName, classesName, dict);
+	}
+}
+
+void feedDict(const NamespaceStat& namespaceStat, std::string namespacesName, ctemplate::TemplateDictionary* dict)
+{
+	if (namespacesName.empty() == false) {
+		namespacesName += "::";
+	}
+	if (namespaceStat.getName().empty()) {
+		namespacesName += "{anonymous}";
+	} else {
+		namespacesName += namespaceStat.getName();
+	}
+	for (unsigned int i = 0; i != namespaceStat.getFunctionCount(); ++i) {
+		const FuncStat& funcStat = namespaceStat.getFuncStat(i);
+		feedDict(funcStat, namespacesName, "", dict);
+	}
+	for (NamespaceStat::ClassStatConstIterator it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
+		feedDict(*it->second, namespacesName, "", dict);
+	}
+	for (NamespaceStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
+		feedDict(*it->second, namespacesName, dict);
+	}
+}
+
+void feedDict(const FileStat& fileStat, ctemplate::TemplateDictionary* dict)
+{
+	dict->SetValue("filename", fileStat.getFilename());
+	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
+		feedDict(fileStat.getFuncStat(i), "", "", dict);
+	}
+	for (FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
+		feedDict(*it->second, "", dict);
+	}
+	for (FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
+		feedDict(*it->second, "", "", dict);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	ccccc::Parameters params;
@@ -180,11 +249,19 @@ int main(int argc, char* argv[])
 
 	allStat.Compute(params);
 
+	ctemplate::TemplateDictionary dict("root");
+
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
+		ctemplate::TemplateDictionary* fileDict = dict.AddSectionDictionary("InFiles");
 		const FileStat& filestat = allStat.getFileStat(i);
 
-		std::cout << filestat;
+		feedDict(filestat, fileDict);
+		//std::cout << filestat;
 	}
+
+	std::string output;
+	ctemplate::ExpandTemplate("template/html/template.tpl", ctemplate::DO_NOT_STRIP, &dict, &output);
+	std::cout << output;
 	return 0;
 }
 
