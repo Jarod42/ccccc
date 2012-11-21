@@ -11,9 +11,9 @@
 <script type="text/javascript" src="template/html/ccccc.js"></script>
 </head>
 <body onload="onDocLoaded();">
-<table WIDTH="100%" id="myTable" class="tablesorter draggable">
+<table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<TR><TH>Filename</TH><TH>Namespaces Name</TH><TH>Classes Name</TH><TH>Prototype</TH><TH>LOCphy</TH><TH>LOCpro</TH><TH>LOCcom</TH><TH>LOCbl</TH><TH>MVG</TH></TR>
+<tr><th>Filename</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th>LOCphy</th><th>LOCpro</th><th>LOCcom</th><th>LOCbl</th><th>MVG</th></tr>
 </thead>
 <tbody>
 {{#InFiles}}{{#InFunctions}}	<tr><td>{{filename:h}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td class="LOCphy">{{LOCphy}}</td><td class="LOCpro">{{LOCpro}}</td><td class="LOCcom">{{LOCcom}}</td><td class="LOCbl">{{LOCbl}}</td><td class="MVG">{{MVG}}</td></tr>
