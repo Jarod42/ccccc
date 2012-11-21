@@ -1,5 +1,5 @@
-function setClassToSpecificColumnBadForLowValue(id, low, high) {
-$('td#' + id).each(function(){
+function setClassToSpecificColumnBadForLowValue(classid, low, high) {
+$('td.' + classid).each(function(){
     var t = $(this);
     var val = parseInt( t.text(), 10 );
     if (val <= low) { t.addClass('bad'); }
@@ -7,8 +7,8 @@ $('td#' + id).each(function(){
 });
 }
 
-function setClassToSpecificColumnBadForHighValue(id, low, high) {
-$('td#' + id).each(function(){
+function setClassToSpecificColumnBadForHighValue(classid, low, high) {
+$('td.' + classid).each(function(){
     var t = $(this);
     var val = parseInt( t.text(), 10 );
     if (val >= high) { t.addClass('bad'); }
