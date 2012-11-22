@@ -65,8 +65,10 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 		if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
 			|| clang_getCursorKind(cursor) == CXCursor_FunctionTemplate) {
 			std::vector<std::string> parentClasses; // empty
-			std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
-			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr);
+			const std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
+			const CXSourceRange range = clang_getCursorExtent(cursor);
+			const unsigned int line = getStartLine(range);
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
 			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;
@@ -80,9 +82,10 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			getParentClasses(cursor, &parentClasses);
 
 			std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
-
+			const CXSourceRange range = clang_getCursorExtent(cursor);
+			const int line = getStartLine(range);
 			// TODO: get ClassStat.
-			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr);
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
 			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;

@@ -52,9 +52,9 @@ ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 	return *classStat;
 }
 
-FuncStat* ClassStat::AddMethodStat(const std::string& className)
+FuncStat* ClassStat::AddMethodStat(const std::string& className, unsigned int line)
 {
-	FuncStat* stat = new FuncStat(className);
+	FuncStat* stat = new FuncStat(className, line);
 
 	m_methodStats.push_back(stat);
 	return stat;

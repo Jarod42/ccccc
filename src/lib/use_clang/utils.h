@@ -7,6 +7,7 @@
 #include <clang-c/Index.h>
 #include <string>
 
+unsigned int getStartLine(CXSourceRange range);
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
 
 std::string getStringAndDispose(CXString cxStr);
