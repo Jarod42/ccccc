@@ -12,11 +12,26 @@
 	CHECK_EQUAL((lhs).getMcCabeCyclomaticNumber(), (rhs).getMcCabeCyclomaticNumber());
 
 
+void InitHardCodedMingwPath(ccccc::Parameters& param)
+{
+	// Hard coded system headersHard coded
+	#define MINGWPATH "d:/Programs/mingw-4.6.1"
+	#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.6.1"
+
+	param.AddInclude(MINGWPATH "/include");
+	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++");
+	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++/mingw32");
+	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++/backward");
+	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include");
+	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include-fixed");
+}
+
+
 TEST(FILE_TEST_C)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	param.InitHardCodedMingwPath();
+	InitHardCodedMingwPath(param);
 	const std::string filename = "../../../samples/test.c";
 	param.AddFile(filename);
 
@@ -44,7 +59,7 @@ TEST(FILE_TEST_H)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	param.InitHardCodedMingwPath();
+	InitHardCodedMingwPath(param);
 	const std::string filename = "../../../samples/test.h";
 
 	param.AddFile(filename);
@@ -62,7 +77,7 @@ TEST(FILE_TEST_INCLUDE_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	param.InitHardCodedMingwPath();
+	InitHardCodedMingwPath(param);
 	const std::string filename = "../../../samples/test_include.cpp";
 
 	param.AddInclude("../../../samples");
@@ -82,7 +97,7 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	param.InitHardCodedMingwPath();
+	InitHardCodedMingwPath(param);
 	const std::string filename = "../../../samples/namespace.cpp";
 
 	//param.AddInclude("../../../samples");

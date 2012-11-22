@@ -104,7 +104,6 @@ int main(int argc, char* argv[])
 {
 	ccccc::Parameters params;
 
-	params.InitHardCodedMingwPath();
 	params.Parse(argc, argv);
 	ccccc::AllStat allStat;
 
