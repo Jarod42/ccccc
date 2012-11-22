@@ -1,13 +1,11 @@
 
 #include "parameters.h"
 
-
 #include "../../generatedsrc/cmdline.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #include "../../generatedsrc/cmdline.cpp"
 #pragma GCC diagnostic pop
-
 
 namespace ccccc
 {
@@ -34,7 +32,6 @@ void Parameters::InitHardCodedMingwPath(std::string mingwRootPath)
 	AddInclude(mingwRootPath + MINGW_LIB_PATH"/include-fixed");
 }
 
-
 void Parameters::Parse(int argc, char** argv)
 {
 	gengetopt_args_info args_info;
@@ -49,7 +46,7 @@ void Parameters::Parse(int argc, char** argv)
 	/* initialize the parameters structure */
 	struct cmdline_parser_params *params = cmdline_parser_params_create();
 
-	if (args_info.option_file_given) {
+	for (unsigned int i = 0; i != args_info.option_file_given; ++i) {
 		/*
 		  override command line options,
 		  but do not initialize args_info, check for required options.
@@ -59,9 +56,8 @@ void Parameters::Parse(int argc, char** argv)
 		*/
 		params->initialize = 0;
 		params->override = 1;
-
 		/* call the config file parser */
-		if (cmdline_parser_config_file(args_info.option_file_arg, &args_info, params) != 0) {
+		if (cmdline_parser_config_file(args_info.option_file_arg[i], &args_info, params) != 0) {
 			cmdline_parser_free (&args_info); /* release allocated memory */
 			exit(1);
 		}
