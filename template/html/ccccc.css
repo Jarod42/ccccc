@@ -13,3 +13,6 @@ th { background:aqua}
 
 table.tablesorter tbody td.bad { background: red; font-weight:bold;}
 table.tablesorter tbody td.warning { background: yellow; font-weight:bold;}
+
+span.bad {background: red; font-weight:bold; }
+span.warning {background: yellow; font-weight:bold; }
