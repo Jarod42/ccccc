@@ -10,6 +10,15 @@ std::string getStringAndDispose(CXString cxStr)
 	return str;
 }
 
+unsigned int getStartLine(CXSourceRange range)
+{
+	CXSourceLocation start = clang_getRangeStart(range);
+	unsigned int startLine;
+	clang_getExpansionLocation(start, NULL, &startLine, NULL, NULL);
+
+	return startLine;
+}
+
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine)
 {
 	CXSourceLocation start = clang_getRangeStart(range);

@@ -30,7 +30,7 @@ public:
 	const ClassStat* getClassByName(const char *funcNameId) const;
 
 private:
-	FuncStat* AddMethodStat(const std::string& funcname);
+	FuncStat* AddMethodStat(const std::string& funcname, unsigned int line);
 	ClassStat& GetOrCreateClass(const std::string& funcname);
 private:
 	std::string m_name;

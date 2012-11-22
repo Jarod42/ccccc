@@ -74,10 +74,10 @@ ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 	return *classStat;
 }
 
-FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname)
+FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line)
 {
 	if (classeNames.empty()) {
-		FuncStat* stat = new FuncStat(funcname);
+		FuncStat* stat = new FuncStat(funcname, line);
 
 		m_funcStats.push_back(stat);
 		return stat;
@@ -86,5 +86,5 @@ FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames
 	for (size_t i = 1; i != classeNames.size(); ++i) {
 		classStat = &classStat->GetOrCreateClass(classeNames[i]);
 	}
-	return classStat->AddMethodStat(funcname);
+	return classStat->AddMethodStat(funcname, line);
 }

@@ -37,7 +37,7 @@ public:
 	ClassStatConstIterator getClass_end() const { return m_classes.end(); }
 	const ClassStat* getClassByName(const char *name) const;
 private:
-	FuncStat* AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname);
+	FuncStat* AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line);
 	NamespaceStat& GetOrCreateNamespace(const std::string& name);
 	ClassStat& GetOrCreateClass(const std::string& className);
 private:

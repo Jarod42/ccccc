@@ -13,10 +13,10 @@
 <body onload="onDocLoaded();">
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<tr><th>Filename</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th>LOCphy</th><th>LOCpro</th><th>LOCcom</th><th>LOCbl</th><th>MVG</th></tr>
+<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th>LOCphy</th><th>LOCpro</th><th>LOCcom</th><th>LOCbl</th><th>MVG</th></tr>
 </thead>
 <tbody>
-{{#InFiles}}{{#InFunctions}}	<tr><td>{{filename:h}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td class="LOCphy">{{LOCphy}}</td><td class="LOCpro">{{LOCpro}}</td><td class="LOCcom">{{LOCcom}}</td><td class="LOCbl">{{LOCbl}}</td><td class="MVG">{{MVG}}</td></tr>
+{{#InFiles}}{{#InFunctions}}	<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td class="LOCphy">{{LOCphy}}</td><td class="LOCpro">{{LOCpro}}</td><td class="LOCcom">{{LOCcom}}</td><td class="LOCbl">{{LOCbl}}</td><td class="MVG">{{MVG}}</td></tr>
 {{/InFunctions}}{{/InFiles}}</tbody>
 </table>
 </body>

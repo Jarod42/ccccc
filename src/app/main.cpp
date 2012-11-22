@@ -177,6 +177,7 @@ void feedDict(const FuncStat& funcStat, const std::string& namespacesName, const
 	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("InFunctions");
 
 	sectionDict.SetValue("funcName", funcStat.getName());
+	sectionDict.SetIntValue("lineDefinition", funcStat.getLineDefinition());
 	sectionDict.SetIntValue("LOCphy", funcStat.getStat().getLineOfCode_physic());
 	sectionDict.SetIntValue("LOCpro", funcStat.getStat().getLineOfCode_program());
 	sectionDict.SetIntValue("LOCcom", funcStat.getStat().getLineOfCode_comment());
