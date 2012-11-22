@@ -8,6 +8,11 @@
 #include "utils.h"
 #include <vector>
 
+namespace ccccc
+{
+namespace use_clang
+{
+
 namespace
 {
 
@@ -116,3 +121,6 @@ void FileStatTool::Compute(const CXTranslationUnit& tu, FileStat* stat)
 	ClientData clientData(tu, stat);
 	clang_visitChildren(cursor, FileCursorVisitor, &clientData);
 }
+
+} // namespace use_clang
+} // namespace ccccc

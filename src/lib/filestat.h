@@ -9,9 +9,16 @@
 #include <string>
 #include <vector>
 
+namespace ccccc
+{
+namespace use_clang
+{
+	class FileStatTool;
+}
+
 class FileStat
 {
-	friend class FileStatTool;
+	friend class use_clang::FileStatTool;
 public:
 	typedef NamespaceStat::NamespaceStatConstIterator NamespaceStatConstIterator;
 	typedef NamespaceStat::ClassStatConstIterator ClassStatConstIterator;
@@ -42,6 +49,9 @@ private:
 	LocalStat m_stat;
 	NamespaceStat m_root;
 };
+
+} // namespace ccccc
+
 
 
 #endif // FILE_STAT_H

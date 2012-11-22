@@ -6,7 +6,7 @@
 
 #include <ctemplate/template.h>
 
-void feedDict(const FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("InFunctions");
 
@@ -22,7 +22,7 @@ void feedDict(const FuncStat& funcStat, const std::string& namespacesName, const
 	sectionDict.SetValue("classesName", classesName);
 }
 
-void feedDict(const ClassStat& classStat, const std::string& namespacesName, std::string classesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesName, std::string classesName, ctemplate::TemplateDictionary* dict)
 {
 	if (classesName.empty() == false) {
 		classesName += "::";
@@ -32,12 +32,12 @@ void feedDict(const ClassStat& classStat, const std::string& namespacesName, std
 	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
 		feedDict(classStat.getMethodStat(i), namespacesName, classesName, dict);
 	}
-	for (ClassStat::ClassStatConstIterator it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
+	for (ccccc::ClassStat::ClassStatConstIterator it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
 		feedDict(*it->second, namespacesName, classesName, dict);
 	}
 }
 
-void feedDict(const NamespaceStat& namespaceStat, std::string namespacesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesName, ctemplate::TemplateDictionary* dict)
 {
 	if (namespacesName.empty() == false) {
 		namespacesName += "::";
@@ -48,27 +48,27 @@ void feedDict(const NamespaceStat& namespaceStat, std::string namespacesName, ct
 		namespacesName += namespaceStat.getName();
 	}
 	for (unsigned int i = 0; i != namespaceStat.getFunctionCount(); ++i) {
-		const FuncStat& funcStat = namespaceStat.getFuncStat(i);
+		const ccccc::FuncStat& funcStat = namespaceStat.getFuncStat(i);
 		feedDict(funcStat, namespacesName, "", dict);
 	}
-	for (NamespaceStat::ClassStatConstIterator it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
+	for (ccccc::NamespaceStat::ClassStatConstIterator it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
 		feedDict(*it->second, namespacesName, "", dict);
 	}
-	for (NamespaceStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
+	for (ccccc::NamespaceStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, namespacesName, dict);
 	}
 }
 
-void feedDict(const FileStat& fileStat, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict)
 {
 	dict->SetValue("filename", fileStat.getFilename());
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", dict);
 	}
-	for (FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
+	for (ccccc::FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, "", dict);
 	}
-	for (FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
+	for (ccccc::FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
 		feedDict(*it->second, "", "", dict);
 	}
 }
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 	dict.SetValue("cccccRoot", getRootPath(exePath));
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
 		ctemplate::TemplateDictionary* fileDict = dict.AddSectionDictionary("InFiles");
-		const FileStat& filestat = allStat.getFileStat(i);
+		const ccccc::FileStat& filestat = allStat.getFileStat(i);
 
 		feedDict(filestat, fileDict);
 	}

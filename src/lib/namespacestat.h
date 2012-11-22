@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+namespace ccccc
+{
+
 class FuncStat;
 class ClassStat;
 
@@ -48,5 +51,6 @@ private:
 	NamespaceStat* m_parent;
 };
 
+} // namespace ccccc
 
 #endif // NAMESPACE_STAT_H

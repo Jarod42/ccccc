@@ -1,6 +1,8 @@
 
 #include "filestat.h"
 
+namespace ccccc
+{
 
 FileStat::FileStat(const std::string& filename) :
 	m_filename(filename),
@@ -20,3 +22,5 @@ FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames, 
 	}
 	return namespaceStat->AddFuncStat(classeNames, funcname, line);
 }
+
+} // namespace ccccc
