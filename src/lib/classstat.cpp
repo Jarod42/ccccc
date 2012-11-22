@@ -20,7 +20,7 @@ ClassStat::~ClassStat()
 	}
 }
 
-const FuncStat* ClassStat::getMethodStatByName(const char *funcNameId) const
+const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 {
 	for (size_t i = 0; i != m_methodStats.size(); ++i) {
 		if (m_methodStats[i]->getName().compare(funcNameId) == 0) {
@@ -30,7 +30,7 @@ const FuncStat* ClassStat::getMethodStatByName(const char *funcNameId) const
 	return NULL;
 }
 
-const ClassStat* ClassStat::getClassByName(const char *className) const
+const ClassStat* ClassStat::getClassByName(const char* className) const
 {
 	ClassStatConstIterator it = m_classes.find(className);
 

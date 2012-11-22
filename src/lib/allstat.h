@@ -15,7 +15,7 @@ class AllStat
 public:
 	~AllStat();
 
-	void Compute(const Parameters &param);
+	void Compute(const Parameters& param);
 
 	unsigned int getFileCount() const { return m_filesStat.size(); }
 	const FileStat& getFileStat(unsigned int index) const { return *m_filesStat[index]; }

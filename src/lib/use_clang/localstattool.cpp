@@ -50,7 +50,7 @@ void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, co
 
 void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LocalStat* stat)
 {
-	CXToken *tokens;
+	CXToken* tokens;
 	unsigned numToken;
 	clang_tokenize(tu, clang_getCursorExtent(cursor), &tokens, &numToken);
 

@@ -11,10 +11,10 @@ LocalStat::LocalStat() :
 {}
 
 LocalStat::LocalStat(unsigned int lineOfCode_physic,
-					unsigned int lineOfCode_program,
-					unsigned int lineOfCode_blank,
-					unsigned int lineOfCode_comment,
-					unsigned int mcCabeCyclomaticNumber) :
+					 unsigned int lineOfCode_program,
+					 unsigned int lineOfCode_blank,
+					 unsigned int lineOfCode_comment,
+					 unsigned int mcCabeCyclomaticNumber) :
 	lineOfCode_physic(lineOfCode_physic),
 	lineOfCode_program(lineOfCode_program),
 	lineOfCode_blank(lineOfCode_blank),
