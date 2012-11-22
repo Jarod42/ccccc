@@ -2,6 +2,11 @@
 
 #include "utils.h"
 
+namespace ccccc
+{
+namespace use_clang
+{
+
 std::string getStringAndDispose(CXString cxStr)
 {
 	std::string str = clang_getCString(cxStr);
@@ -57,3 +62,6 @@ bool isValid(CXTranslationUnit tu)
 
 	return cursorStartLine != 0 && cursorStartLine <= cursorEndLine;
 }
+
+} // namespace use_clang
+} // namespace ccccc
