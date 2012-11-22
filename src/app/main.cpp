@@ -110,7 +110,9 @@ int main(int argc, char* argv[])
 	allStat.Compute(params);
 
 	ctemplate::TemplateDictionary dict("root");
+	const std::string templateFilename = "template/html/template.tpl";
 
+	dict.SetFilename(templateFilename);
 	std::string exePath = normalizePath(getExePath());
 	dict.SetValue("cccccPath", exePath);
 	dict.SetValue("cccccRoot", getRootPath(exePath));
@@ -122,7 +124,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::string output;
-	ctemplate::ExpandTemplate("template/html/template.tpl", ctemplate::DO_NOT_STRIP, &dict, &output);
+	ctemplate::ExpandTemplate(templateFilename, ctemplate::DO_NOT_STRIP, &dict, &output);
 	std::cout << output;
 	return 0;
 }
