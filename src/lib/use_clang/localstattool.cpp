@@ -9,6 +9,11 @@
 
 #include <assert.h>
 
+namespace ccccc
+{
+namespace use_clang
+{
+
 static CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
 {
 	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
@@ -89,3 +94,6 @@ void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor,
 	stat->lineOfCode_program = lineOfCode_physic[1];
 	stat->lineOfCode_blank = lineOfCode_physic[2];
 }
+
+} // namespace use_clang
+} // namespace ccccc

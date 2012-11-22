@@ -3,6 +3,9 @@
 #include "classstat.h"
 #include "funcstat.h"
 
+namespace ccccc
+{
+
 ClassStat::ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent) :
 	m_name(name),
 	m_namespaceParent(namespaceParent),
@@ -59,3 +62,5 @@ FuncStat* ClassStat::AddMethodStat(const std::string& className, unsigned int li
 	m_methodStats.push_back(stat);
 	return stat;
 }
+
+} // namespace ccccc

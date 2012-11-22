@@ -2,11 +2,15 @@
 #ifndef LOCAL_STAT_H
 #define LOCAL_STAT_H
 
-class LocalStatTool;
-
+namespace ccccc
+{
+namespace use_clang
+{
+	class LocalStatTool;
+}
 class LocalStat
 {
-	friend class LocalStatTool;
+	friend class use_clang::LocalStatTool;
 public:
 	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
 	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
@@ -29,5 +33,7 @@ private:
 	unsigned int lineOfCode_comment;     // LOCcom
 	unsigned int mcCabeCyclomaticNumber; // MVG
 };
+
+} // namespace ccccc
 
 #endif // LOCAL_STAT_H

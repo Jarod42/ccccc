@@ -2,6 +2,9 @@
 
 #include "localstat.h"
 
+namespace ccccc
+{
+
 LocalStat::LocalStat() :
 	lineOfCode_physic(0),
 	lineOfCode_program(0),
@@ -21,3 +24,5 @@ LocalStat::LocalStat(unsigned int lineOfCode_physic,
 	lineOfCode_comment(lineOfCode_comment),
 	mcCabeCyclomaticNumber(mcCabeCyclomaticNumber)
 {}
+
+} // namespace ccccc

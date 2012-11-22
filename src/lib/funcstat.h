@@ -7,9 +7,16 @@
 #include "localstat.h"
 #include <string>
 
+namespace ccccc
+{
+namespace use_clang
+{
+	class FuncStatTool;
+}
+
 class FuncStat
 {
-	friend class FuncStatTool;
+	friend class use_clang::FuncStatTool;
 public:
 	FuncStat(const std::string& funcname, unsigned int line);
 
@@ -23,5 +30,6 @@ private:
 	int m_line;
 };
 
+} // namespace ccccc
 
 #endif // FUNC_STAT_H

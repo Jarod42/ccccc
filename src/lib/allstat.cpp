@@ -57,7 +57,7 @@ void AllStat::Compute(const Parameters& param)
 		if (tu && isValid(tu)) {
 			FileStat* fileStat = new FileStat(filename);
 			m_filesStat.push_back(fileStat);
-			FileStatTool::Compute(tu, fileStat);
+			use_clang::FileStatTool::Compute(tu, fileStat);
 		} else {
 			// some errors (file not found)
 
@@ -67,4 +67,4 @@ void AllStat::Compute(const Parameters& param)
 	clang_disposeIndex(index);
 }
 
-}
+} // namespace ccccc
