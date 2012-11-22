@@ -20,13 +20,13 @@ void Parameters::Parse(int argc, char** argv)
 
 	//cmdline_parser_init(&args_info);
 	/* let's call our cmdline parser */
-	if (cmdline_parser (argc, argv, &args_info) != 0) {
-		cmdline_parser_free (&args_info); /* release allocated memory */
+	if (cmdline_parser(argc, argv, &args_info) != 0) {
+		cmdline_parser_free(&args_info);  /* release allocated memory */
 		exit(1);
 	}
 
 	/* initialize the parameters structure */
-	struct cmdline_parser_params *params = cmdline_parser_params_create();
+	struct cmdline_parser_params* params = cmdline_parser_params_create();
 
 	for (unsigned int i = 0; i != args_info.option_file_given; ++i) {
 		/*
@@ -40,7 +40,7 @@ void Parameters::Parse(int argc, char** argv)
 		params->override = 1;
 		/* call the config file parser */
 		if (cmdline_parser_config_file(args_info.option_file_arg[i], &args_info, params) != 0) {
-			cmdline_parser_free (&args_info); /* release allocated memory */
+			cmdline_parser_free(&args_info);  /* release allocated memory */
 			exit(1);
 		}
 	}
@@ -64,7 +64,7 @@ void Parameters::Parse(int argc, char** argv)
 		SetPch(args_info.pch_arg);
 	}
 
-	cmdline_parser_free (&args_info); /* release allocated memory */
+	cmdline_parser_free(&args_info);  /* release allocated memory */
 }
 
 }

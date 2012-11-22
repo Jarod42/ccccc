@@ -55,7 +55,7 @@ void AllStat::Compute(const Parameters& param)
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
 		if (tu && isValid(tu)) {
-			FileStat *fileStat = new FileStat(filename);
+			FileStat* fileStat = new FileStat(filename);
 			m_filesStat.push_back(fileStat);
 			FileStatTool::Compute(tu, fileStat);
 		} else {

@@ -13,7 +13,7 @@ std::string getExePath()
 	HMODULE hModule = GetModuleHandle(NULL);
 
 	if (hModule != NULL) {
-		GetModuleFileName(hModule, ownPth, sizeof (ownPth));
+		GetModuleFileName(hModule, ownPth, sizeof(ownPth));
 	}
 	return dirname(ownPth);
 }

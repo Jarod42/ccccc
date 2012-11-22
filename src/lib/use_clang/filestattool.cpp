@@ -8,7 +8,8 @@
 #include "utils.h"
 #include <vector>
 
-namespace {
+namespace
+{
 
 class ClientData
 {
@@ -22,7 +23,7 @@ public:
 	const char* getFilename() const { return m_stat->getFilename().c_str(); }
 	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
 
-	void PushNamespace(const std::string &name) { namespaceNames.push_back(name);}
+	void PushNamespace(const std::string& name) { namespaceNames.push_back(name);}
 	void PopNamespace() { namespaceNames.pop_back(); }
 	const std::vector<std::string>& GetNamespaceNames() const { return namespaceNames; }
 private:
@@ -34,13 +35,13 @@ private:
 bool IsAKindOfClass(CXCursor cursor)
 {
 	return clang_getCursorKind(cursor) == CXCursor_StructDecl
-	|| clang_getCursorKind(cursor) == CXCursor_ClassDecl
-	|| clang_getCursorKind(cursor) == CXCursor_ClassTemplate
-	|| clang_getCursorKind(cursor) == CXCursor_ClassTemplatePartialSpecialization;
+		   || clang_getCursorKind(cursor) == CXCursor_ClassDecl
+		   || clang_getCursorKind(cursor) == CXCursor_ClassTemplate
+		   || clang_getCursorKind(cursor) == CXCursor_ClassTemplatePartialSpecialization;
 }
 
 
-void getParentClasses(CXCursor cursor, std::vector<std::string> *parentClasses)
+void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 {
 	for (CXCursor parent = clang_getCursorSemanticParent(cursor); IsAKindOfClass(parent); parent = clang_getCursorSemanticParent(parent)) {
 		std::string parentStr = getStringAndDispose(clang_getCursorDisplayName(parent));
@@ -73,11 +74,11 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;
 		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
-		|| clang_getCursorKind(cursor) == CXCursor_Constructor
-		|| clang_getCursorKind(cursor) == CXCursor_Destructor
-		|| clang_getCursorKind(cursor) == CXCursor_ConversionFunction) {
-		//CXCursor_ClassTemplate
-		//CXCursor_ClassTemplatePartialSpecialization
+				   || clang_getCursorKind(cursor) == CXCursor_Constructor
+				   || clang_getCursorKind(cursor) == CXCursor_Destructor
+				   || clang_getCursorKind(cursor) == CXCursor_ConversionFunction) {
+			//CXCursor_ClassTemplate
+			//CXCursor_ClassTemplatePartialSpecialization
 			std::vector<std::string> parentClasses;
 			getParentClasses(cursor, &parentClasses);
 

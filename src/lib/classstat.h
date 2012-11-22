@@ -22,12 +22,12 @@ public:
 	const std::string& getName() const { return m_name; }
 	unsigned int getMethodCount() const { return m_methodStats.size(); }
 	const FuncStat& getMethodStat(unsigned int index) const { return *m_methodStats[index]; }
-	const FuncStat* getMethodStatByName(const char *funcNameId) const;
+	const FuncStat* getMethodStatByName(const char* funcNameId) const;
 
 	unsigned int getClassCount() const { return m_classes.size(); }
 	ClassStatConstIterator getClass_begin() const { return m_classes.begin(); }
 	ClassStatConstIterator getClass_end() const { return m_classes.end(); }
-	const ClassStat* getClassByName(const char *funcNameId) const;
+	const ClassStat* getClassByName(const char* funcNameId) const;
 
 private:
 	FuncStat* AddMethodStat(const std::string& funcname, unsigned int line);

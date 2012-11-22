@@ -20,7 +20,7 @@ NamespaceStat::~NamespaceStat()
 	}
 }
 
-const FuncStat* NamespaceStat::getFuncStatByName(const char *funcNameId) const
+const FuncStat* NamespaceStat::getFuncStatByName(const char* funcNameId) const
 {
 	for (size_t i = 0; i != m_funcStats.size(); ++i) {
 		if (m_funcStats[i]->getName().compare(funcNameId) == 0) {
@@ -30,7 +30,7 @@ const FuncStat* NamespaceStat::getFuncStatByName(const char *funcNameId) const
 	return NULL;
 }
 
-const NamespaceStat* NamespaceStat::getNamespaceByName(const char *namespaceName) const
+const NamespaceStat* NamespaceStat::getNamespaceByName(const char* namespaceName) const
 {
 	NamespaceStatConstIterator it = m_namespaces.find(namespaceName);
 
@@ -40,7 +40,7 @@ const NamespaceStat* NamespaceStat::getNamespaceByName(const char *namespaceName
 	return NULL;
 }
 
-const ClassStat* NamespaceStat::getClassByName(const char *ClassName) const
+const ClassStat* NamespaceStat::getClassByName(const char* ClassName) const
 {
 	ClassStatConstIterator it = m_classes.find(ClassName);
 
@@ -82,7 +82,7 @@ FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames
 		m_funcStats.push_back(stat);
 		return stat;
 	}
-	ClassStat *classStat = &GetOrCreateClass(classeNames[0]);
+	ClassStat* classStat = &GetOrCreateClass(classeNames[0]);
 	for (size_t i = 1; i != classeNames.size(); ++i) {
 		classStat = &classStat->GetOrCreateClass(classeNames[i]);
 	}

@@ -14,13 +14,13 @@ public:
 	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
 	unsigned int getMcCabeCyclomaticNumber() const { return mcCabeCyclomaticNumber; }
 
-//private:
+	//private:
 	LocalStat();
 	LocalStat(unsigned int lineOfCode_physic,
-				unsigned int lineOfCode_program,
-				unsigned int lineOfCode_blank,
-				unsigned int lineOfCode_comment,
-				unsigned int mcCabeCyclomaticNumber);
+			  unsigned int lineOfCode_program,
+			  unsigned int lineOfCode_blank,
+			  unsigned int lineOfCode_comment,
+			  unsigned int mcCabeCyclomaticNumber);
 
 private:
 	unsigned int lineOfCode_physic;      // LOCphy
