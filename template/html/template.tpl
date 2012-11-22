@@ -2,13 +2,13 @@
 <html>
 <head>
 <title>CCCCCC report</title>
-<link rel="stylesheet" href="3rd/__jquery.tablesorter/themes/blue/style.css" type="text/css" media="print, projection, screen" />
-<link rel="stylesheet" type="text/css" href="template/html/ccccc.css" media="all" />
-<script type="text/javascript" src="3rd/jquery.js"></script>
-<script type="text/javascript" src="3rd/__jquery.tablesorter/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="3rd/jquery.tablesorter.widgets.js"></script>
-<script type="text/javascript" src="3rd/dragtable.js"></script>
-<script type="text/javascript" src="template/html/ccccc.js"></script>
+<link rel="stylesheet" href="file:///{{cccccRoot:h}}/3rd/__jquery.tablesorter/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" type="text/css" href="file:///{{cccccRoot:h}}template/html/ccccc.css" media="all" />
+<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/jquery.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/__jquery.tablesorter/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/jquery.tablesorter.widgets.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/dragtable.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot:h}}/template/html/ccccc.js"></script>
 </head>
 <body onload="onDocLoaded();">
 <table width="100%" id="myTable" class="tablesorter draggable">
