@@ -26,6 +26,7 @@ Number of linearly independent paths through a program's source code.<br/> It is
 </li>
 </ul>
 <h2>Report.</h2>
+<em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header!
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
 <tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th>LOCphy</th><th>LOCpro</th><th>LOCcom</th><th>LOCbl</th><th>MVG</th></tr>
