@@ -1,0 +1,22 @@
+3rd Parties:
+
++premake4:
+http://industriousone.com/premake
+
++gengetopt:
+http://www.gnu.org/software/gengetopt/gengetopt.html
+
++clang:
+http://clang.llvm.org/
+
++ctemplate:
+http://code.google.com/p/ctemplate/
+
++jquery:
+http://jquery.com/
+
++jquery.tablesorter + widgets extension:
+http://tablesorter.com/docs/
+
++dragtable.js:
+http://www.danvk.org/wp/dragtable/
