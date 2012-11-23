@@ -27,7 +27,7 @@
 
 void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
 {
-	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("InFunctions");
+	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("ForEachFunctions");
 
 	sectionDict.SetValue("funcName", funcStat.getName());
 	sectionDict.SetIntValue("lineDefinition", funcStat.getLineDefinition());
@@ -80,15 +80,17 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesN
 
 void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict)
 {
-	dict->SetValue("filename", fileStat.getFilename());
+	ctemplate::TemplateDictionary* sectionDict = dict->AddSectionDictionary("ForEachFiles");
+
+	sectionDict->SetValue("filename", fileStat.getFilename());
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
-		feedDict(fileStat.getFuncStat(i), "", "", dict);
+		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}
 	for (ccccc::FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
-		feedDict(*it->second, "", dict);
+		feedDict(*it->second, "", sectionDict);
 	}
 	for (ccccc::FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
-		feedDict(*it->second, "", "", dict);
+		feedDict(*it->second, "", "", sectionDict);
 	}
 }
 
@@ -128,18 +130,19 @@ int main(int argc, char* argv[])
 
 	allStat.Compute(params);
 
+	const std::string cccccPath = normalizePath(getExePath());
+	const std::string cccccRoot= getRootPath(cccccPath);
 	ctemplate::TemplateDictionary dict("root");
-	const std::string templateFilename = "template/html/template.tpl";
+	const std::string templateFilename = cccccRoot + "/template/html/template.tpl";
 
 	dict.SetFilename(templateFilename);
-	std::string exePath = normalizePath(getExePath());
-	dict.SetValue("cccccPath", exePath);
-	dict.SetValue("cccccRoot", getRootPath(exePath));
+	dict.SetValue("cccccPath", cccccPath);
+	dict.SetValue("cccccRoot", cccccRoot);
+
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
-		ctemplate::TemplateDictionary* fileDict = dict.AddSectionDictionary("InFiles");
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
 
-		feedDict(filestat, fileDict);
+		feedDict(filestat, &dict);
 	}
 
 	std::string output;
