@@ -29,10 +29,10 @@ Number of linearly independent paths through a program's source code.<br/> It is
 <em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header!
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th>LOCphy</th><th>LOCpro</th><th>LOCcom</th><th>LOCbl</th><th>MVG</th></tr>
+<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th></tr>
 </thead>
 <tbody>
-{{#ForEachFiles}}{{#ForEachFunctions}}	<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td class="LOCphy">{{LOCphy}}</td><td class="LOCpro">{{LOCpro}}</td><td class="LOCcom">{{LOCcom}}</td><td class="LOCbl">{{LOCbl}}</td><td class="MVG">{{MVG}}</td></tr>
+{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
 </body>

@@ -1,19 +1,31 @@
 function setClassToSpecificColumnBadForLowValue(classid, low, high) {
-$('td.' + classid).each(function(){
-    var t = $(this);
-    var val = parseInt( t.text(), 10 );
-    if (val <= low) { t.addClass('bad'); }
-    else if (val <= high) { t.addClass('warning'); }
-});
+	var colNumber = -1;
+	$.each($('th.' + classid),function(idx,_val) {
+    var table = $(this).parent().parent();
+    colNumber = 1 + $(this).parent("tr").children().index($(this));
+	});
+	$('table tr').each(function() {
+		var tr = $(this)
+		var td = rows.find("td:nth-child(" + (colNumber + 1) + ")")
+		var val = parseInt( td.text(), 10 );
+		if (val <= low) { td.addClass('bad'); }
+		else if (val <= high) { td.addClass('warning'); }
+	});
 }
 
 function setClassToSpecificColumnBadForHighValue(classid, low, high) {
-$('td.' + classid).each(function(){
-    var t = $(this);
-    var val = parseInt( t.text(), 10 );
-    if (val >= high) { t.addClass('bad'); }
-    else if (val >= low) { t.addClass('warning'); }
-});
+	var colNumber = -1;
+	$.each($('th.' + classid),function(idx,_val) {
+    var table = $(this).parent().parent();
+    colNumber = 1 + $(this).parent("tr").children().index($(this));
+	});
+	$('table tr').each(function() {
+		var tr = $(this)
+		var td = tr.find("td:nth-child(" + (colNumber) + ")")
+		var val = parseInt( td.text(), 10 );
+		if (val >= high) { td.addClass('bad'); }
+		else if (val >= low) { td.addClass('warning'); }
+	});
 }
 
 function setClassToColumn() {
