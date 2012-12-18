@@ -59,16 +59,16 @@ TEST(FILE_TEST_C)
 	const unsigned int expectedFileCount = 1;
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LocalStat expectedFileStat(24, 13, 4, 8, 2);
-	CHECK_EQUAL_STAT(expectedFileStat, fileStat.getStat());
+	ccccc::LineCount expectedFileStat(24, 13, 4, 8, 2);
+	CHECK_EQUAL_STAT(expectedFileStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 
 	const unsigned int expectedFuncCount = 1;
 	CHECK_EQUAL(expectedFuncCount, fileStat.getFunctionCount());
 
 	const ccccc::FuncStat& funcStat = fileStat.getFuncStat(0);
-	ccccc::LocalStat expectedFuncStat(11, 9, 1, 2, 2);
-	CHECK_EQUAL_STAT(expectedFuncStat, funcStat.getStat());
+	ccccc::LineCount expectedFuncStat(11, 9, 1, 2, 2);
+	CHECK_EQUAL_STAT(expectedFuncStat, funcStat.getLineCount());
 
 	const ccccc::FuncStat* funcStatName = fileStat.getFuncStatByName("main(int, char **)");
 	CHECK_EQUAL(&funcStat, funcStatName);
@@ -87,8 +87,8 @@ TEST(FILE_TEST_H)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LocalStat expectedStat(12, 8, 4, 0, 1);
-	CHECK_EQUAL_STAT(expectedStat, fileStat.getStat());
+	ccccc::LineCount expectedStat(12, 8, 4, 0, 1);
+	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
 
@@ -107,8 +107,8 @@ TEST(FILE_TEST_INCLUDE_CPP)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LocalStat expectedStat(23, 14, 4, 6, 2);
-	CHECK_EQUAL_STAT(expectedStat, fileStat.getStat());
+	ccccc::LineCount expectedStat(23, 14, 4, 6, 2);
+	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
 
@@ -127,12 +127,12 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LocalStat expectedStat(4, 4, 0, 0, 1);
+	ccccc::LineCount expectedStat(4, 4, 0, 0, 1);
 	CHECK(fileStat.getFuncStatByName("sum(int, int)") == NULL);
 	const ccccc::NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
 	CHECK(namespaceStat != NULL);
 	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
 	CHECK(funcStat != NULL);
-	CHECK_EQUAL_STAT(expectedStat, funcStat->getStat());
+	CHECK_EQUAL_STAT(expectedStat, funcStat->getLineCount());
 }
 

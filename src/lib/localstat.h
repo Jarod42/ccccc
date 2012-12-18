@@ -18,8 +18,8 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOCAL_STAT_H
-#define LOCAL_STAT_H
+#ifndef LINECOUNT_H
+#define LINECOUNT_H
 
 namespace ccccc
 {
@@ -27,7 +27,8 @@ namespace use_clang
 {
 	class LocalStatTool;
 }
-class LocalStat
+
+class LineCount
 {
 	friend class use_clang::LocalStatTool;
 public:
@@ -38,8 +39,8 @@ public:
 	unsigned int getMcCabeCyclomaticNumber() const { return mcCabeCyclomaticNumber; }
 
 	//private:
-	LocalStat();
-	LocalStat(unsigned int lineOfCode_physic,
+	LineCount();
+	LineCount(unsigned int lineOfCode_physic,
 			  unsigned int lineOfCode_program,
 			  unsigned int lineOfCode_blank,
 			  unsigned int lineOfCode_comment,
@@ -55,4 +56,4 @@ private:
 
 } // namespace ccccc
 
-#endif // LOCAL_STAT_H
+#endif // LINECOUNT_H

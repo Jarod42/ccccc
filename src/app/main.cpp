@@ -31,11 +31,11 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 
 	sectionDict.SetValue("funcName", funcStat.getName());
 	sectionDict.SetIntValue("lineDefinition", funcStat.getLineDefinition());
-	sectionDict.SetIntValue("LOCphy", funcStat.getStat().getLineOfCode_physic());
-	sectionDict.SetIntValue("LOCpro", funcStat.getStat().getLineOfCode_program());
-	sectionDict.SetIntValue("LOCcom", funcStat.getStat().getLineOfCode_comment());
-	sectionDict.SetIntValue("LOCbl", funcStat.getStat().getLineOfCode_blank());
-	sectionDict.SetIntValue("MVG", funcStat.getStat().getMcCabeCyclomaticNumber());
+	sectionDict.SetIntValue("LOCphy", funcStat.getLineCount().getLineOfCode_physic());
+	sectionDict.SetIntValue("LOCpro", funcStat.getLineCount().getLineOfCode_program());
+	sectionDict.SetIntValue("LOCcom", funcStat.getLineCount().getLineOfCode_comment());
+	sectionDict.SetIntValue("LOCbl", funcStat.getLineCount().getLineOfCode_blank());
+	sectionDict.SetIntValue("MVG", funcStat.getMcCabeCyclomaticNumber());
 
 	sectionDict.SetValue("namespacesName", namespacesName);
 	sectionDict.SetValue("classesName", classesName);
