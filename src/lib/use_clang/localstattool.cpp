@@ -37,7 +37,7 @@ static CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
 	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
 }
 
-void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token, LocalStat* stat)
+static void updateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token, unsigned int* mcCabeCyclomaticNumber)
 {
 	if (clang_getTokenKind(token) == CXToken_Keyword) {
 		CXString cxstr = clang_getTokenSpelling(tu, token);
@@ -47,7 +47,7 @@ void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, co
 
 		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {
 			if (str.compare(keywords[i]) == 0) {
-				++stat->mcCabeCyclomaticNumber;
+				++*mcCabeCyclomaticNumber;
 				break;
 			}
 		}
@@ -63,7 +63,7 @@ void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, co
 				CXCursor cursor = getCursor(tu, token);
 
 				if (clang_isDeclaration(clang_getCursorKind(cursor)) == false) { // && can be part of declaration in C++11
-					++stat->mcCabeCyclomaticNumber;
+					++*mcCabeCyclomaticNumber;
 				}
 				break;
 			}
@@ -71,7 +71,7 @@ void LocalStatTool::UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, co
 	}
 }
 
-void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LocalStat* stat)
+void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LineCount* lineCount)
 {
 	CXToken* tokens;
 	unsigned numToken;
@@ -79,7 +79,7 @@ void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor,
 
 	unsigned cursorStartLine, cursorEndLine;
 	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
-	stat->lineOfCode_physic = cursorEndLine - cursorStartLine + 1;
+	lineCount->lineOfCode_physic = cursorEndLine - cursorStartLine + 1;
 
 	assert(cursorStartLine != 0);
 	// com, loc, blankLine
@@ -87,7 +87,7 @@ void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor,
 	unsigned int lineOfCode_physic[3] = {0, 0, 0};
 	for (unsigned i = 0; i != numToken; ++i) {
 		unsigned startLine, endLine;
-		LocalStatTool::UpdateMcCabeCyclomaticNumber(tu, tokens[i], stat);
+		updateMcCabeCyclomaticNumber(tu, tokens[i], &lineCount->mcCabeCyclomaticNumber);
 		getStartEndLine(clang_getTokenExtent(tu, tokens[i]), &startLine, &endLine);
 		unsigned int type = (clang_getTokenKind(tokens[i]) == CXToken_Comment) ? 0 : 1;
 
@@ -108,9 +108,9 @@ void LocalStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor,
 		lastLine[type] = endLine;
 	}
 	clang_disposeTokens(tu, tokens, numToken);
-	stat->lineOfCode_comment = lineOfCode_physic[0];
-	stat->lineOfCode_program = lineOfCode_physic[1];
-	stat->lineOfCode_blank = lineOfCode_physic[2];
+	lineCount->lineOfCode_comment = lineOfCode_physic[0];
+	lineCount->lineOfCode_program = lineOfCode_physic[1];
+	lineCount->lineOfCode_blank = lineOfCode_physic[2];
 }
 
 } // namespace use_clang

@@ -32,9 +32,7 @@ namespace use_clang
 class LocalStatTool
 {
 public:
-	static void Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LocalStat* stat);
-private:
-	static void UpdateMcCabeCyclomaticNumber(const CXTranslationUnit& tu, const CXToken& token, LocalStat* stat);
+	static void Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LineCount* lineCount);
 };
 
 } // namespace use_clang

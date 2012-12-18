@@ -23,7 +23,7 @@
 namespace ccccc
 {
 
-LocalStat::LocalStat() :
+LineCount::LineCount() :
 	lineOfCode_physic(0),
 	lineOfCode_program(0),
 	lineOfCode_blank(0),
@@ -31,7 +31,7 @@ LocalStat::LocalStat() :
 	mcCabeCyclomaticNumber(1)
 {}
 
-LocalStat::LocalStat(unsigned int lineOfCode_physic,
+LineCount::LineCount(unsigned int lineOfCode_physic,
 					 unsigned int lineOfCode_program,
 					 unsigned int lineOfCode_blank,
 					 unsigned int lineOfCode_comment,

@@ -46,7 +46,7 @@ public:
 	~FileStat();
 
 	const std::string& getFilename() const { return m_filename; }
-	const LocalStat& getStat() const { return m_stat; }
+	const LineCount& getLineCount() const { return m_lineCount; }
 	unsigned int getFunctionCount() const { return m_root.getFunctionCount(); }
 	const FuncStat& getFuncStat(unsigned int index) const { return m_root.getFuncStat(index); }
 	const FuncStat* getFuncStatByName(const char* funcNameId) const { return m_root.getFuncStatByName(funcNameId); }
@@ -65,7 +65,7 @@ private:
 	NamespaceStat* AddNamespace(const std::string& name);
 private:
 	std::string m_filename;
-	LocalStat m_stat;
+	LineCount m_lineCount;
 	NamespaceStat m_root;
 };
 
