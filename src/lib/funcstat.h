@@ -21,7 +21,7 @@
 #ifndef FUNC_STAT_H
 #define FUNC_STAT_H
 
-#include "localstat.h"
+#include "linecount.h"
 #include <string>
 
 namespace ccccc
