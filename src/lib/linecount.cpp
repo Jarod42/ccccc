@@ -18,7 +18,7 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "localstat.h"
+#include "linecount.h"
 
 namespace ccccc
 {

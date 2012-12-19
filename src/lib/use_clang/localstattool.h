@@ -21,7 +21,7 @@
 #ifndef LOCALSTATTOOL_H
 #define LOCALSTATTOOL_H
 
-#include "../localstat.h"
+#include "../linecount.h"
 #include <clang-c/Index.h>
 
 namespace ccccc

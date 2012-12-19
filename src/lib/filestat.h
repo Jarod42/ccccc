@@ -22,7 +22,7 @@
 #define FILE_STAT_H
 
 #include "namespacestat.h"
-#include "localstat.h"
+#include "linecount.h"
 #include "funcstat.h"
 
 #include <string>
