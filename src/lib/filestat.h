@@ -32,7 +32,7 @@ namespace ccccc
 {
 namespace use_clang
 {
-	class FileStatTool;
+class FileStatTool;
 }
 
 class FileStat

@@ -107,14 +107,14 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 	std::string defines[] = {"FOO", "BAR=42"};
 	std::string extras[] = {"-std=c++0x"};
 	std::string pchFile = "pchFile";
-	const char *argv[] = {argv0,
-		includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
-		pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
-		files[0].c_str(), files[1].c_str()
-	};
+	const char* argv[] = {argv0,
+						  includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
+						  pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
+						  files[0].c_str(), files[1].c_str()
+						 };
 	ccccc::Parameters param;
 
-	param.Parse(ARRAY_SIZE(argv), const_cast<char **>(argv));
+	param.Parse(ARRAY_SIZE(argv), const_cast<char**>(argv));
 
 	CHECK(IsRangeEq(files, files + ARRAY_SIZE(files), param.Files_begin(), param.Files_end()));
 	CHECK(IsRangeEq(includes, includes + ARRAY_SIZE(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
@@ -135,14 +135,14 @@ TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 	std::string defines[] = {"FOO", "BAR=42"};
 	std::string extras[] = {"-std=c++0x"};
 	std::string pchFile = "pchFile";
-	const char *argv[] = {argv0,
-		includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
-		pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
-		files[0].c_str(), files[1].c_str()
-	};
+	const char* argv[] = {argv0,
+						  includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
+						  pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
+						  files[0].c_str(), files[1].c_str()
+						 };
 	ccccc::Parameters param;
 
-	param.Parse(ARRAY_SIZE(argv), const_cast<char **>(argv));
+	param.Parse(ARRAY_SIZE(argv), const_cast<char**>(argv));
 
 	CHECK(IsRangeEq(files, files + ARRAY_SIZE(files), param.Files_begin(), param.Files_end()));
 	CHECK(IsRangeEq(includes, includes + ARRAY_SIZE(includes), param.IncludePaths_begin(), param.IncludePaths_end()));

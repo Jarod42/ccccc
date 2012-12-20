@@ -33,8 +33,8 @@
 void InitHardCodedMingwPath(ccccc::Parameters& param)
 {
 	// Hard coded system headersHard coded
-	#define MINGWPATH "d:/Programs/mingw-4.6.1"
-	#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.6.1"
+#define MINGWPATH "d:/Programs/mingw-4.6.1"
+#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.6.1"
 
 	param.AddInclude(MINGWPATH "/include");
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++");

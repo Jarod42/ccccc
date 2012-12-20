@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
 	allStat.Compute(params);
 
 	const std::string cccccPath = normalizePath(getExePath());
-	const std::string cccccRoot= getRootPath(cccccPath);
+	const std::string cccccRoot = getRootPath(cccccPath);
 	ctemplate::TemplateDictionary dict("root");
 	const std::string templateFilename = cccccRoot + "/template/html/template.tpl";
 
