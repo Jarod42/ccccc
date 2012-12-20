@@ -21,7 +21,9 @@
 #include "filestattool.h"
 
 #include "funcstattool.h"
+#include "linecounter.h"
 #include "localstattool.h"
+#include "mccabecyclomaticnumber.h"
 
 #include "utils.h"
 #include <vector>
@@ -33,6 +35,25 @@ namespace use_clang
 
 namespace
 {
+
+class FileStatFeeder
+{
+public:
+	explicit FileStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor)
+	{
+	}
+
+	void operator () (const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
+	{
+		m_mvg(tu, cursor, token);
+		m_lineCounter(tu, cursor, token);
+	}
+
+public:
+	McCabeCyclomaticNumber m_mvg;
+	LineCounter m_lineCounter;
+};
+
 
 class ClientData
 {
@@ -133,8 +154,15 @@ void FileStatTool::VisitNamespace(CXCursor cursor, CXClientData user_data)
 void FileStatTool::Compute(const CXTranslationUnit& tu, FileStat* stat)
 {
 	CXCursor cursor = clang_getTranslationUnitCursor(tu);
+	FileStatFeeder fileStatFeeder(cursor);
 
-	LocalStatTool::Compute(tu, cursor, &stat->m_lineCount);
+	processTokens(tu, cursor, fileStatFeeder);
+
+	stat->m_lineCount.lineOfCode_physic = fileStatFeeder.m_lineCounter.getLineOfCode_physic();
+	stat->m_lineCount.lineOfCode_comment = fileStatFeeder.m_lineCounter.getLineOfCode_comment();
+	stat->m_lineCount.lineOfCode_program = fileStatFeeder.m_lineCounter.getLineOfCode_program();
+	stat->m_lineCount.lineOfCode_blank = fileStatFeeder.m_lineCounter.getLineOfCode_blank();
+	stat->m_lineCount.mcCabeCyclomaticNumber = fileStatFeeder.m_mvg.getValue();
 
 	ClientData clientData(tu, stat);
 	clang_visitChildren(cursor, FileCursorVisitor, &clientData);

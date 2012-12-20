@@ -51,6 +51,16 @@ void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine
 	clang_getExpansionLocation(end, NULL, endLine, NULL, NULL);
 }
 
+void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset)
+{
+	CXSourceLocation start = clang_getRangeStart(range);
+	CXSourceLocation end = clang_getRangeEnd(range);
+
+	clang_getExpansionLocation(start, NULL, NULL, NULL, startoffset);
+	clang_getExpansionLocation(end, NULL, NULL, NULL, endOffset);
+}
+
+
 bool isInFile(const char* filename, CXCursor cursor)
 {
 	CXSourceRange range = clang_getCursorExtent(cursor);

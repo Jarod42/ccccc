@@ -18,31 +18,30 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UTILS_H
-#define UTILS_H
-
-#define ARRAY_SIZE(a) (sizeof (a) / sizeof(*a))
+#ifndef MCCABECYCLOMATICNUMBER_H
+#define MCCABECYCLOMATICNUMBER_H
 
 #include <clang-c/Index.h>
-#include <string>
 
 namespace ccccc
 {
 namespace use_clang
 {
 
+class McCabeCyclomaticNumber
+{
+public:
+	McCabeCyclomaticNumber();
 
-unsigned int getStartLine(CXSourceRange range);
-void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
-void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
+	void operator ()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
-std::string getStringAndDispose(CXString cxStr);
+	unsigned int getValue() const { return m_value; }
+private:
+	unsigned int m_value;
+};
 
-bool isInFile(const char* filename, CXCursor cursor);
-
-bool isValid(CXTranslationUnit tu);
 
 } // namespace use_clang
 } // namespace ccccc
 
-#endif // UTILS_H
+#endif // MCCABECYCLOMATICNUMBER_H

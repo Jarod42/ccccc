@@ -25,12 +25,14 @@ namespace ccccc
 {
 namespace use_clang
 {
-	class LocalStatTool;
+	class FileStatTool;
+	class FuncStatTool;
 }
 
 class LineCount
 {
-	friend class use_clang::LocalStatTool;
+	friend class use_clang::FileStatTool;
+	friend class use_clang::FuncStatTool;
 public:
 	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
 	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
