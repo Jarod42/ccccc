@@ -60,7 +60,7 @@ void FuncStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, 
 	stat->m_lineCount.lineOfCode_comment = funcStatFeeder.m_lineCounter.getLineOfCode_comment();
 	stat->m_lineCount.lineOfCode_program = funcStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = funcStatFeeder.m_lineCounter.getLineOfCode_blank();
-	stat->m_lineCount.mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
+	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 }
 
 } // namespace use_clang
