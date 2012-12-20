@@ -39,13 +39,15 @@ public:
 
 	const std::string& getName() const { return m_name; }
 	const LineCount& getLineCount() const { return m_lineCount; }
-	unsigned int getMcCabeCyclomaticNumber() const { return m_lineCount.getMcCabeCyclomaticNumber(); }
+	unsigned int getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	int getLineDefinition() const { return m_line; }
 
 private:
 	std::string m_name;
 	LineCount m_lineCount;
 	int m_line;
+	unsigned int m_mcCabeCyclomaticNumber; // MVG
+
 };
 
 } // namespace ccccc

@@ -23,7 +23,6 @@
 #include "funcstattool.h"
 #include "linecounter.h"
 #include "localstattool.h"
-#include "mccabecyclomaticnumber.h"
 
 #include "utils.h"
 #include <vector>
@@ -45,12 +44,10 @@ public:
 
 	void operator () (const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
 	{
-		m_mvg(tu, cursor, token);
 		m_lineCounter(tu, cursor, token);
 	}
 
 public:
-	McCabeCyclomaticNumber m_mvg;
 	LineCounter m_lineCounter;
 };
 
@@ -162,7 +159,6 @@ void FileStatTool::Compute(const CXTranslationUnit& tu, FileStat* stat)
 	stat->m_lineCount.lineOfCode_comment = fileStatFeeder.m_lineCounter.getLineOfCode_comment();
 	stat->m_lineCount.lineOfCode_program = fileStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = fileStatFeeder.m_lineCounter.getLineOfCode_blank();
-	stat->m_lineCount.mcCabeCyclomaticNumber = fileStatFeeder.m_mvg.getValue();
 
 	ClientData clientData(tu, stat);
 	clang_visitChildren(cursor, FileCursorVisitor, &clientData);
