@@ -27,8 +27,7 @@
 	CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank());            \
 	CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment());        \
 	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());          \
-	CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());        \
-	CHECK_EQUAL((lhs).getMcCabeCyclomaticNumber(), (rhs).getMcCabeCyclomaticNumber());
+	CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
 
 
 void InitHardCodedMingwPath(ccccc::Parameters& param)
@@ -59,7 +58,7 @@ TEST(FILE_TEST_C)
 	const unsigned int expectedFileCount = 1;
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedFileStat(24, 13, 4, 8, 2);
+	ccccc::LineCount expectedFileStat(24, 13, 4, 8);
 	CHECK_EQUAL_STAT(expectedFileStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 
@@ -67,8 +66,10 @@ TEST(FILE_TEST_C)
 	CHECK_EQUAL(expectedFuncCount, fileStat.getFunctionCount());
 
 	const ccccc::FuncStat& funcStat = fileStat.getFuncStat(0);
-	ccccc::LineCount expectedFuncStat(11, 9, 1, 2, 2);
+	ccccc::LineCount expectedFuncStat(11, 9, 1, 2);
+	const unsigned int expectedMvg = 2;
 	CHECK_EQUAL_STAT(expectedFuncStat, funcStat.getLineCount());
+	CHECK_EQUAL(expectedMvg, funcStat.getMcCabeCyclomaticNumber());
 
 	const ccccc::FuncStat* funcStatName = fileStat.getFuncStatByName("main(int, char **)");
 	CHECK_EQUAL(&funcStat, funcStatName);
@@ -87,7 +88,7 @@ TEST(FILE_TEST_H)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(12, 8, 4, 0, 1);
+	ccccc::LineCount expectedStat(12, 8, 4, 0);
 	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
@@ -107,7 +108,7 @@ TEST(FILE_TEST_INCLUDE_CPP)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(23, 14, 4, 6, 2);
+	ccccc::LineCount expectedStat(23, 14, 4, 6);
 	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
@@ -127,12 +128,13 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(4, 4, 0, 0, 1);
+	ccccc::LineCount expectedStat(4, 4, 0, 0);
+	const unsigned int expectedMvg = 1;
 	CHECK(fileStat.getFuncStatByName("sum(int, int)") == NULL);
 	const ccccc::NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
 	CHECK(namespaceStat != NULL);
 	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
 	CHECK(funcStat != NULL);
 	CHECK_EQUAL_STAT(expectedStat, funcStat->getLineCount());
+	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
 }
-
