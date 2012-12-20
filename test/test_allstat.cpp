@@ -22,11 +22,12 @@
 
 #include "allstat.h"
 #include "parameters.h"
+#include "classstat.h"
 
-#define CHECK_EQUAL_STAT(lhs, rhs)                                                \
-	CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank());            \
-	CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment());        \
-	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());          \
+#define CHECK_EQUAL_STAT(lhs, rhs)                                             \
+	CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank());     \
+	CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment()); \
+	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());   \
 	CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
 
 
@@ -44,13 +45,12 @@ void InitHardCodedMingwPath(ccccc::Parameters& param)
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include-fixed");
 }
 
-
-TEST(FILE_TEST_C)
+TEST(LINECOUNT_FILE_TEST_C)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
 	InitHardCodedMingwPath(param);
-	const std::string filename = "../../../samples/test.c";
+	const std::string filename = "../../../samples/linecount/test.c";
 	param.AddFile(filename);
 
 	stat.Compute(param);
@@ -75,12 +75,12 @@ TEST(FILE_TEST_C)
 	CHECK_EQUAL(&funcStat, funcStatName);
 }
 
-TEST(FILE_TEST_H)
+TEST(LINECOUNT_FILE_TEST_H)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
 	InitHardCodedMingwPath(param);
-	const std::string filename = "../../../samples/test.h";
+	const std::string filename = "../../../samples/linecount/test.h";
 
 	param.AddFile(filename);
 	stat.Compute(param);
@@ -93,14 +93,14 @@ TEST(FILE_TEST_H)
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
 
-TEST(FILE_TEST_INCLUDE_CPP)
+TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
 	InitHardCodedMingwPath(param);
-	const std::string filename = "../../../samples/test_include.cpp";
+	const std::string filename = "../../../samples/linecount/test_include.cpp";
 
-	param.AddInclude("../../../samples");
+	param.AddInclude("../../../samples/linecount");
 	//param.AddExtra("-std=c++0x");
 	param.AddFile(filename);
 	stat.Compute(param);
@@ -137,4 +137,36 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	CHECK(funcStat != NULL);
 	CHECK_EQUAL_STAT(expectedStat, funcStat->getLineCount());
 	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
+}
+
+TEST(FILE_TEST_CLASS_CPP)
+{
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	InitHardCodedMingwPath(param);
+	const std::string filename = "../../../samples/class.cpp";
+
+	//param.AddInclude("../../../samples");
+	param.AddExtra("-std=c++0x");
+	param.AddFile(filename);
+	stat.Compute(param);
+
+	unsigned int expected = 1;
+	CHECK_EQUAL(expected, stat.getFileCount());
+	const ccccc::FileStat& fileStat = stat.getFileStat(0);
+
+	const ccccc::ClassStat* classFooStat = fileStat.getClassByName("Foo");
+	CHECK(classFooStat != NULL);
+	CHECK(classFooStat->getMethodCount() == 4);
+	CHECK(classFooStat->getMethodStatByName("Foo()") != NULL);
+	CHECK(classFooStat->getMethodStatByName("Foo(Foo &&)") != NULL);
+	CHECK(classFooStat->getMethodStatByName("bar()") != NULL);
+	CHECK(classFooStat->getMethodStatByName("isNul()") != NULL);
+
+	CHECK(classFooStat->getClassCount() == 1);
+	const ccccc::ClassStat* classInnerStat = classFooStat->getClassByName("InnerClass");
+	CHECK(classInnerStat != NULL);
+	CHECK(classInnerStat->getMethodStatByName("InnerClass()") != NULL);
+	CHECK(classInnerStat->getMethodStatByName("~InnerClass()") != NULL);
+	CHECK(classInnerStat->getMethodStatByName("bar()") == NULL);
 }
