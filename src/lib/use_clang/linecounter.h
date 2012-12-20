@@ -33,7 +33,7 @@ class LineCounter
 public:
 	explicit LineCounter(const CXCursor& cursor);
 
-	void operator () (const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
+	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
 	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
 	unsigned int getLineOfCode_comment() const { return lineOfCode[0]; }

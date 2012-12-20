@@ -25,8 +25,8 @@ namespace ccccc
 {
 namespace use_clang
 {
-	class FileStatTool;
-	class FuncStatTool;
+class FileStatTool;
+class FuncStatTool;
 }
 
 class LineCount

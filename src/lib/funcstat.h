@@ -28,7 +28,7 @@ namespace ccccc
 {
 namespace use_clang
 {
-	class FuncStatTool;
+class FuncStatTool;
 }
 
 class FuncStat

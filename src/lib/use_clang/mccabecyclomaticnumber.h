@@ -33,7 +33,7 @@ class McCabeCyclomaticNumber
 public:
 	McCabeCyclomaticNumber();
 
-	void operator ()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
+	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
 	unsigned int getValue() const { return m_value; }
 private:
