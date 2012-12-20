@@ -18,31 +18,36 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UTILS_H
-#define UTILS_H
-
-#define ARRAY_SIZE(a) (sizeof (a) / sizeof(*a))
+#ifndef LINECOUNTER_H
+#define LINECOUNTER_H
 
 #include <clang-c/Index.h>
-#include <string>
 
 namespace ccccc
 {
 namespace use_clang
 {
 
+class LineCounter
+{
+public:
+	explicit LineCounter(const CXCursor& cursor);
 
-unsigned int getStartLine(CXSourceRange range);
-void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
-void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
+	void operator () (const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
-std::string getStringAndDispose(CXString cxStr);
+	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
+	unsigned int getLineOfCode_comment() const { return lineOfCode[0]; }
+	unsigned int getLineOfCode_program() const { return lineOfCode[1]; }
+	unsigned int getLineOfCode_blank() const { return lineOfCode[2]; }
 
-bool isInFile(const char* filename, CXCursor cursor);
-
-bool isValid(CXTranslationUnit tu);
+private:
+	unsigned int lineOfCode_physic;
+	// com, loc, blankLine
+	unsigned int lastLine[2];
+	unsigned int lineOfCode[3];
+};
 
 } // namespace use_clang
 } // namespace ccccc
 
-#endif // UTILS_H
+#endif // LINECOUNTER_H

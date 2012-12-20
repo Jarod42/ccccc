@@ -23,17 +23,42 @@
 
 #include "../linecount.h"
 #include <clang-c/Index.h>
+#include "utils.h"
 
 namespace ccccc
 {
 namespace use_clang
 {
 
-class LocalStatTool
+template <typename FUNC>
+static void processTokens(const CXTranslationUnit& tu, const CXCursor& cursor, FUNC& f)
 {
-public:
-	static void Compute(const CXTranslationUnit& tu, const CXCursor& cursor, LineCount* lineCount);
-};
+	CXToken* tokens;
+	unsigned numToken;
+	clang_tokenize(tu, clang_getCursorExtent(cursor), &tokens, &numToken);
+	unsigned cursorStartOffset, cursorEndOffset;
+	getStartEndOffset(clang_getCursorExtent(cursor), &cursorStartOffset, &cursorEndOffset);
+
+	unsigned int startIndex = 0;
+	for (startIndex = 0; startIndex != numToken; ++startIndex) {
+		unsigned startOffset, endOffset;
+		getStartEndOffset(clang_getTokenExtent(tu, tokens[startIndex]), &startOffset, &endOffset);
+		if (cursorStartOffset <= startOffset) {
+			break;
+		}
+	}
+
+	for (unsigned int i = startIndex; i != numToken; ++i) {
+		const CXToken& token = tokens[i];
+		unsigned startOffset, endOffset;
+		getStartEndOffset(clang_getTokenExtent(tu, token), &startOffset, &endOffset);
+		if (cursorEndOffset < endOffset) {
+			break;
+		}
+		f(tu, cursor, token);
+	}
+	clang_disposeTokens(tu, tokens, numToken);
+}
 
 } // namespace use_clang
 } // namespace ccccc
