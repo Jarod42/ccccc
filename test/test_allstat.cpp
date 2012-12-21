@@ -24,7 +24,7 @@
 #include "parameters.h"
 #include "classstat.h"
 
-#define CHECK_EQUAL_STAT(lhs, rhs)                                             \
+#define CHECK_EQUAL_LOC(lhs, rhs)                                             \
 	CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank());     \
 	CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment()); \
 	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());   \
@@ -59,7 +59,7 @@ TEST(LINECOUNT_FILE_TEST_C)
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedFileStat(24, 13, 4, 8);
-	CHECK_EQUAL_STAT(expectedFileStat, fileStat.getLineCount());
+	CHECK_EQUAL_LOC(expectedFileStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 
 	const unsigned int expectedFuncCount = 1;
@@ -68,7 +68,7 @@ TEST(LINECOUNT_FILE_TEST_C)
 	const ccccc::FuncStat& funcStat = fileStat.getFuncStat(0);
 	ccccc::LineCount expectedFuncStat(11, 9, 1, 2);
 	const unsigned int expectedMvg = 2;
-	CHECK_EQUAL_STAT(expectedFuncStat, funcStat.getLineCount());
+	CHECK_EQUAL_LOC(expectedFuncStat, funcStat.getLineCount());
 	CHECK_EQUAL(expectedMvg, funcStat.getMcCabeCyclomaticNumber());
 
 	const ccccc::FuncStat* funcStatName = fileStat.getFuncStatByName("main(int, char **)");
@@ -89,7 +89,7 @@ TEST(LINECOUNT_FILE_TEST_H)
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(12, 8, 4, 0);
-	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
+	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
 
@@ -109,7 +109,7 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(23, 14, 4, 6);
-	CHECK_EQUAL_STAT(expectedStat, fileStat.getLineCount());
+	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
 
@@ -135,7 +135,7 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	CHECK(namespaceStat != NULL);
 	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
 	CHECK(funcStat != NULL);
-	CHECK_EQUAL_STAT(expectedStat, funcStat->getLineCount());
+	CHECK_EQUAL_LOC(expectedStat, funcStat->getLineCount());
 	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
 }
 
@@ -170,3 +170,45 @@ TEST(FILE_TEST_CLASS_CPP)
 	CHECK(classInnerStat->getMethodStatByName("~InnerClass()") != NULL);
 	CHECK(classInnerStat->getMethodStatByName("bar()") == NULL);
 }
+
+static bool CheckMvg(const ccccc::FileStat& fileStat, const char* funcName, unsigned expectedMvg)
+{
+	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
+
+	if (funcStat == NULL) {
+		return false;
+	}
+	return expectedMvg == funcStat->getMcCabeCyclomaticNumber();
+}
+
+TEST(FILE_TEST_MVG_CPP)
+{
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	InitHardCodedMingwPath(param);
+	const std::string filename = "../../../samples/mvg.cpp";
+
+	//param.AddInclude("../../../samples");
+	param.AddExtra("-std=c++0x");
+	param.AddFile(filename);
+	stat.Compute(param);
+
+	unsigned int expected = 1;
+	CHECK_EQUAL(expected, stat.getFileCount());
+	const ccccc::FileStat& fileStat = stat.getFileStat(0);
+
+	CHECK(CheckMvg(fileStat, "function_comparaison(int, int)", 1));
+	CHECK(CheckMvg(fileStat, "function_if(int, int)", 2));
+	CHECK(CheckMvg(fileStat, "function_ifelse(int, int)", 2));
+	CHECK(CheckMvg(fileStat, "function_ternaire(int, int)", 2));
+	CHECK(CheckMvg(fileStat, "function_while(const char *)", 2));
+	CHECK(CheckMvg(fileStat, "function_for(const char *)", 2));
+	CHECK(CheckMvg(fileStat, "function_switch(int)", 8));
+	CHECK(CheckMvg(fileStat, "function_and(int, int, int)", 1));
+	CHECK(CheckMvg(fileStat, "function_andand(int, int, int)", 2));
+	CHECK(CheckMvg(fileStat, "function_or(int, int, int)", 1));
+	CHECK(CheckMvg(fileStat, "function_oror(int, int, int)", 2));
+	CHECK(CheckMvg(fileStat, "function_rval(T &, T &)", 1));
+	CHECK(CheckMvg(fileStat, "function_rval(int &&)", 1));
+}
+
