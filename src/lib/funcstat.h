@@ -21,6 +21,7 @@
 #ifndef FUNC_STAT_H
 #define FUNC_STAT_H
 
+#include "halsteadmetric.h"
 #include "linecount.h"
 #include <string>
 
@@ -41,13 +42,14 @@ public:
 	const LineCount& getLineCount() const { return m_lineCount; }
 	unsigned int getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	int getLineDefinition() const { return m_line; }
+	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
 
 private:
 	std::string m_name;
 	LineCount m_lineCount;
 	int m_line;
 	unsigned int m_mcCabeCyclomaticNumber; // MVG
-
+	HalsteadMetric m_halsteadMetric;
 };
 
 } // namespace ccccc

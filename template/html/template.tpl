@@ -14,25 +14,35 @@
 <h1>CCCCC Software Metrics Report</h1>
 <h2>Definitions.</h2>
 <ul>
-<li>LOCphy = Number of physical lines<br/>It include blank line and line with code or comment.</li>
-<li>LOCpro = Number of lines with code<br/>Number of lines of with source code. (Line may also have comment)<br/>
+<li><b>LOCphy</b> = Number of physical lines<br/>It include blank line and line with code or comment.</li>
+<li><b>LOCpro</b> = Number of lines with code<br/>Number of lines of with source code. (Line may also have comment)<br/>
 <span class="warning">high value from 25</span>. <span class="bad">Very high value from 50</span>.
 </li>
-<li>LOCcom = Lines of Comments<br/>Number of lines of comment identified. (Line may also have code)</li>
-<li>LOCbl = Number of blank-line.</li>
-<li>MVG = <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">McCabe's Cyclomatic Complexity</a><br/>
+<li><b>LOCcom</b> = Lines of Comments<br/>Number of lines of comment identified. (Line may also have code)</li>
+<li><b>LOCbl</b> = Number of blank-line.</li>
+<li><b>MVG</b> = <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">McCabe's Cyclomatic Complexity</a><br/>
 Number of linearly independent paths through a program's source code.<br/> It is nearly equivalent to the number of branches.<br/>
 <span class="warning">high value from 10</span>. <span class="bad">Very high value from 30</span>.
 </li>
+<li><a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures">Halstead metrics</a>:
+<ul>
+ <li><b>Vocabulary size</b> = Number of distinct 'tolens'.</li>
+ <li><b>Program length</b> = Number of 'tokens'.</li>
+ <li><b>Volume</b> = Information contents of the function, measured in mathematical bits.</li>
+ <li><b>Difficulty</b> = Error proneness of the program.</li>
+ <li><b>Effort</b> = The effort to implement or understand a function.</li>
+ <li><b>Time to implement</b> (in seconds) = Approximation time to implement or understand a function.</li>
+ <li><b>Delivered bugs</b> = Estimate for the number of errors in the implementation.</li>
+</ul></li>
 </ul>
 <h2>Report.</h2>
 <em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header!
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th></tr>
+<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th></tr>
 </thead>
 <tbody>
-{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td></tr>
+{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
 </body>

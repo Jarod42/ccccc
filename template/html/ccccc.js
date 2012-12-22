@@ -6,7 +6,7 @@ function setClassToSpecificColumnBadForLowValue(classid, low, high) {
 	});
 	$('table tr').each(function() {
 		var tr = $(this)
-		var td = rows.find("td:nth-child(" + (colNumber + 1) + ")")
+		var td = tr.find("td:nth-child(" + colNumber + ")")
 		var val = parseInt( td.text(), 10 );
 		if (val <= low) { td.addClass('bad'); }
 		else if (val <= high) { td.addClass('warning'); }
@@ -21,7 +21,7 @@ function setClassToSpecificColumnBadForHighValue(classid, low, high) {
 	});
 	$('table tr').each(function() {
 		var tr = $(this)
-		var td = tr.find("td:nth-child(" + (colNumber) + ")")
+		var td = tr.find("td:nth-child(" + colNumber + ")")
 		var val = parseInt( td.text(), 10 );
 		if (val >= high) { td.addClass('bad'); }
 		else if (val >= low) { td.addClass('warning'); }
@@ -31,6 +31,9 @@ function setClassToSpecificColumnBadForHighValue(classid, low, high) {
 function setClassToColumn() {
 	setClassToSpecificColumnBadForHighValue('MVG', 10, 30);
 	setClassToSpecificColumnBadForHighValue('LOCpro', 25, 50);
+	setClassToSpecificColumnBadForHighValue('Halstead_V', 800, 1000);
+	setClassToSpecificColumnBadForLowValue('Halstead_V', 10, 15);
+	setClassToSpecificColumnBadForHighValue('Halstead_B', 1, 2);
 }
 
 function onDocLoaded() {
