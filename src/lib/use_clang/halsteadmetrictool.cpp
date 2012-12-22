@@ -31,11 +31,6 @@ namespace ccccc
 namespace use_clang
 {
 
-static CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
-{
-	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
-}
-
 HalsteadMetricTool::HalsteadMetricTool() :
 	m_operatorCount(0),
 	m_operandCount(0),

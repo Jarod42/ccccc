@@ -29,11 +29,6 @@ namespace ccccc
 namespace use_clang
 {
 
-static CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
-{
-	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
-}
-
 McCabeCyclomaticNumber::McCabeCyclomaticNumber() : m_value(1)
 {
 }
@@ -41,9 +36,7 @@ McCabeCyclomaticNumber::McCabeCyclomaticNumber() : m_value(1)
 void McCabeCyclomaticNumber::operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
 {
 	if (clang_getTokenKind(token) == CXToken_Keyword) {
-		CXString cxstr = clang_getTokenSpelling(tu, token);
-		std::string str = clang_getCString(cxstr);
-		clang_disposeString(cxstr);
+		const std::string str = getStringAndDispose(clang_getTokenSpelling(tu, token));
 		const char* keywords[] = {"if", "for", "while", "case", "catch"}; // #if, #ifdef, #ifndef, #elif
 
 		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {
@@ -53,10 +46,7 @@ void McCabeCyclomaticNumber::operator()(const CXTranslationUnit& tu, const CXCur
 			}
 		}
 	} else if (clang_getTokenKind(token) == CXToken_Punctuation) {
-		CXString cxstr = clang_getTokenSpelling(tu, token);
-		std::string str = clang_getCString(cxstr);
-		clang_disposeString(cxstr);
-
+		const std::string str = getStringAndDispose(clang_getTokenSpelling(tu, token));
 		const char* keywords[] = {"?", "&&", "||"};
 
 		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {

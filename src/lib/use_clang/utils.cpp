@@ -27,25 +27,29 @@ namespace use_clang
 
 std::string getStringAndDispose(CXString cxStr)
 {
-	std::string str = clang_getCString(cxStr);
+	const std::string str = clang_getCString(cxStr);
 
 	clang_disposeString(cxStr);
 	return str;
 }
 
+CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
+{
+	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
+}
+
 unsigned int getStartLine(CXSourceRange range)
 {
-	CXSourceLocation start = clang_getRangeStart(range);
+	const CXSourceLocation start = clang_getRangeStart(range);
 	unsigned int startLine;
 	clang_getExpansionLocation(start, NULL, &startLine, NULL, NULL);
-
 	return startLine;
 }
 
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine)
 {
-	CXSourceLocation start = clang_getRangeStart(range);
-	CXSourceLocation end = clang_getRangeEnd(range);
+	const CXSourceLocation start = clang_getRangeStart(range);
+	const CXSourceLocation end = clang_getRangeEnd(range);
 
 	clang_getExpansionLocation(start, NULL, startLine, NULL, NULL);
 	clang_getExpansionLocation(end, NULL, endLine, NULL, NULL);
@@ -53,38 +57,36 @@ void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine
 
 void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset)
 {
-	CXSourceLocation start = clang_getRangeStart(range);
-	CXSourceLocation end = clang_getRangeEnd(range);
+	const CXSourceLocation start = clang_getRangeStart(range);
+	const CXSourceLocation end = clang_getRangeEnd(range);
 
 	clang_getExpansionLocation(start, NULL, NULL, NULL, startoffset);
 	clang_getExpansionLocation(end, NULL, NULL, NULL, endOffset);
 }
 
-
 bool isInFile(const char* filename, CXCursor cursor)
 {
-	CXSourceRange range = clang_getCursorExtent(cursor);
+	const CXSourceRange range = clang_getCursorExtent(cursor);
 	if (clang_Range_isNull(range)) {
 		return false;
 	}
-	CXSourceLocation start = clang_getRangeStart(range);
+	const CXSourceLocation start = clang_getRangeStart(range);
 	CXFile file;
 	clang_getExpansionLocation(start, &file, NULL, NULL, NULL);
-	CXString cxCursorFilename = clang_getFileName(file);
+	const CXString cxCursorFilename = clang_getFileName(file);
 	const char* cstr = clang_getCString(cxCursorFilename);
 	if (cstr == NULL) {
 		clang_disposeString(cxCursorFilename);
 		return false;
 	}
 	clang_disposeString(cxCursorFilename);
-	std::string cursorFilename = cstr;
-
+	const std::string cursorFilename = cstr;
 	return cursorFilename.compare(filename) == 0;
 }
 
 bool isValid(CXTranslationUnit tu)
 {
-	CXCursor cursor = clang_getTranslationUnitCursor(tu);
+	const CXCursor cursor = clang_getTranslationUnitCursor(tu);
 	unsigned cursorStartLine, cursorEndLine;
 	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
 
