@@ -19,11 +19,20 @@
 */
 
 #include <iostream>
+#include <sstream>
 
 #include "cccc_clang_api.h"
 #include "utils.h"
 
 #include <ctemplate/template.h>
+
+static void SetDoubleValue(ctemplate::TemplateDictionary& dict, const char* key, double value)
+{
+	std::stringstream ss;
+
+	ss << value;
+	dict.SetValue(key, ss.str());
+}
 
 void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
 {
@@ -36,6 +45,14 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 	sectionDict.SetIntValue("LOCcom", funcStat.getLineCount().getLineOfCode_comment());
 	sectionDict.SetIntValue("LOCbl", funcStat.getLineCount().getLineOfCode_blank());
 	sectionDict.SetIntValue("MVG", funcStat.getMcCabeCyclomaticNumber());
+
+	sectionDict.SetIntValue("Halstead_n", funcStat.getHalsteadMetric().getVocabularySize());
+	sectionDict.SetIntValue("Halstead_N", funcStat.getHalsteadMetric().getProgramLength());
+	SetDoubleValue(sectionDict, "Halstead_V", funcStat.getHalsteadMetric().getVolume());
+	SetDoubleValue(sectionDict, "Halstead_D", funcStat.getHalsteadMetric().getDifficulty());
+	SetDoubleValue(sectionDict, "Halstead_E", funcStat.getHalsteadMetric().getEffort());
+	SetDoubleValue(sectionDict, "Halstead_B", funcStat.getHalsteadMetric().getDeliveredBugCount());
+	SetDoubleValue(sectionDict, "Halstead_T", funcStat.getHalsteadMetric().getTimeToImplement());
 
 	sectionDict.SetValue("namespacesName", namespacesName);
 	sectionDict.SetValue("classesName", classesName);

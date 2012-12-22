@@ -23,6 +23,7 @@
 #include "localstattool.h"
 #include "linecounter.h"
 #include "mccabecyclomaticnumber.h"
+#include "halsteadmetrictool.h"
 
 namespace ccccc
 {
@@ -38,11 +39,13 @@ public:
 	}
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token) {
+		m_halsteadMetricTool(tu, cursor, token);
 		m_mvg(tu, cursor, token);
 		m_lineCounter(tu, cursor, token);
 	}
 
 public:
+	HalsteadMetricTool m_halsteadMetricTool;
 	McCabeCyclomaticNumber m_mvg;
 	LineCounter m_lineCounter;
 };
@@ -59,6 +62,7 @@ void FuncStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, 
 	stat->m_lineCount.lineOfCode_program = funcStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = funcStatFeeder.m_lineCounter.getLineOfCode_blank();
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
+	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
 }
 
 } // namespace use_clang
