@@ -31,12 +31,11 @@ namespace ccccc
 namespace use_clang
 {
 
-
+std::string getStringAndDispose(CXString cxStr);
+CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token);
 unsigned int getStartLine(CXSourceRange range);
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
 void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
-
-std::string getStringAndDispose(CXString cxStr);
 
 bool isInFile(const char* filename, CXCursor cursor);
 
