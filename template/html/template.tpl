@@ -37,7 +37,7 @@ Number of linearly independent paths through a program's source code.<br/> It is
  <li><b>Time to implement</b> (in seconds) = Approximation time to implement or understand a function.</li>
  <li><b>Delivered bugs</b> = Estimate for the number of errors in the implementation.</li>
 </ul></li>
-<li>Maintainability Index:
+<li><a href="http://www.verifysoft.com/en_maintainability.html">Maintainability Index</a>:
 Computed from line count, mvg and halstead metrics.
 <ul>
   <li><b>MIwoc</b>:maintainability index without comments.</li>
