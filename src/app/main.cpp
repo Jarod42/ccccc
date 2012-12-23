@@ -54,6 +54,10 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 	SetDoubleValue(sectionDict, "Halstead_B", funcStat.getHalsteadMetric().getDeliveredBugCount());
 	SetDoubleValue(sectionDict, "Halstead_T", funcStat.getHalsteadMetric().getTimeToImplement());
 
+	SetDoubleValue(sectionDict, "MIwoc", funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments());
+	SetDoubleValue(sectionDict, "MIcw", funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
+	SetDoubleValue(sectionDict, "MI", funcStat.getMaintainabilityIndex().getMaintainabilityIndex());
+
 	sectionDict.SetValue("namespacesName", namespacesName);
 	sectionDict.SetValue("classesName", classesName);
 }

@@ -28,21 +28,33 @@ Number of linearly independent paths through a program's source code.<br/> It is
 <ul>
  <li><b>Vocabulary size</b> = Number of distinct 'tolens'.</li>
  <li><b>Program length</b> = Number of 'tokens'.</li>
- <li><b>Volume</b> = Information contents of the function, measured in mathematical bits.</li>
+ <li><b>Volume</b> = Information contents of the function, measured in mathematical bits.
+  <span class="warning">low value from 15</span>. <span class="bad">Very low value from 10</span>.
+  <span class="warning">high value from 1000</span>. <span class="bad">Very high value from 1200</span>.
+ </li>
  <li><b>Difficulty</b> = Error proneness of the program.</li>
  <li><b>Effort</b> = The effort to implement or understand a function.</li>
  <li><b>Time to implement</b> (in seconds) = Approximation time to implement or understand a function.</li>
  <li><b>Delivered bugs</b> = Estimate for the number of errors in the implementation.</li>
+</ul></li>
+<li>Maintainability Index:
+Computed from line count, mvg and halstead metrics.
+<ul>
+  <li><b>MIwoc</b>:maintainability index without comments.</li>
+  <li><b>MIcw</b>:maintainability index comment weight.</li>
+  <li><b>MI</b>:maintainability index (MIwoc + MIcw).
+  <span class="warning">low value from 85</span>. <span class="bad">Very low value from 65</span>.
+</li>
 </ul></li>
 </ul>
 <h2>Report.</h2>
 <em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header!
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th></tr>
+<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th><th class="MIwoc">MIwoc</th><th class="MIcw">MIcw</th><th class="MI">MI</th></tr>
 </thead>
 <tbody>
-{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td></tr>
+{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
 </body>
