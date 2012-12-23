@@ -63,6 +63,7 @@ void FuncStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, 
 	stat->m_lineCount.lineOfCode_blank = funcStatFeeder.m_lineCounter.getLineOfCode_blank();
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
+	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
 }
 
 } // namespace use_clang

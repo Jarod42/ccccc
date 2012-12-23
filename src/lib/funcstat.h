@@ -23,6 +23,7 @@
 
 #include "halsteadmetric.h"
 #include "linecount.h"
+#include "maintainabilityindex.h"
 #include <string>
 
 namespace ccccc
@@ -43,13 +44,14 @@ public:
 	unsigned int getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	int getLineDefinition() const { return m_line; }
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
-
+	const MaintainabilityIndex& getMaintainabilityIndex() const { return m_maintainabilityIndex; }
 private:
 	std::string m_name;
 	LineCount m_lineCount;
 	int m_line;
 	unsigned int m_mcCabeCyclomaticNumber; // MVG
 	HalsteadMetric m_halsteadMetric;
+	MaintainabilityIndex m_maintainabilityIndex;
 };
 
 } // namespace ccccc

@@ -34,6 +34,7 @@ function setClassToColumn() {
 	setClassToSpecificColumnBadForHighValue('Halstead_V', 1000, 1200);
 	setClassToSpecificColumnBadForLowValue('Halstead_V', 10, 15);
 	setClassToSpecificColumnBadForHighValue('Halstead_B', 1, 2);
+	setClassToSpecificColumnBadForLowValue('MI', 65, 85);
 }
 
 function onDocLoaded() {
