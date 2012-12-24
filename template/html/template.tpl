@@ -14,12 +14,12 @@
 <h1>CCCCC Software Metrics Report</h1>
 <h2>Definitions.</h2>
 <ul>
-<li><b>LOCphy</b> = Number of physical lines<br/>It include blank line and line with code or comment.</li>
+<li><b>LOCphy</b> = Number of physical lines<br/>It includes blank line and line with code or comment.</li>
 <li><b>LOCpro</b> = Number of lines with code<br/>Number of lines of with source code. (Line may also have comment)<br/>
 <span class="warning">high value from 25</span>. <span class="bad">Very high value from 50</span>.
 </li>
 <li><b>LOCcom</b> = Lines of Comments<br/>Number of lines of comment identified. (Line may also have code)</li>
-<li><b>LOCbl</b> = Number of blank-line.</li>
+<li><b>LOCbl</b> = Number of blank-lines.</li>
 <li><b>MVG</b> = <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">McCabe's Cyclomatic Complexity</a><br/>
 Number of linearly independent paths through a program's source code.<br/> It is nearly equivalent to the number of branches.<br/>
 <span class="warning">high value from 10</span>. <span class="bad">Very high value from 30</span>.
