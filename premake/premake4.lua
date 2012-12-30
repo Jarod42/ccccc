@@ -79,7 +79,7 @@ solution "ccccc"
 	project "ccccc_lib"
 		kind "StaticLib"
 		language "C++"
-		--flags "WinMain"
+		targetname("ccccc")
 		files { path.join(Root, "src/lib/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
@@ -94,7 +94,7 @@ solution "ccccc"
 	project "ccccc_app"
 		kind "ConsoleApp"
 		language "C++"
-		--flags "WinMain"
+		targetname("ccccc")
 		files { path.join(Root, "src/app/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
