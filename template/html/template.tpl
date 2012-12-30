@@ -26,7 +26,7 @@ Number of linearly independent paths through a program's source code.<br/> It is
 </li>
 <li><a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures">Halstead metrics</a>:
 <ul>
- <li><b>Vocabulary size</b> = Number of distinct 'tolens'.</li>
+ <li><b>Vocabulary size</b> = Number of distinct 'tokens'.</li>
  <li><b>Program length</b> = Number of 'tokens'.</li>
  <li><b>Volume</b> = Information contents of the function, measured in mathematical bits.
   <span class="warning">low value from 15</span>. <span class="bad">Very low value from 10</span>.
@@ -40,11 +40,11 @@ Number of linearly independent paths through a program's source code.<br/> It is
 <li><a href="http://www.verifysoft.com/en_maintainability.html">Maintainability Index</a>:
 Computed from line count, mvg and halstead metrics.
 <ul>
-  <li><b>MIwoc</b>:maintainability index without comments.</li>
-  <li><b>MIcw</b>:maintainability index comment weight.</li>
-  <li><b>MI</b>:maintainability index (MIwoc + MIcw).
+  <li><b>MIwoc</b> = maintainability index without comments.</li>
+  <li><b>MIcw</b> = maintainability index comment weight.</li>
+  <li><b>MI</b> = maintainability index (MIwoc + MIcw).
   <span class="warning">low value from 85</span>. <span class="bad">Very low value from 65</span>.
-</li>
+  </li>
 </ul></li>
 </ul>
 <h2>Report.</h2>
