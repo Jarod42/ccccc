@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,17 +18,23 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "funcstat.h"
+#ifndef BLOCKCOUNTER_H
+#define BLOCKCOUNTER_H
+
+#include <clang-c/Index.h>
 
 namespace ccccc
 {
-
-FuncStat::FuncStat(const std::string& funcname, unsigned int line) :
-	m_name(funcname),
-	m_line(line),
-	m_mcCabeCyclomaticNumber(0),
-	m_nestedBlockCount(0)
+namespace use_clang
 {
-}
 
+class BlockCounter
+{
+public:
+	static unsigned int ComputeNestedBlockCount(const char *filename, const CXCursor& cursor);
+};
+
+} // namespace use_clang
 } // namespace ccccc
+
+#endif // BLOCKCOUNTER_H

@@ -57,6 +57,8 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 	SetDoubleValue(sectionDict, "MIcw", funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
 	SetDoubleValue(sectionDict, "MI", funcStat.getMaintainabilityIndex().getMaintainabilityIndex());
 
+	sectionDict.SetIntValue("NestedBlockCount", funcStat.getNestedBlockCount());
+
 	sectionDict.SetValue("namespacesName", namespacesName);
 	sectionDict.SetValue("classesName", classesName);
 }
