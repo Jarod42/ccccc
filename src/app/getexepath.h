@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,12 +18,12 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef GETEXEPATH_H
+#define GETEXEPATH_H
 
 #include <string>
 
 
 std::string getExePath();
 
-#endif // UTILS_H
+#endif // GETEXEPATH_H
