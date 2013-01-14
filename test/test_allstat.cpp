@@ -212,3 +212,37 @@ TEST(FILE_TEST_MVG_CPP)
 	CHECK(CheckMvg(fileStat, "function_rval(int &&)", 1));
 }
 
+static bool CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName, unsigned expectedBlockCount)
+{
+	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
+
+	if (funcStat == NULL) {
+		return false;
+	}
+	return expectedBlockCount == funcStat->getNestedBlockCount();
+}
+
+TEST(FILE_TEST_BLOCKCOUNT_CPP)
+{
+	ccccc::AllStat stat;
+	ccccc::Parameters param;
+	InitHardCodedMingwPath(param);
+	const std::string filename = "../../../samples/blockcount.cpp";
+
+	//param.AddInclude("../../../samples");
+	//param.AddExtra("-std=c++0x");
+	param.AddFile(filename);
+	stat.Compute(param);
+
+	unsigned int expected = 1;
+	CHECK_EQUAL(expected, stat.getFileCount());
+	const ccccc::FileStat& fileStat = stat.getFileStat(0);
+
+	CHECK(CheckBlockCount(fileStat, "function_comparaison(int, int)", 1));
+	CHECK(CheckBlockCount(fileStat, "function_if(int, int)", 2));
+	CHECK(CheckBlockCount(fileStat, "function_ifelse(int, int)", 2));
+	CHECK(CheckBlockCount(fileStat, "function_while(const char *)", 2));
+	CHECK(CheckBlockCount(fileStat, "function_for_noblock(const char *)", 1));
+	CHECK(CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])", 3));
+	CHECK(CheckBlockCount(fileStat, "function_switch(int)", 2));
+}

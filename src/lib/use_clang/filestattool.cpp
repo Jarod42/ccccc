@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -110,7 +110,7 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			const unsigned int line = getStartLine(range);
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
+			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;
 		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
 				   || clang_getCursorKind(cursor) == CXCursor_Constructor
@@ -127,7 +127,7 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			// TODO: get ClassStat.
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getCXTranslationUnit(), cursor, funcStat);
+			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, funcStat);
 			return CXChildVisit_Continue;
 		} else {
 			return CXChildVisit_Recurse;

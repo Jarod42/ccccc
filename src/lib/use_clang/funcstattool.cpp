@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,6 +20,7 @@
 
 #include "funcstattool.h"
 
+#include "blockcounter.h"
 #include "localstattool.h"
 #include "linecounter.h"
 #include "mccabecyclomaticnumber.h"
@@ -52,7 +53,7 @@ public:
 
 } // anonymous namespace
 
-void FuncStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat)
+void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat)
 {
 	FuncStatFeeder funcStatFeeder(cursor);
 	processTokens(tu, cursor, funcStatFeeder);
@@ -64,6 +65,7 @@ void FuncStatTool::Compute(const CXTranslationUnit& tu, const CXCursor& cursor, 
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
 	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
+	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
 }
 
 } // namespace use_clang

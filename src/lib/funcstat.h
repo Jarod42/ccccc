@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -45,6 +45,7 @@ public:
 	int getLineDefinition() const { return m_line; }
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
 	const MaintainabilityIndex& getMaintainabilityIndex() const { return m_maintainabilityIndex; }
+	unsigned int getNestedBlockCount() const { return m_nestedBlockCount; }
 private:
 	std::string m_name;
 	LineCount m_lineCount;
@@ -52,6 +53,7 @@ private:
 	unsigned int m_mcCabeCyclomaticNumber; // MVG
 	HalsteadMetric m_halsteadMetric;
 	MaintainabilityIndex m_maintainabilityIndex;
+	unsigned int m_nestedBlockCount;
 };
 
 } // namespace ccccc

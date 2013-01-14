@@ -24,6 +24,7 @@
 Number of linearly independent paths through a program's source code.<br/> It is nearly equivalent to the number of branches.<br/>
 <span class="warning">high value from 10</span>. <span class="bad">Very high value from 30</span>.
 </li>
+<li><b>Block</b> = Max Nested Block Count.</li>
 <li><a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures">Halstead metrics</a>:
 <ul>
  <li><b>Vocabulary size</b> = Number of distinct 'tokens'.</li>
@@ -51,10 +52,10 @@ Computed from line count, mvg and halstead metrics.
 <em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header!
 <table width="100%" id="myTable" class="tablesorter draggable">
 <thead>
-<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th><th class="MIwoc">MIwoc</th><th class="MIcw">MIcw</th><th class="MI">MI</th></tr>
+<tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="NestedBlockCount">Block</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th><th class="MIwoc">MIwoc</th><th class="MIcw">MIcw</th><th class="MI">MI</th></tr>
 </thead>
 <tbody>
-{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td></tr>
+{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{NestedBlockCount}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
 </body>

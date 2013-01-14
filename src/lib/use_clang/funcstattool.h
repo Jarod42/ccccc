@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2013 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -32,7 +32,7 @@ namespace use_clang
 class FuncStatTool
 {
 public:
-	static void Compute(const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat);
+	static void Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat);
 };
 
 } // namespace use_clang
