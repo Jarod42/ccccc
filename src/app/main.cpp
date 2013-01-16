@@ -71,7 +71,11 @@ int main(int argc, char* argv[])
 	dict.SetFilename(templateFilename);
 	dict.SetValue("cccccPath", cccccPath);
 	dict.SetValue("cccccRoot", cccccRoot);
-
+	{
+		time_t now;
+		time(&now);
+		dict.SetValue("Date", ctime(&now));
+	}
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
 
