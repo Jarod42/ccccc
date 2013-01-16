@@ -58,5 +58,6 @@ Computed from line count, mvg and halstead metrics.
 {{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{funcName:h}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{NestedBlockCount}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
+<span class="footer">File generated {{Date}} by <a href="https://bitbucket.org/jarod42/ccccc">ccccc</a>.</span>
 </body>
 </html>
