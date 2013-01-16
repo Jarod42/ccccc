@@ -1,10 +1,10 @@
-// block = 1
+// block = 0
 bool function_comparaison(int a, int b)
 {
 	return (a < b);
 }
 
-// block = 2
+// block = 1
 int function_if(int a, int b)
 {
 	if (a < b) {
@@ -13,7 +13,7 @@ int function_if(int a, int b)
 	return b;
 }
 
-// block = 2
+// block = 1
 int function_ifelse(int a, int b)
 {
 	if (a < b) {
@@ -23,7 +23,32 @@ int function_ifelse(int a, int b)
 	}
 }
 
+// block = 1
+int function_ifelif(int a, int b, int c)
+{
+	if (a < b) {
+		return -1;
+	} else if (a > c){
+		return 2;
+	} else if (a == b) {
+		return 0;
+	} else if (a == c) {
+		return 1;
+	} else {
+		return a;
+	}
+}
+
 // block = 2
+int function_ifif(int a, int b, int c)
+{
+	if (a < b)
+		if (b < c)
+			return c;
+	return a;
+}
+
+// block = 1
 int function_while(const char *s)
 {
 	int i = 0;
@@ -33,7 +58,7 @@ int function_while(const char *s)
 	return i;
 }
 
-// block = 1
+// block = 0
 int function_for_noblock(const char *s)
 {
 	int i;
@@ -41,7 +66,7 @@ int function_for_noblock(const char *s)
 	return i;
 }
 
-// block = 1
+// block = 2
 int function_forfor(const char (&a)[5][5])
 {
 	int sum = 0;
@@ -53,7 +78,17 @@ int function_forfor(const char (&a)[5][5])
 	return sum;
 }
 
-// block = 2
+// block = 0
+int function_forfor_no_block(const char (&a)[5][5])
+{
+	int sum = 0;
+	for (int j = 0; j != 5; ++j)
+		for (int i = 0; i != 5; ++i)
+			sum += a[i][j];
+	return sum;
+}
+
+// block = 1
 const char* function_switch(int i)
 {
 	switch (i) {
@@ -67,3 +102,19 @@ const char* function_switch(int i)
 		default: return NULL;
 	}
 }
+
+// block = 2
+void function_block()
+{
+	int whichvalue = 0;
+	{
+		int autoblock = 2;
+		{
+			int autoblock = 4;
+			whichvalue += autoblock;
+		}
+		whichvalue += autoblock;
+	}
+	assert(whichvalue == 6)
+}
+

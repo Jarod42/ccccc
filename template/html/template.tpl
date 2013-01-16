@@ -24,7 +24,7 @@
 Number of linearly independent paths through a program's source code.<br/> It is nearly equivalent to the number of branches.<br/>
 <span class="warning">high value from 10</span>. <span class="bad">Very high value from 30</span>.
 </li>
-<li><b>Block</b> = Max Nested Block Count.</li>
+<li><b>Block</b> = Max Nested Block Count.<span class="warning">high value from 4</span>. <span class="bad">Very high value from 5</span>.</li>
 <li><a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures">Halstead metrics</a>:
 <ul>
  <li><b>Vocabulary size</b> = Number of distinct 'tokens'.</li>

@@ -65,7 +65,7 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
 	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
-	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
+	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor) - 1;
 }
 
 } // namespace use_clang
