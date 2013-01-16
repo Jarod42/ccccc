@@ -212,14 +212,14 @@ TEST(FILE_TEST_MVG_CPP)
 	CHECK(CheckMvg(fileStat, "function_rval(int &&)", 1));
 }
 
-static bool CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName, unsigned expectedBlockCount)
+static int CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName)
 {
 	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
 
 	if (funcStat == NULL) {
-		return false;
+		return -1;
 	}
-	return expectedBlockCount == funcStat->getNestedBlockCount();
+	return funcStat->getNestedBlockCount();
 }
 
 TEST(FILE_TEST_BLOCKCOUNT_CPP)
@@ -238,11 +238,15 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
-	CHECK(CheckBlockCount(fileStat, "function_comparaison(int, int)", 1));
-	CHECK(CheckBlockCount(fileStat, "function_if(int, int)", 2));
-	CHECK(CheckBlockCount(fileStat, "function_ifelse(int, int)", 2));
-	CHECK(CheckBlockCount(fileStat, "function_while(const char *)", 2));
-	CHECK(CheckBlockCount(fileStat, "function_for_noblock(const char *)", 1));
-	CHECK(CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])", 3));
-	CHECK(CheckBlockCount(fileStat, "function_switch(int)", 2));
+	CHECK_EQUAL(0, CheckBlockCount(fileStat, "function_comparaison(int, int)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_if(int, int)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelse(int, int)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelif(int, int, int)"));
+	//CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_ifif(int, int, int)")); // KNOW BUG.
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_while(const char *)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_for_noblock(const char *)"));
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])"));
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor_no_block(const char (&)[5][5])"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch(int)"));
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_block()"));
 }

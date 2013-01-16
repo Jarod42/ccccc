@@ -56,8 +56,18 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 	if (isInFile(filename, cursor) == false) {
 		return CXChildVisit_Continue;
 	}
-	if (//clang_getCursorKind(cursor) == CXCursor_BlockExpr ||
-		clang_getCursorKind(cursor) == CXCursor_CompoundStmt) {
+	if (clang_getCursorKind(parent) == CXCursor_IfStmt
+		&& clang_getCursorKind(cursor) == CXCursor_IfStmt) { // try to manage 'else if' : create bug with if() if() :-/
+		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
+		client_data->setNestedCount(childNestedBlockCount);
+		return CXChildVisit_Continue;
+	}
+	if (clang_getCursorKind(parent) == CXCursor_IfStmt
+		|| clang_getCursorKind(parent) == CXCursor_ForStmt
+		|| clang_getCursorKind(parent) == CXCursor_WhileStmt
+		|| clang_getCursorKind(parent) == CXCursor_DoStmt
+		|| clang_getCursorKind(parent) == CXCursor_SwitchStmt
+		|| clang_getCursorKind(cursor) == CXCursor_CompoundStmt) {
 		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
 		client_data->setNestedCount(1 + childNestedBlockCount);
 		return CXChildVisit_Continue;
