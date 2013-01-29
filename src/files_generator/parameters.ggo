@@ -20,10 +20,10 @@
 #
 
 package "ccccc"
-version "1.0"
+version "1.1"
 #purpose "<purpose>"
 usage "ccccc [OPTIONS]... [FILES]... > output.html"
-description "Compute metrics from input file and output the report"
+description "Compute metrics from input files and output the report"
 
 args "--conf-parser --unamed-opts --output-dir=../../generatedsrc  --c-extension=cpp"
 
