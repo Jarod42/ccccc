@@ -71,7 +71,11 @@ end
 
 function LinkToClang()
 	configuration "*WithDLL"
-		links { "clang" }
+	if (_ACTION == "codelite") then
+		links { "liblibclang" } -- hack for codelite which remove one prefix lib
+	else
+		links { "libclang" }
+	end
 	configuration "not *WithDLL"
 	if (_ACTION == "codelite") then
 		links { "liblibclang" } -- hack for codelite which remove one prefix lib
@@ -116,7 +120,7 @@ solution "ccccc"
 		configuration "*"
 		if (_PREMAKE_VERSION >= "4.4") then
 			--debugdir(Root)
-			debugargs {"../../../samples/test.c"}
+			debugargs {"../../../samples/namespace.cpp"}
 		end
 
 		DefaultConfiguration()
