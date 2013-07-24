@@ -2,44 +2,56 @@
 Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
+-- Some path to customize with your config.
+LLVMRoot = "D:/llvm/llvm-3.3-install/"
+UnitTestPPRoot = "C:/UnitTest++-1.3"
+CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
+ExtraPath = "D:\\msys\\1.0\\local\\bin"
+
+
+-- You shoul not Modify script below this line.
+
+GenGetOptExe = os.pathsearch("gengetopt.exe", os.getenv("PATH"), ExtraPath)
+
+if GenGetOptExe == nil then
+	print ("executable gengetopt not found. CANCEL premake")
+	GenGetOptExe = ""
+	return
+end
+GenGetOptExe = path.join(GenGetOptExe, "gengetopt")
+
+
 if (_ACTION == nil) then
 	return
 end
 
-ActionsData = { ["codelite"] = {["Dir"]="CL"},
-				["codeblocks"] = {["Dir"]="codeblocks"},
-				["vs2005"] = {["Dir"]="vs2005"}, ["vs2008"] = {["Dir"]="vs2008"}, ["vs2010"] = {["Dir"]="vs2010"}
-			}
+ActionsData = {
+	["codelite"] = {["Dir"] = "CL"},
+	["codeblocks"] = {["Dir"] = "codeblocks"},
+	["vs2005"] = {["Dir"] = "vs2005"}, ["vs2008"] = {["Dir"] = "vs2008"}, ["vs2010"] = {["Dir"] = "vs2010"},
+	["gmake"] = {["Dir"] = "gmake"}
+}
 
 if (ActionsData[_ACTION] == nil) then
 	error (_ACTION .. " unsupported")
 end
 
-ConfigurationsData = {["Debug"] = {["Dir"] = "Debug", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
-						["Release"] = {["Dir"] = "Release", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}},
-						["DebugWithDLL"] = {["Dir"] = "DebugWithDLL", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
-						["ReleaseWithDLL"] = {["Dir"] = "ReleaseWithDLL", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}}
-					}
+ConfigurationsData = {
+	["Debug"] = {["Dir"] = "Debug", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
+	["Release"] = {["Dir"] = "Release", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}},
+	["DebugWithDLL"] = {["Dir"] = "DebugWithDLL", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
+	["ReleaseWithDLL"] = {["Dir"] = "ReleaseWithDLL", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}}
+}
 
 LocationDir = path.join(Root, "project/" .. ActionsData[_ACTION].Dir)
 
---LibDir3rd = path.join(ThirdRoot, "lib")
---IncludeDir3rd = path.join(ThirdRoot, "include")
 
-ClangRoot = path.join(ThirdRoot, "clang_llvm-3.1-i386-mingw32-EXPERIMENTAL")
-ClangBinDir = path.join(ClangRoot, "bin")
-ClangIncludeDir = path.join(ClangRoot, "include")
-ClangLibDir = path.join(ClangRoot, "lib")
+LLVMIncludeDir = path.join(LLVMRoot, "include")
+LLVMBinDir = path.join(LLVMRoot, "bin")
+LLVMLibDir = path.join(LLVMRoot, "lib")
 
-UnitTestPPRoot = "d:/UnitTest++-1.3"
 UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
 UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
-
-CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
-
-
-GenGetOptExe = "D:\\Programs\\Msys\\msys\\1.0\\local\\bin\\gengetopt.exe"
-
 
 function DefaultConfiguration()
 	for config,data in pairs(ConfigurationsData) do
@@ -57,40 +69,34 @@ function UseCTemplate()
 	links { "ctemplate_nothreads" }
 end
 
+function LinkToClang()
+	configuration "*WithDLL"
+		links { "clang" }
+	configuration "not *WithDLL"
+	if (_ACTION == "codelite") then
+		links { "liblibclang" } -- hack for codelite which remove one prefix lib
+	else
+		links { "libclang" }
+	end
+		links { "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewriteCore", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+
+		links { "psapi", "imagehlp" }
+		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --libs" .. ")" }
+end
+
+
 solution "ccccc"
 	location ( LocationDir )
 	configurations { "Debug", "Release", "DebugWithDLL", "ReleaseWithDLL" }
 
-	includedirs(ClangIncludeDir)
-	
+	includedirs(LLVMIncludeDir)
+
 	configuration "*WithDLL"
-		libdirs(ClangBinDir)
+		libdirs(LLVMBinDir)
 	configuration "not *WithDLL"
-		libdirs(ClangLibDir)
+		libdirs(LLVMLibDir)
 
-	project "files_generator"
-		kind "ConsoleApp"
-		language "C"
-
-		files { path.join(Root, "src/files_generator/**.*") }
-		postbuildcommands { GenGetOptExe .. " -i " .. path.join(Root, "src/files_generator/parameters.ggo") }
-		DefaultConfiguration()
-
-	project "ccccc_lib"
-		kind "StaticLib"
-		language "C++"
-		targetname("ccccc")
-		files { path.join(Root, "src/lib/**.*") }
-		flags { "ExtraWarnings", "FatalWarnings"}
-
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
-
-		--links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
-		--links { "psapi", "imagehlp" }
-		--linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
-
-		DefaultConfiguration()
-
+-- --------------------------------------
 	project "ccccc_app"
 		kind "ConsoleApp"
 		language "C++"
@@ -102,15 +108,10 @@ solution "ccccc"
 
 		UseCTemplate()
 
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
+		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
 
 		links { "ccccc_lib"}
-		configuration "*WithDLL"
-			links { "clang" }
-		configuration "not *WithDLL"
-			links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
-			links { "psapi", "imagehlp" }
-			linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+		LinkToClang()
 
 		configuration "*"
 		if (_PREMAKE_VERSION >= "4.4") then
@@ -119,6 +120,31 @@ solution "ccccc"
 		end
 
 		DefaultConfiguration()
+
+-- --------------------------------------
+	project "ccccc_lib"
+		kind "StaticLib"
+		language "C++"
+		targetname("ccccc")
+		files { path.join(Root, "src/lib/**.*") }
+		flags { "ExtraWarnings", "FatalWarnings"}
+
+		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+
+		links "files_generator" -- dependency
+
+		DefaultConfiguration()
+
+-- --------------------------------------
+	project "files_generator"
+		kind "ConsoleApp"
+		language "C++"
+
+		files { path.join(Root, "src/files_generator/**.*") }
+		postbuildcommands { GenGetOptExe .. " -i " .. path.join(Root, "src/files_generator/parameters.ggo") }
+		DefaultConfiguration()
+
+-- --------------------------------------
 	project "ccccc_test"
 		kind "ConsoleApp"
 		language "C++"
@@ -130,17 +156,11 @@ solution "ccccc"
 		includedirs {UnitTestPPIncludeDir}
 		libdirs {UnitTestPPLibDir}
 
-		buildoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --cppflags" .. ")" }
-		
+		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+
 		links { "ccccc_lib" }
 		links { "unittest++" }
-		configuration "*WithDLL"
-			links { "clang" }
-		configuration "not *WithDLL"
-			links { "clang", "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewrite", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
-			links { "psapi", "imagehlp" }
-
-			linkoptions { "$(shell " .. path.join(ClangBinDir, "llvm-config") .. " --libs" .. ")" }
+		LinkToClang()
 
 		configuration "*"
 		if (_PREMAKE_VERSION >= "4.4") then
@@ -149,18 +169,15 @@ solution "ccccc"
 
 		DefaultConfiguration()
 
+-- --------------------------------------
+	if (_ACTION ~= "gmake") then -- project to see examples
 	project "sample"
 		kind "StaticLib"
 		language "C++"
 		--flags "WinMain"
 		files { path.join(Root, "samples/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
+		--buildoptions "-std=c++11"
 
 		DefaultConfiguration()
-
-	project "3rd"
-		kind "StaticLib"
-		language "C++"
-		files { path.join(ClangIncludeDir, "**.h") }
-
-		DefaultConfiguration()
+	end
