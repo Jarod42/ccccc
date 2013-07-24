@@ -9,7 +9,7 @@ CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
 ExtraPath = "D:\\msys\\1.0\\local\\bin"
 
 
--- You shoul not Modify script below this line.
+-- You should not modify this script below this line.
 
 GenGetOptExe = os.pathsearch("gengetopt.exe", os.getenv("PATH"), ExtraPath)
 
