@@ -1,3 +1,5 @@
+#if 0 // Hack for dependencies
+
 #
 # Copyright 2012 Joris Dauphin
 #
@@ -33,3 +35,5 @@ option "option-file" - "Read option from this file" string typestr="file" multip
 option "pch" p "Compiled header path" string typestr="pch-file" optional
 option "extra-option" e "Extra option directly given to the clang parser" string typestr="option" multiple optional
 #option "ouput" o ""
+
+#endif // Hack for dependencies
