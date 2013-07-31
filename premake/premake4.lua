@@ -26,10 +26,17 @@ if (_ACTION == nil) then
 end
 
 ActionsData = {
-	["codelite"] = {["Dir"] = "CL"},
-	["codeblocks"] = {["Dir"] = "codeblocks"},
-	["vs2005"] = {["Dir"] = "vs2005"}, ["vs2008"] = {["Dir"] = "vs2008"}, ["vs2010"] = {["Dir"] = "vs2010"},
-	["gmake"] = {["Dir"] = "gmake"}
+	["codelite"] = {["Dir"] = "CL", ["Compiler"] = "g++"},
+	["codeblocks"] = {["Dir"] = "codeblocks", ["Compiler"] = "g++"},
+	["vs2005"] = {["Dir"] = "vs2005", ["Compiler"] = "vc"},
+	["vs2008"] = {["Dir"] = "vs2008", ["Compiler"] = "vc"},
+	["vs2010"] = {["Dir"] = "vs2010", ["Compiler"] = "vc"},
+	["gmake"] = {["Dir"] = "gmake", ["Compiler"] = "g++"}
+}
+
+CompilerData = {
+	["g++"] = { ["buildoptions"] = {"-Wextra"}},
+	["vc"] = {}
 }
 
 if (ActionsData[_ACTION] == nil) then
@@ -54,12 +61,16 @@ UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
 UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
 
 function DefaultConfiguration()
+	compilerData = CompilerData[ActionsData[_ACTION].Compiler]
 	for config,data in pairs(ConfigurationsData) do
 		configuration(config)
 			objdir(path.join(Root, "obj/" .. ActionsData[_ACTION].Dir)) -- premake add $(configName)/$(AppName)
 			targetdir(path.join(Root, "bin/" .. ActionsData[_ACTION].Dir .. "/" .. data.Dir))
 			flags (data.Flags)
 			defines(data.Defines)
+			if (compilerData ~= nil) then
+				buildoptions(compilerData.buildoptions)
+			end
 	end
 end
 
