@@ -31,7 +31,7 @@ namespace use_clang
 class BlockCounter
 {
 public:
-	static unsigned int ComputeNestedBlockCount(const char *filename, const CXCursor& cursor);
+	static unsigned int ComputeNestedBlockCount(const char* filename, const CXCursor& cursor);
 };
 
 } // namespace use_clang

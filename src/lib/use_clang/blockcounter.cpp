@@ -79,7 +79,7 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 }
 
 
-unsigned int BlockCounter::ComputeNestedBlockCount(const char *filename, const CXCursor& cursor)
+unsigned int BlockCounter::ComputeNestedBlockCount(const char* filename, const CXCursor& cursor)
 {
 	ClientData clientData(filename);
 	clang_visitChildren(cursor, BlockCounterVisitor, &clientData);
