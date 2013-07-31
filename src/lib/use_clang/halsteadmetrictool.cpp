@@ -62,7 +62,7 @@ void HalsteadMetricTool::AddOperator(const std::string& spelling)
 	}
 }
 
-void HalsteadMetricTool::operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
+void HalsteadMetricTool::operator()(const CXTranslationUnit& tu, const CXCursor& /*cursor*/, const CXToken& token)
 {
 	if (clang_getTokenKind(token) == CXToken_Comment) {
 		return;

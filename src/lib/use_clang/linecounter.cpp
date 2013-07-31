@@ -39,7 +39,7 @@ LineCounter::LineCounter(const CXCursor& cursor)
 	lineOfCode[0] = lineOfCode[1] = lineOfCode[2] = 0;
 }
 
-void LineCounter::operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
+void LineCounter::operator()(const CXTranslationUnit& tu, const CXCursor& /*cursor*/, const CXToken& token)
 {
 	unsigned startLine, endLine;
 	getStartEndLine(clang_getTokenExtent(tu, token), &startLine, &endLine);
