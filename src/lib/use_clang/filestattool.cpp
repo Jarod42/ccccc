@@ -91,7 +91,7 @@ void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 
 }
 
-enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
+enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
 {
 	ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
 	if (isInFile(client_data->getFilename(), cursor) == false) {
