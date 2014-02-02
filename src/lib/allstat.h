@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -21,13 +21,13 @@
 #ifndef ALL_STAT_H
 #define ALL_STAT_H
 
+#include <memory>
 #include <vector>
-
-#include "filestat.h"
 
 namespace ccccc
 {
 
+class FileStat;
 class Parameters;
 
 class AllStat
@@ -41,7 +41,7 @@ public:
 	const FileStat& getFileStat(unsigned int index) const { return *m_filesStat[index]; }
 
 private:
-	std::vector<FileStat*> m_filesStat;
+	std::vector<std::unique_ptr<FileStat>> m_filesStat;
 };
 
 } // namespace ccccc

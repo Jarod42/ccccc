@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,6 +22,7 @@
 #define NAMESPACE_STAT_H
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -36,9 +37,9 @@ class NamespaceStat
 	friend class FuncStatTool;
 	friend class FileStat;
 public:
-	typedef std::map<std::string, NamespaceStat*> NamespaceMap;
+	typedef std::map<std::string, std::unique_ptr<NamespaceStat>> NamespaceMap;
 	typedef NamespaceMap::const_iterator NamespaceStatConstIterator;
-	typedef std::map<std::string, ClassStat*> ClassMap;
+	typedef std::map<std::string, std::unique_ptr<ClassStat>> ClassMap;
 	typedef ClassMap::const_iterator ClassStatConstIterator;
 public:
 	NamespaceStat(const std::string& name, NamespaceStat* parent);
@@ -64,7 +65,7 @@ private:
 	ClassStat& GetOrCreateClass(const std::string& className);
 private:
 	std::string m_name;
-	std::vector<FuncStat*> m_funcStats;
+	std::vector<std::unique_ptr<FuncStat>> m_funcStats;
 	NamespaceMap m_namespaces;
 	ClassMap m_classes;
 	NamespaceStat* m_parent;

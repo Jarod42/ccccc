@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,6 +22,7 @@
 #define CLASS_STAT_H
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -35,7 +36,7 @@ class ClassStat
 {
 	friend class NamespaceStat;
 public:
-	typedef std::map<std::string, ClassStat*> ClassMap;
+	typedef std::map<std::string, std::unique_ptr<ClassStat>> ClassMap;
 	typedef ClassMap::const_iterator ClassStatConstIterator;
 public:
 	ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent);
@@ -56,7 +57,7 @@ private:
 	ClassStat& GetOrCreateClass(const std::string& funcname);
 private:
 	std::string m_name;
-	std::vector<FuncStat*> m_methodStats;
+	std::vector<std::unique_ptr<FuncStat>> m_methodStats;
 	ClassMap m_classes;
 	NamespaceStat* m_namespaceParent;
 	ClassStat* m_classParent;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -33,19 +33,13 @@ ClassStat::ClassStat(const std::string& name, ClassStat* classParent, NamespaceS
 
 ClassStat::~ClassStat()
 {
-	for (size_t i = 0; i != m_methodStats.size(); ++i) {
-		delete m_methodStats[i];
-	}
-	for (ClassStatConstIterator it = m_classes.begin(); it != m_classes.end(); ++it) {
-		delete it->second;
-	}
 }
 
 const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 {
-	for (size_t i = 0; i != m_methodStats.size(); ++i) {
-		if (m_methodStats[i]->getName().compare(funcNameId) == 0) {
-			return m_methodStats[i];
+	for (auto& methodStat : m_methodStats) {
+		if (methodStat->getName().compare(funcNameId) == 0) {
+			return methodStat.get();
 		}
 	}
 	return nullptr;
@@ -56,7 +50,7 @@ const ClassStat* ClassStat::getClassByName(const char* className) const
 	ClassStatConstIterator it = m_classes.find(className);
 
 	if (it != m_classes.end()) {
-		return (*it).second;
+		return (*it).second.get();
 	}
 	return nullptr;
 }
@@ -68,17 +62,16 @@ ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	ClassStat* classStat = new ClassStat(className, this, nullptr);
-	m_classes.insert(make_pair(className, classStat));
-	return *classStat;
+	std::unique_ptr<ClassStat> classStat(new ClassStat(className, this, nullptr));
+	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
 FuncStat* ClassStat::AddMethodStat(const std::string& className, unsigned int line)
 {
-	FuncStat* stat = new FuncStat(className, line);
+	std::unique_ptr<FuncStat> stat(new FuncStat(className, line));
 
-	m_methodStats.push_back(stat);
-	return stat;
+	m_methodStats.push_back(std::move(stat));
+	return m_methodStats.back().get();
 }
 
 } // namespace ccccc

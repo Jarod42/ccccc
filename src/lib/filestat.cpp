@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -36,8 +36,8 @@ FileStat::~FileStat()
 FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames, const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line)
 {
 	NamespaceStat* namespaceStat = &m_root;
-	for (size_t i = 0; i != namespaceNames.size(); ++i) {
-		namespaceStat = &namespaceStat->GetOrCreateNamespace(namespaceNames[i]);
+	for (const auto& namespaceName : namespaceNames) {
+		namespaceStat = &namespaceStat->GetOrCreateNamespace(namespaceName);
 	}
 	return namespaceStat->AddFuncStat(classeNames, funcname, line);
 }
