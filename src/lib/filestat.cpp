@@ -25,7 +25,7 @@ namespace ccccc
 
 FileStat::FileStat(const std::string& filename) :
 	m_filename(filename),
-	m_root("", NULL)
+	m_root("", nullptr)
 {
 }
 

@@ -28,9 +28,9 @@
 std::string getExePath()
 {
 	char ownPth[MAX_PATH];
-	HMODULE hModule = GetModuleHandle(NULL);
+	HMODULE hModule = GetModuleHandle(nullptr);
 
-	if (hModule != NULL) {
+	if (hModule != nullptr) {
 		GetModuleFileName(hModule, ownPth, sizeof(ownPth));
 	}
 	return dirname(ownPth);

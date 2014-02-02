@@ -48,7 +48,7 @@ const FuncStat* NamespaceStat::getFuncStatByName(const char* funcNameId) const
 			return m_funcStats[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 const NamespaceStat* NamespaceStat::getNamespaceByName(const char* namespaceName) const
@@ -58,7 +58,7 @@ const NamespaceStat* NamespaceStat::getNamespaceByName(const char* namespaceName
 	if (it != m_namespaces.end()) {
 		return (*it).second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 const ClassStat* NamespaceStat::getClassByName(const char* ClassName) const
@@ -68,7 +68,7 @@ const ClassStat* NamespaceStat::getClassByName(const char* ClassName) const
 	if (it != m_classes.end()) {
 		return (*it).second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 NamespaceStat& NamespaceStat::GetOrCreateNamespace(const std::string& namespaceName)
@@ -90,7 +90,7 @@ ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	ClassStat* classStat = new ClassStat(className, NULL, this);
+	ClassStat* classStat = new ClassStat(className, nullptr, this);
 	m_classes.insert(make_pair(className, classStat));
 	return *classStat;
 }

@@ -33,7 +33,7 @@ namespace ccccc
 
 static void GetClangParamFromParam(const Parameters& param, std::vector<const char* >* args)
 {
-	assert(args != NULL);
+	assert(args != nullptr);
 
 	for (Parameters::IncludePathConstIterator it = param.IncludePaths_begin(); it != param.IncludePaths_end(); ++it) {
 		args->push_back("-I");
@@ -77,7 +77,6 @@ void AllStat::Compute(const Parameters& param)
 			use_clang::FileStatTool::Compute(tu, fileStat);
 		} else {
 			// some errors (file not found)
-
 		}
 		clang_disposeTranslationUnit(tu);
 	}

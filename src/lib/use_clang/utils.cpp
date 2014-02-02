@@ -42,7 +42,7 @@ unsigned int getStartLine(CXSourceRange range)
 {
 	const CXSourceLocation start = clang_getRangeStart(range);
 	unsigned int startLine;
-	clang_getExpansionLocation(start, NULL, &startLine, NULL, NULL);
+	clang_getExpansionLocation(start, nullptr, &startLine, nullptr, nullptr);
 	return startLine;
 }
 
@@ -51,8 +51,8 @@ void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine
 	const CXSourceLocation start = clang_getRangeStart(range);
 	const CXSourceLocation end = clang_getRangeEnd(range);
 
-	clang_getExpansionLocation(start, NULL, startLine, NULL, NULL);
-	clang_getExpansionLocation(end, NULL, endLine, NULL, NULL);
+	clang_getExpansionLocation(start, nullptr, startLine, nullptr, nullptr);
+	clang_getExpansionLocation(end, nullptr, endLine, nullptr, nullptr);
 }
 
 void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset)
@@ -60,8 +60,8 @@ void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* end
 	const CXSourceLocation start = clang_getRangeStart(range);
 	const CXSourceLocation end = clang_getRangeEnd(range);
 
-	clang_getExpansionLocation(start, NULL, NULL, NULL, startoffset);
-	clang_getExpansionLocation(end, NULL, NULL, NULL, endOffset);
+	clang_getExpansionLocation(start, nullptr, nullptr, nullptr, startoffset);
+	clang_getExpansionLocation(end, nullptr, nullptr, nullptr, endOffset);
 }
 
 bool isInFile(const char* filename, CXCursor cursor)
@@ -72,10 +72,10 @@ bool isInFile(const char* filename, CXCursor cursor)
 	}
 	const CXSourceLocation start = clang_getRangeStart(range);
 	CXFile file;
-	clang_getExpansionLocation(start, &file, NULL, NULL, NULL);
+	clang_getExpansionLocation(start, &file, nullptr, nullptr, nullptr);
 	const CXString cxCursorFilename = clang_getFileName(file);
 	const char* cstr = clang_getCString(cxCursorFilename);
-	if (cstr == NULL) {
+	if (cstr == nullptr) {
 		clang_disposeString(cxCursorFilename);
 		return false;
 	}
