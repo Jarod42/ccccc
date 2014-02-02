@@ -3,7 +3,7 @@ Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
-LLVMRoot = "D:/llvm/llvm-3.3-install/"
+LLVMRoot = "D:/llvm/llvm-3.4-install/"
 UnitTestPPRoot = "C:/UnitTest++-1.3"
 CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
 ExtraPath = "D:\\msys\\1.0\\local\\bin"
@@ -35,7 +35,7 @@ ActionsData = {
 }
 
 CompilerData = {
-	["g++"] = { ["buildoptions"] = {"-Wextra"}},
+	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++11"}},
 	["vc"] = {}
 }
 
