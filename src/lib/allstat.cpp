@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -50,12 +50,8 @@ static void GetClangParamFromParam(const Parameters& param, std::vector<const ch
 	}
 }
 
-
 AllStat::~AllStat()
 {
-	for (size_t i = 0; i != m_filesStat.size(); ++i) {
-		delete m_filesStat[i];
-	}
 }
 
 void AllStat::Compute(const Parameters& param)
@@ -72,9 +68,9 @@ void AllStat::Compute(const Parameters& param)
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
 		if (tu && use_clang::isValid(tu)) {
-			FileStat* fileStat = new FileStat(filename);
-			m_filesStat.push_back(fileStat);
-			use_clang::FileStatTool::Compute(tu, fileStat);
+			std::unique_ptr<FileStat> fileStat(new FileStat(filename));
+			use_clang::FileStatTool::Compute(tu, fileStat.get());
+			m_filesStat.push_back(std::move(fileStat));
 		} else {
 			// some errors (file not found)
 		}

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,7 +23,9 @@
 
 #include "allstat.h"
 #include "classstat.h"
+#include "filestat.h"
 #include "funcstat.h"
+#include "namespacestat.h"
 #include "parameters.h"
 
 #endif // CCCC_CLANG_API_H
