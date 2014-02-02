@@ -34,8 +34,8 @@
 void InitHardCodedMingwPath(ccccc::Parameters& param)
 {
 	// Hard coded system headersHard coded
-#define MINGWPATH "d:/Programs/mingw-4.6.1"
-#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.6.1"
+#define MINGWPATH "d:/Programs/mingw-4.8.1"
+#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.8.1"
 
 	param.AddInclude(MINGWPATH "/include");
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++");
@@ -58,7 +58,7 @@ TEST(LINECOUNT_FILE_TEST_C)
 	const unsigned int expectedFileCount = 1;
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedFileStat(24, 13, 4, 8);
+	ccccc::LineCount expectedFileStat(25, 13, 4, 8);
 	CHECK_EQUAL_LOC(expectedFileStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 
@@ -88,7 +88,7 @@ TEST(LINECOUNT_FILE_TEST_H)
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(12, 8, 4, 0);
+	ccccc::LineCount expectedStat(13, 8, 4, 0);
 	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
@@ -101,14 +101,14 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 	const std::string filename = "../../../samples/linecount/test_include.cpp";
 
 	param.AddInclude("../../../samples/linecount");
-	//param.AddExtra("-std=c++0x");
+	//param.AddExtra("-std=c++11");
 	param.AddFile(filename);
 	stat.Compute(param);
 
 	unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(23, 14, 4, 6);
+	ccccc::LineCount expectedStat(24, 14, 4, 6);
 	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 }
@@ -121,7 +121,7 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	const std::string filename = "../../../samples/namespace.cpp";
 
 	//param.AddInclude("../../../samples");
-	//param.AddExtra("-std=c++0x");
+	//param.AddExtra("-std=c++11");
 	param.AddFile(filename);
 	stat.Compute(param);
 
@@ -130,11 +130,11 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(4, 4, 0, 0);
 	const unsigned int expectedMvg = 1;
-	CHECK(fileStat.getFuncStatByName("sum(int, int)") == NULL);
+	CHECK(fileStat.getFuncStatByName("sum(int, int)") == nullptr);
 	const ccccc::NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
-	CHECK(namespaceStat != NULL);
+	CHECK(namespaceStat != nullptr);
 	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
-	CHECK(funcStat != NULL);
+	CHECK(funcStat != nullptr);
 	CHECK_EQUAL_LOC(expectedStat, funcStat->getLineCount());
 	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
 }
@@ -147,7 +147,7 @@ TEST(FILE_TEST_CLASS_CPP)
 	const std::string filename = "../../../samples/class.cpp";
 
 	//param.AddInclude("../../../samples");
-	param.AddExtra("-std=c++0x");
+	param.AddExtra("-std=c++11");
 	param.AddFile(filename);
 	stat.Compute(param);
 
@@ -156,26 +156,26 @@ TEST(FILE_TEST_CLASS_CPP)
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
 	const ccccc::ClassStat* classFooStat = fileStat.getClassByName("Foo");
-	CHECK(classFooStat != NULL);
+	CHECK(classFooStat != nullptr);
 	CHECK(classFooStat->getMethodCount() == 4);
-	CHECK(classFooStat->getMethodStatByName("Foo()") != NULL);
-	CHECK(classFooStat->getMethodStatByName("Foo(Foo &&)") != NULL);
-	CHECK(classFooStat->getMethodStatByName("bar()") != NULL);
-	CHECK(classFooStat->getMethodStatByName("isNul()") != NULL);
+	CHECK(classFooStat->getMethodStatByName("Foo()") != nullptr);
+	CHECK(classFooStat->getMethodStatByName("Foo(Foo &&)") != nullptr);
+	CHECK(classFooStat->getMethodStatByName("bar()") != nullptr);
+	CHECK(classFooStat->getMethodStatByName("isNul()") != nullptr);
 
 	CHECK(classFooStat->getClassCount() == 1);
 	const ccccc::ClassStat* classInnerStat = classFooStat->getClassByName("InnerClass");
-	CHECK(classInnerStat != NULL);
-	CHECK(classInnerStat->getMethodStatByName("InnerClass()") != NULL);
-	CHECK(classInnerStat->getMethodStatByName("~InnerClass()") != NULL);
-	CHECK(classInnerStat->getMethodStatByName("bar()") == NULL);
+	CHECK(classInnerStat != nullptr);
+	CHECK(classInnerStat->getMethodStatByName("InnerClass()") != nullptr);
+	CHECK(classInnerStat->getMethodStatByName("~InnerClass()") != nullptr);
+	CHECK(classInnerStat->getMethodStatByName("bar()") == nullptr);
 }
 
 static bool CheckMvg(const ccccc::FileStat& fileStat, const char* funcName, unsigned expectedMvg)
 {
 	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
 
-	if (funcStat == NULL) {
+	if (funcStat == nullptr) {
 		return false;
 	}
 	return expectedMvg == funcStat->getMcCabeCyclomaticNumber();
@@ -216,7 +216,7 @@ static int CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName
 {
 	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
 
-	if (funcStat == NULL) {
+	if (funcStat == nullptr) {
 		return -1;
 	}
 	return funcStat->getNestedBlockCount();
