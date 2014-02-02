@@ -48,7 +48,7 @@ const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 			return m_methodStats[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 const ClassStat* ClassStat::getClassByName(const char* className) const
@@ -58,7 +58,7 @@ const ClassStat* ClassStat::getClassByName(const char* className) const
 	if (it != m_classes.end()) {
 		return (*it).second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
@@ -68,7 +68,7 @@ ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	ClassStat* classStat = new ClassStat(className, this, NULL);
+	ClassStat* classStat = new ClassStat(className, this, nullptr);
 	m_classes.insert(make_pair(className, classStat));
 	return *classStat;
 }
