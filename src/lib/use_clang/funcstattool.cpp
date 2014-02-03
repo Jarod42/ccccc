@@ -36,10 +36,12 @@ namespace
 class FuncStatFeeder
 {
 public:
-	explicit FuncStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor) {
+	explicit FuncStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor)
+	{
 	}
 
-	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token) {
+	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
+	{
 		m_halsteadMetricTool(tu, cursor, token);
 		m_mvg(tu, cursor, token);
 		m_lineCounter(tu, cursor, token);

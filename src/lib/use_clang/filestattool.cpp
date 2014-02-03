@@ -38,10 +38,12 @@ namespace
 class FileStatFeeder
 {
 public:
-	explicit FileStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor) {
+	explicit FileStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor)
+	{
 	}
 
-	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token) {
+	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
+	{
 		m_lineCounter(tu, cursor, token);
 	}
 
