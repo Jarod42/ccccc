@@ -12,6 +12,12 @@ http://clang.llvm.org/
 +ctemplate:
 http://code.google.com/p/ctemplate/
 
+Note: Fix for C++11 compilation of version 2.2 (trunk fixed):
+ctemplate-2.2\src\ctemplate\template_string.h:340
+-  { { str, sizeof(""str"")-1, hash } };                                       \
++  { { str, sizeof("" str "")-1, hash } };                                     \
+
+
 +jquery:
 http://jquery.com/
 
