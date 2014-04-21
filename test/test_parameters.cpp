@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,7 +22,8 @@
 
 #include "parameters.h"
 
-#define ARRAY_SIZE(a) (sizeof (a) / sizeof (*a))
+template <typename T, std::size_t N>
+static constexpr std::size_t ArraySize(const T (&)[N]) { return N; }
 
 template <typename Iterator1, typename Iterator2>
 static bool IsRangeEq(Iterator1 begin1, Iterator1 end1, Iterator2 begin2, Iterator2 end2)
@@ -47,10 +48,10 @@ TEST(PARAMETERS_ADD_FILE)
 	std::string files[] = {"a.c", "a.h", "b.c", "b.h"};
 	ccccc::Parameters param;
 
-	for (int i = 0; i != ARRAY_SIZE(files); ++i) {
-		param.AddFile(files[i]);
+	for (const auto& file : files) {
+		param.AddFile(file);
 	}
-	CHECK(IsRangeEq(files, files + ARRAY_SIZE(files), param.Files_begin(), param.Files_end()));
+	CHECK(IsRangeEq(std::begin(files), std::end(files), param.Files_begin(), param.Files_end()));
 }
 
 TEST(PARAMETERS_ADD_INCLUDE)
@@ -58,10 +59,10 @@ TEST(PARAMETERS_ADD_INCLUDE)
 	std::string includes[] = {"/usr/include", "./", "c:\\foo"};
 	ccccc::Parameters param;
 
-	for (int i = 0; i != ARRAY_SIZE(includes); ++i) {
-		param.AddInclude(includes[i]);
+	for (const auto& include : includes) {
+		param.AddInclude(include);
 	}
-	CHECK(IsRangeEq(includes, includes + ARRAY_SIZE(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
+	CHECK(IsRangeEq(std::begin(includes), std::end(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
 }
 
 TEST(PARAMETERS_ADD_DEFINE)
@@ -69,10 +70,10 @@ TEST(PARAMETERS_ADD_DEFINE)
 	std::string defines[] = {"FOO", "BAR=42"};
 	ccccc::Parameters param;
 
-	for (int i = 0; i != ARRAY_SIZE(defines); ++i) {
-		param.AddDefine(defines[i]);
+	for (const auto& define : defines) {
+		param.AddDefine(define);
 	}
-	CHECK(IsRangeEq(defines, defines + ARRAY_SIZE(defines), param.Defines_begin(), param.Defines_end()));
+	CHECK(IsRangeEq(std::begin(defines), std::end(defines), param.Defines_begin(), param.Defines_end()));
 }
 
 TEST(PARAMETERS_ADD_EXTRA)
@@ -80,10 +81,10 @@ TEST(PARAMETERS_ADD_EXTRA)
 	std::string extras[] = {"-std=c++0x"};
 	ccccc::Parameters param;
 
-	for (int i = 0; i != ARRAY_SIZE(extras); ++i) {
-		param.AddExtra(extras[i]);
+	for (const auto& extra : extras) {
+		param.AddExtra(extra);
 	}
-	CHECK(IsRangeEq(extras, extras + ARRAY_SIZE(extras), param.Extras_begin(), param.Extras_end()));
+	CHECK(IsRangeEq(std::begin(extras), std::end(extras), param.Extras_begin(), param.Extras_end()));
 }
 
 TEST(PARAMETERS_ADD_PCH)
@@ -114,12 +115,12 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 						 };
 	ccccc::Parameters param;
 
-	param.Parse(ARRAY_SIZE(argv), const_cast<char**>(argv));
+	param.Parse(ArraySize(argv), const_cast<char**>(argv));
 
-	CHECK(IsRangeEq(files, files + ARRAY_SIZE(files), param.Files_begin(), param.Files_end()));
-	CHECK(IsRangeEq(includes, includes + ARRAY_SIZE(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
-	CHECK(IsRangeEq(defines, defines + ARRAY_SIZE(defines), param.Defines_begin(), param.Defines_end()));
-	CHECK(IsRangeEq(extras, extras + ARRAY_SIZE(extras), param.Extras_begin(), param.Extras_end()));
+	CHECK(IsRangeEq(std::begin(files), std::end(files), param.Files_begin(), param.Files_end()));
+	CHECK(IsRangeEq(std::begin(includes), std::end(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
+	CHECK(IsRangeEq(std::begin(defines), std::end(defines), param.Defines_begin(), param.Defines_end()));
+	CHECK(IsRangeEq(std::begin(extras), std::end(extras), param.Extras_begin(), param.Extras_end()));
 	CHECK_EQUAL(pchFile, param.GetPch());
 }
 
@@ -142,11 +143,11 @@ TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 						 };
 	ccccc::Parameters param;
 
-	param.Parse(ARRAY_SIZE(argv), const_cast<char**>(argv));
+	param.Parse(ArraySize(argv), const_cast<char**>(argv));
 
-	CHECK(IsRangeEq(files, files + ARRAY_SIZE(files), param.Files_begin(), param.Files_end()));
-	CHECK(IsRangeEq(includes, includes + ARRAY_SIZE(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
-	CHECK(IsRangeEq(defines, defines + ARRAY_SIZE(defines), param.Defines_begin(), param.Defines_end()));
-	CHECK(IsRangeEq(extras, extras + ARRAY_SIZE(extras), param.Extras_begin(), param.Extras_end()));
+	CHECK(IsRangeEq(std::begin(files), std::end(files), param.Files_begin(), param.Files_end()));
+	CHECK(IsRangeEq(std::begin(includes), std::end(includes), param.IncludePaths_begin(), param.IncludePaths_end()));
+	CHECK(IsRangeEq(std::begin(defines), std::end(defines), param.Defines_begin(), param.Defines_end()));
+	CHECK(IsRangeEq(std::begin(extras), std::end(extras), param.Extras_begin(), param.Extras_end()));
 	CHECK_EQUAL(pchFile, param.GetPch());
 }

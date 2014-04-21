@@ -1,5 +1,5 @@
 /*
-** Copyright 2013 Joris Dauphin
+** Copyright 2013-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -75,9 +75,7 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 	return CXChildVisit_Recurse;
 }
 
-
 }
-
 
 unsigned int BlockCounter::ComputeNestedBlockCount(const char* filename, const CXCursor& cursor)
 {
@@ -86,6 +84,5 @@ unsigned int BlockCounter::ComputeNestedBlockCount(const char* filename, const C
 	return clientData.getNestedCount();
 }
 
-} //namespace use_clang
+} // namespace use_clang
 } // namespace ccccc
-

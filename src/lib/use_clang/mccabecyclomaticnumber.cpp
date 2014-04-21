@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -24,6 +24,8 @@
 
 #include "utils.h"
 
+#include <algorithm>
+
 namespace ccccc
 {
 namespace use_clang
@@ -39,24 +41,18 @@ void McCabeCyclomaticNumber::operator()(const CXTranslationUnit& tu, const CXCur
 		const std::string str = getStringAndDispose(clang_getTokenSpelling(tu, token));
 		const char* keywords[] = {"if", "for", "while", "case", "catch"}; // #if, #ifdef, #ifndef, #elif
 
-		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {
-			if (str.compare(keywords[i]) == 0) {
-				++m_value;
-				break;
-			}
+		if (std::find(std::begin(keywords), std::end(keywords), str) != std::end(keywords)) {
+			++m_value;
 		}
 	} else if (clang_getTokenKind(token) == CXToken_Punctuation) {
 		const std::string str = getStringAndDispose(clang_getTokenSpelling(tu, token));
 		const char* keywords[] = {"?", "&&", "||"};
 
-		for (unsigned int i = 0; i != ARRAY_SIZE(keywords); ++i) {
-			if (str.compare(keywords[i]) == 0) {
-				CXCursor cursor = getCursor(tu, token);
+		if (std::find(std::begin(keywords), std::end(keywords), str) != std::end(keywords)) {
+			CXCursor cursor = getCursor(tu, token);
 
-				if (clang_isDeclaration(clang_getCursorKind(cursor)) == false) { // && can be part of declaration in C++11
-					++m_value;
-				}
-				break;
+			if (clang_isDeclaration(clang_getCursorKind(cursor)) == false) { // && can be part of declaration in C++11
+				++m_value;
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -21,6 +21,8 @@
 #include "UnitTest++.h"
 
 #include "allstat.h"
+#include "filestat.h"
+#include "linecount.h"
 #include "parameters.h"
 #include "classstat.h"
 
@@ -30,10 +32,9 @@
 	CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic());   \
 	CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
 
-
 void InitHardCodedMingwPath(ccccc::Parameters& param)
 {
-	// Hard coded system headersHard coded
+	// Hard coded system headers
 #define MINGWPATH "d:/Programs/mingw-4.8.1"
 #define MINGW_LIB_PATH "/lib/gcc/mingw32/4.8.1"
 
@@ -43,6 +44,9 @@ void InitHardCodedMingwPath(ccccc::Parameters& param)
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++/backward");
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include");
 	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include-fixed");
+
+#undef MINGW_LIB_PATH
+#undef MINGWPATH
 }
 
 TEST(LINECOUNT_FILE_TEST_C)
@@ -85,7 +89,7 @@ TEST(LINECOUNT_FILE_TEST_H)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(13, 8, 4, 0);
@@ -105,7 +109,7 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(24, 14, 4, 6);
@@ -125,7 +129,7 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(4, 4, 0, 0);
@@ -151,7 +155,7 @@ TEST(FILE_TEST_CLASS_CPP)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
@@ -193,7 +197,7 @@ TEST(FILE_TEST_MVG_CPP)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
@@ -234,7 +238,7 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	unsigned int expected = 1;
+	const unsigned int expected = 1;
 	CHECK_EQUAL(expected, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 

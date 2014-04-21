@@ -37,7 +37,7 @@ NamespaceStat::~NamespaceStat()
 
 const FuncStat* NamespaceStat::getFuncStatByName(const char* funcNameId) const
 {
-	for (auto& funcStat : m_funcStats) {
+	for (const auto& funcStat : m_funcStats) {
 		if (funcStat->getName().compare(funcNameId) == 0) {
 			return funcStat.get();
 		}

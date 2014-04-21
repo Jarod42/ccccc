@@ -35,17 +35,17 @@ static void GetClangParamFromParam(const Parameters& param, std::vector<const ch
 {
 	assert(args != nullptr);
 
-	for (Parameters::IncludePathConstIterator it = param.IncludePaths_begin(); it != param.IncludePaths_end(); ++it) {
+	for (auto it = param.IncludePaths_begin(); it != param.IncludePaths_end(); ++it) {
 		args->push_back("-I");
 		args->push_back(it->c_str());
 	}
 
-	for (Parameters::DefineConstIterator it = param.Defines_begin(); it != param.Defines_end(); ++it) {
+	for (auto it = param.Defines_begin(); it != param.Defines_end(); ++it) {
 		args->push_back("-D");
 		args->push_back(it->c_str());
 	}
 
-	for (Parameters::ExtraConstIterator it = param.Extras_begin(); it != param.Extras_end(); ++it) {
+	for (auto it = param.Extras_begin(); it != param.Extras_end(); ++it) {
 		args->push_back(it->c_str());
 	}
 }
@@ -63,7 +63,7 @@ void AllStat::Compute(const Parameters& param)
 	std::vector<const char*> args;
 
 	GetClangParamFromParam(param, &args);
-	for (Parameters::FilenameConstIterator it = param.Files_begin(); it != param.Files_end(); ++it) {
+	for (auto it = param.Files_begin(); it != param.Files_end(); ++it) {
 		const std::string& filename = *it;
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
