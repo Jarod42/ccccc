@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -40,17 +40,17 @@ std::string normalizePath(const std::string& path)
 // Default bin location is Root/bin/$IDE/$Config
 std::string getRootPath(const std::string& exePath)
 {
-	std::string::size_type t = exePath.rfind("/");
+	std::string::size_type slashPos = exePath.rfind("/");
 	for (int i = 0; i != 2; ++i) {
-		if (t == std::string::npos) {
+		if (slashPos == std::string::npos) {
 			return exePath;
 		}
-		t = exePath.rfind("/", t - 1);
+		slashPos = exePath.rfind("/", slashPos - 1);
 	}
-	if (exePath.compare(t + 1, 4, "bin/") != 0) {
+	if (exePath.compare(slashPos + 1, 4, "bin/") != 0) {
 		return exePath;
 	}
-	std::string res = exePath.substr(0, t);
+	std::string res = exePath.substr(0, slashPos);
 	return res;
 }
 

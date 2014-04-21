@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -73,7 +73,7 @@ void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesNa
 	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
 		feedDict(classStat.getMethodStat(i), namespacesName, classesName, dict);
 	}
-	for (ccccc::ClassStat::ClassStatConstIterator it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
+	for (auto it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
 		feedDict(*it->second, namespacesName, classesName, dict);
 	}
 }
@@ -92,10 +92,10 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesN
 		const ccccc::FuncStat& funcStat = namespaceStat.getFuncStat(i);
 		feedDict(funcStat, namespacesName, "", dict);
 	}
-	for (ccccc::NamespaceStat::ClassStatConstIterator it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
+	for (auto it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
 		feedDict(*it->second, namespacesName, "", dict);
 	}
-	for (ccccc::NamespaceStat::NamespaceStatConstIterator it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
+	for (auto it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, namespacesName, dict);
 	}
 }
@@ -108,10 +108,10 @@ void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* di
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}
-	for (ccccc::FileStat::NamespaceStatConstIterator it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
+	for (auto it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, "", sectionDict);
 	}
-	for (ccccc::FileStat::ClassStatConstIterator it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
+	for (auto it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
 		feedDict(*it->second, "", "", sectionDict);
 	}
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,8 +20,6 @@
 
 #ifndef UTILS_H
 #define UTILS_H
-
-#define ARRAY_SIZE(a) (sizeof (a) / sizeof(*a))
 
 #include <clang-c/Index.h>
 #include <string>

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2014 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,8 +20,7 @@
 
 #include "UnitTest++.h"
 
-
-int main(int argc, char* argv[])
+int main()
 {
 	return UnitTest::RunAllTests();
 }

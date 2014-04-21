@@ -37,7 +37,7 @@ ClassStat::~ClassStat()
 
 const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 {
-	for (auto& methodStat : m_methodStats) {
+	for (const auto& methodStat : m_methodStats) {
 		if (methodStat->getName().compare(funcNameId) == 0) {
 			return methodStat.get();
 		}
