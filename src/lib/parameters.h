@@ -27,10 +27,10 @@ namespace ccccc
 class Parameters
 {
 public:
-	typedef std::vector<std::string>::const_iterator FilenameConstIterator;
-	typedef std::vector<std::string>::const_iterator IncludePathConstIterator;
-	typedef std::vector<std::string>::const_iterator DefineConstIterator;
-	typedef std::vector<std::string>::const_iterator ExtraConstIterator;
+	using FilenameConstIterator = std::vector<std::string>::const_iterator;
+	using IncludePathConstIterator = std::vector<std::string>::const_iterator;
+	using DefineConstIterator = std::vector<std::string>::const_iterator;
+	using ExtraConstIterator = std::vector<std::string>::const_iterator;
 
 public:
 	Parameters();
