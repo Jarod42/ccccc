@@ -3,11 +3,10 @@ Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
-LLVMRoot = "D:/llvm/llvm-3.4-install/"
+LLVMRoot = "D:/llvm/llvm-3.6.1/"
 UnitTestPPRoot = "C:/UnitTest++-1.3"
 CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
 ExtraPath = "D:\\msys\\1.0\\local\\bin"
-
 
 -- You should not modify this script below this line.
 
@@ -35,7 +34,19 @@ ActionsData = {
 }
 
 CompilerData = {
-	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++11"}},
+	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++14"}},
+	["clang++"] = {
+		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++14"},
+		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"},
+		["includedirs"] = {
+			"D:/Programs/TDM-GCC-32/include",
+			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++",
+			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++/mingw32",
+			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++/backward",
+			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include",
+			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include-fixed"
+		}
+	},
 	["vc"] = {}
 }
 
@@ -69,7 +80,9 @@ function DefaultConfiguration()
 			flags (data.Flags)
 			defines(data.Defines)
 			if (compilerData ~= nil) then
-				buildoptions(compilerData.buildoptions)
+				if compilerData.buildoptions ~= nil then buildoptions(compilerData.buildoptions) end
+				if compilerData.defines ~= nil then defines(compilerData.defines) end
+				if compilerData.includedirs ~= nil then includedirs(compilerData.includedirs) end
 			end
 	end
 end
@@ -89,11 +102,14 @@ function LinkToClang()
 	end
 	configuration "not *WithDLL"
 	if (_ACTION == "codelite") then
-		links { "liblibclang" } -- hack for codelite which remove one prefix lib
+		--links { "liblibclang" } -- hack for codelite which remove one prefix lib
 	else
-		links { "libclang" }
+		links { "clangIndex" }
+		
 	end
-		links { "clangFrontend", "clangDriver", "clangSerialization", "clangParse", "clangSema", "clangAnalysis", "clangRewriteCore", "clangEdit", "clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+		links { "clangFrontend", "clangDriver", "clangSerialization", "clangParse",
+						"clangSema", "clangAnalysis", "clangRewrite", "clangEdit",
+						"clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 
 		links { "psapi", "imagehlp" }
 		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --libs" .. ")" }

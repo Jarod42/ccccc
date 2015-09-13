@@ -62,13 +62,13 @@ ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	std::unique_ptr<ClassStat> classStat(new ClassStat(className, this, nullptr));
+	auto classStat = std::make_unique<ClassStat>(className, this, nullptr);
 	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
 FuncStat* ClassStat::AddMethodStat(const std::string& className, unsigned int line)
 {
-	std::unique_ptr<FuncStat> stat(new FuncStat(className, line));
+	auto stat = std::make_unique<FuncStat>(className, line);
 
 	m_methodStats.push_back(std::move(stat));
 	return m_methodStats.back().get();

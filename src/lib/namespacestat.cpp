@@ -72,7 +72,7 @@ NamespaceStat& NamespaceStat::GetOrCreateNamespace(const std::string& namespaceN
 	if (it != m_namespaces.end()) {
 		return *(*it).second;
 	}
-	std::unique_ptr<NamespaceStat> namespaceStat(new NamespaceStat(namespaceName, this));
+	auto namespaceStat = std::make_unique<NamespaceStat>(namespaceName, this);
 	return *m_namespaces.insert(make_pair(namespaceName, std::move(namespaceStat))).first->second;
 }
 
@@ -83,14 +83,14 @@ ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 	if (it != m_classes.end()) {
 		return *(*it).second;
 	}
-	std::unique_ptr<ClassStat> classStat(new ClassStat(className, nullptr, this));
+	auto classStat = std::make_unique<ClassStat>(className, nullptr, this);
 	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
 FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line)
 {
 	if (classeNames.empty()) {
-		std::unique_ptr<FuncStat> stat(new FuncStat(funcname, line));
+		auto stat = std::make_unique<FuncStat>(funcname, line);
 
 		m_funcStats.push_back(std::move(stat));
 		return m_funcStats.back().get();
