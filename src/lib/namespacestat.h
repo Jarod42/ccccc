@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -40,7 +40,6 @@ public:
 	using NamespaceMap = std::map<std::string, std::unique_ptr<NamespaceStat>>;
 	using NamespaceStatConstIterator = NamespaceMap::const_iterator;
 	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
-	using ClassStatConstIterator = ClassMap::const_iterator;
 public:
 	NamespaceStat(const std::string& name, NamespaceStat* parent);
 	~NamespaceStat();
@@ -56,8 +55,7 @@ public:
 	const NamespaceStat* getNamespaceByName(const char* name) const;
 
 	unsigned int getClassCount() const { return m_classes.size(); }
-	ClassStatConstIterator getClass_begin() const { return m_classes.begin(); }
-	ClassStatConstIterator getClass_end() const { return m_classes.end(); }
+	const ClassMap& getClasses() const { return m_classes; }
 	const ClassStat* getClassByName(const char* name) const;
 private:
 	FuncStat* AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line);

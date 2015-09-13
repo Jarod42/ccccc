@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -78,7 +78,7 @@ NamespaceStat& NamespaceStat::GetOrCreateNamespace(const std::string& namespaceN
 
 ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 {
-	ClassStatConstIterator it = m_classes.find(className);
+	auto it = m_classes.find(className);
 
 	if (it != m_classes.end()) {
 		return *(*it).second;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -40,7 +40,7 @@ class FileStat
 	friend class use_clang::FileStatTool;
 public:
 	using NamespaceStatConstIterator = NamespaceStat::NamespaceStatConstIterator;
-	using ClassStatConstIterator = NamespaceStat::ClassStatConstIterator;
+	using ClassMap = NamespaceStat::ClassMap;
 public:
 	explicit FileStat(const std::string& filename);
 	~FileStat();
@@ -57,8 +57,7 @@ public:
 	const NamespaceStat* getNamespaceByName(const char* name) const { return m_root.getNamespaceByName(name); }
 
 	unsigned int getClassCount() const { return m_root.getClassCount(); }
-	ClassStatConstIterator getClass_begin() const { return m_root.getClass_begin(); }
-	ClassStatConstIterator getClass_end() const { return m_root.getClass_end(); }
+	const ClassMap& getClasses() const { return m_root.getClasses(); }
 	const ClassStat* getClassByName(const char* name) const { return m_root.getClassByName(name); }
 private:
 	FuncStat* AddFuncStat(const std::vector<std::string>& namespaceNames, const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line);
