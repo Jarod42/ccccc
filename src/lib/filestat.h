@@ -39,8 +39,8 @@ class FileStat
 {
 	friend class use_clang::FileStatTool;
 public:
-	typedef NamespaceStat::NamespaceStatConstIterator NamespaceStatConstIterator;
-	typedef NamespaceStat::ClassStatConstIterator ClassStatConstIterator;
+	using NamespaceStatConstIterator = NamespaceStat::NamespaceStatConstIterator;
+	using ClassStatConstIterator = NamespaceStat::ClassStatConstIterator;
 public:
 	explicit FileStat(const std::string& filename);
 	~FileStat();

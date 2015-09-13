@@ -37,10 +37,10 @@ class NamespaceStat
 	friend class FuncStatTool;
 	friend class FileStat;
 public:
-	typedef std::map<std::string, std::unique_ptr<NamespaceStat>> NamespaceMap;
-	typedef NamespaceMap::const_iterator NamespaceStatConstIterator;
-	typedef std::map<std::string, std::unique_ptr<ClassStat>> ClassMap;
-	typedef ClassMap::const_iterator ClassStatConstIterator;
+	using NamespaceMap = std::map<std::string, std::unique_ptr<NamespaceStat>>;
+	using NamespaceStatConstIterator = NamespaceMap::const_iterator;
+	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
+	using ClassStatConstIterator = ClassMap::const_iterator;
 public:
 	NamespaceStat(const std::string& name, NamespaceStat* parent);
 	~NamespaceStat();
