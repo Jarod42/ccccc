@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -27,12 +27,6 @@ namespace ccccc
 class Parameters
 {
 public:
-	using FilenameConstIterator = std::vector<std::string>::const_iterator;
-	using IncludePathConstIterator = std::vector<std::string>::const_iterator;
-	using DefineConstIterator = std::vector<std::string>::const_iterator;
-	using ExtraConstIterator = std::vector<std::string>::const_iterator;
-
-public:
 	Parameters();
 
 	void Parse(int argc, char** argv);
@@ -43,19 +37,12 @@ public:
 	void SetPch(const std::string& pchFile) { m_pch = pchFile; }
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
 
-	FilenameConstIterator Files_begin() const { return m_files.begin(); }
-	FilenameConstIterator Files_end() const { return m_files.end(); }
-
-	IncludePathConstIterator IncludePaths_begin() const { return m_includePaths.begin(); }
-	IncludePathConstIterator IncludePaths_end() const { return m_includePaths.end(); }
-
-	DefineConstIterator Defines_begin() const { return m_defines.begin(); }
-	DefineConstIterator Defines_end() const { return m_defines.end(); }
-
-	ExtraConstIterator Extras_begin() const { return m_extras.begin(); }
-	ExtraConstIterator Extras_end() const { return m_extras.end(); }
-
+	const std::vector<std::string>& Filenames() const { return m_files; }
+	const std::vector<std::string>& IncludePaths() const { return m_includePaths; }
+	const std::vector<std::string>& Defines() const { return m_defines; }
+	const std::vector<std::string>& Extras() const { return m_extras; }
 	const std::string& GetPch() const { return m_pch; }
+
 private:
 	std::vector<std::string> m_files;
 	std::vector<std::string> m_includePaths;

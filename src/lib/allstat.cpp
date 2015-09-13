@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -35,18 +35,18 @@ static void GetClangParamFromParam(const Parameters& param, std::vector<const ch
 {
 	assert(args != nullptr);
 
-	for (auto it = param.IncludePaths_begin(); it != param.IncludePaths_end(); ++it) {
+	for (const auto& includePath : param.IncludePaths()) {
 		args->push_back("-I");
-		args->push_back(it->c_str());
+		args->push_back(includePath.c_str());
 	}
 
-	for (auto it = param.Defines_begin(); it != param.Defines_end(); ++it) {
+	for (const auto& define : param.Defines()) {
 		args->push_back("-D");
-		args->push_back(it->c_str());
+		args->push_back(define.c_str());
 	}
 
-	for (auto it = param.Extras_begin(); it != param.Extras_end(); ++it) {
-		args->push_back(it->c_str());
+	for (const auto& extra : param.Extras()) {
+		args->push_back(extra.c_str());
 	}
 }
 
@@ -63,8 +63,7 @@ void AllStat::Compute(const Parameters& param)
 	std::vector<const char*> args;
 
 	GetClangParamFromParam(param, &args);
-	for (auto it = param.Files_begin(); it != param.Files_end(); ++it) {
-		const std::string& filename = *it;
+	for (const std::string& filename : param.Filenames()) {
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
 		if (tu && use_clang::isValid(tu)) {
