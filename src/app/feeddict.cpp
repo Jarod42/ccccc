@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -73,8 +73,8 @@ void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesNa
 	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
 		feedDict(classStat.getMethodStat(i), namespacesName, classesName, dict);
 	}
-	for (auto it = classStat.getClass_begin(); it != classStat.getClass_end(); ++it) {
-		feedDict(*it->second, namespacesName, classesName, dict);
+	for (const auto& p : classStat.getInnerClasses()) {
+		feedDict(*p.second, namespacesName, classesName, dict);
 	}
 }
 
@@ -92,8 +92,8 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesN
 		const ccccc::FuncStat& funcStat = namespaceStat.getFuncStat(i);
 		feedDict(funcStat, namespacesName, "", dict);
 	}
-	for (auto it = namespaceStat.getClass_begin(); it != namespaceStat.getClass_end(); ++it) {
-		feedDict(*it->second, namespacesName, "", dict);
+	for (const auto& p : namespaceStat.getClasses()) {
+		feedDict(*p.second, namespacesName, "", dict);
 	}
 	for (auto it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, namespacesName, dict);
@@ -111,7 +111,7 @@ void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* di
 	for (auto it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
 		feedDict(*it->second, "", sectionDict);
 	}
-	for (auto it = fileStat.getClass_begin(); it != fileStat.getClass_end(); ++it) {
-		feedDict(*it->second, "", "", sectionDict);
+	for (const auto& p : fileStat.getClasses()) {
+		feedDict(*p.second, "", "", sectionDict);
 	}
 }

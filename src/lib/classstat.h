@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -37,7 +37,6 @@ class ClassStat
 	friend class NamespaceStat;
 public:
 	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
-	using ClassStatConstIterator = ClassMap::const_iterator;
 public:
 	ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent);
 	~ClassStat();
@@ -48,8 +47,7 @@ public:
 	const FuncStat* getMethodStatByName(const char* funcNameId) const;
 
 	unsigned int getClassCount() const { return m_classes.size(); }
-	ClassStatConstIterator getClass_begin() const { return m_classes.begin(); }
-	ClassStatConstIterator getClass_end() const { return m_classes.end(); }
+	const ClassMap& getInnerClasses() const { return m_classes; }
 	const ClassStat* getClassByName(const char* funcNameId) const;
 
 private:

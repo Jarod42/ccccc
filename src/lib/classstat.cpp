@@ -47,7 +47,7 @@ const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 
 const ClassStat* ClassStat::getClassByName(const char* className) const
 {
-	ClassStatConstIterator it = m_classes.find(className);
+	auto it = m_classes.find(className);
 
 	if (it != m_classes.end()) {
 		return (*it).second.get();
@@ -57,7 +57,7 @@ const ClassStat* ClassStat::getClassByName(const char* className) const
 
 ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 {
-	ClassStatConstIterator it = m_classes.find(className);
+	auto it = m_classes.find(className);
 
 	if (it != m_classes.end()) {
 		return *(*it).second;
