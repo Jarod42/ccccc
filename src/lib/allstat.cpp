@@ -68,7 +68,7 @@ void AllStat::Compute(const Parameters& param)
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
 		if (tu && use_clang::isValid(tu)) {
-			std::unique_ptr<FileStat> fileStat(new FileStat(filename));
+			auto fileStat = std::make_unique<FileStat>(filename);
 			use_clang::FileStatTool::Compute(tu, fileStat.get());
 			m_filesStat.push_back(std::move(fileStat));
 		} else {
