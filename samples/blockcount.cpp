@@ -115,6 +115,6 @@ void function_block()
 		}
 		whichvalue += autoblock;
 	}
-	assert(whichvalue == 6)
+	assert(whichvalue == 6);
 }
 
