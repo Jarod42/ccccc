@@ -95,8 +95,8 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesN
 	for (const auto& p : namespaceStat.getClasses()) {
 		feedDict(*p.second, namespacesName, "", dict);
 	}
-	for (auto it = namespaceStat.getNamespace_begin(); it != namespaceStat.getNamespace_end(); ++it) {
-		feedDict(*it->second, namespacesName, dict);
+	for (const auto& p : namespaceStat.getNamespaces()) {
+		feedDict(*p.second, namespacesName, dict);
 	}
 }
 
@@ -108,8 +108,8 @@ void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* di
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}
-	for (auto it = fileStat.getNamespace_begin(); it != fileStat.getNamespace_end(); ++it) {
-		feedDict(*it->second, "", sectionDict);
+	for (const auto& p : fileStat.getNamespaces()) {
+		feedDict(*p.second, "", sectionDict);
 	}
 	for (const auto& p : fileStat.getClasses()) {
 		feedDict(*p.second, "", "", sectionDict);

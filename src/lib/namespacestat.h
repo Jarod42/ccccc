@@ -38,7 +38,6 @@ class NamespaceStat
 	friend class FileStat;
 public:
 	using NamespaceMap = std::map<std::string, std::unique_ptr<NamespaceStat>>;
-	using NamespaceStatConstIterator = NamespaceMap::const_iterator;
 	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
 public:
 	NamespaceStat(const std::string& name, NamespaceStat* parent);
@@ -50,8 +49,7 @@ public:
 	const FuncStat* getFuncStatByName(const char* funcNameId) const;
 
 	unsigned int getNamespaceCount() const { return m_namespaces.size(); }
-	NamespaceStatConstIterator getNamespace_begin() const { return m_namespaces.begin(); }
-	NamespaceStatConstIterator getNamespace_end() const { return m_namespaces.end(); }
+	const NamespaceMap& getNamespaces() const { return m_namespaces; }
 	const NamespaceStat* getNamespaceByName(const char* name) const;
 
 	unsigned int getClassCount() const { return m_classes.size(); }

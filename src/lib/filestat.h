@@ -39,7 +39,7 @@ class FileStat
 {
 	friend class use_clang::FileStatTool;
 public:
-	using NamespaceStatConstIterator = NamespaceStat::NamespaceStatConstIterator;
+	using NamespaceMap = NamespaceStat::NamespaceMap;
 	using ClassMap = NamespaceStat::ClassMap;
 public:
 	explicit FileStat(const std::string& filename);
@@ -52,8 +52,7 @@ public:
 	const FuncStat* getFuncStatByName(const char* funcNameId) const { return m_root.getFuncStatByName(funcNameId); }
 
 	unsigned int getNamespaceCount() const { return m_root.getNamespaceCount(); }
-	NamespaceStatConstIterator getNamespace_begin() const { return m_root.getNamespace_begin(); }
-	NamespaceStatConstIterator getNamespace_end() const { return m_root.getNamespace_end(); }
+	const NamespaceMap& getNamespaces() const { return m_root.getNamespaces(); }
 	const NamespaceStat* getNamespaceByName(const char* name) const { return m_root.getNamespaceByName(name); }
 
 	unsigned int getClassCount() const { return m_root.getClassCount(); }
@@ -69,7 +68,5 @@ private:
 };
 
 } // namespace ccccc
-
-
 
 #endif // FILE_STAT_H
