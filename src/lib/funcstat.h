@@ -46,6 +46,7 @@ public:
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
 	const MaintainabilityIndex& getMaintainabilityIndex() const { return m_maintainabilityIndex; }
 	unsigned int getNestedBlockCount() const { return m_nestedBlockCount; }
+	int getCallerCount() const { return m_callerCount; }
 private:
 	std::string m_name;
 	LineCount m_lineCount;
@@ -54,6 +55,10 @@ private:
 	HalsteadMetric m_halsteadMetric;
 	MaintainabilityIndex m_maintainabilityIndex;
 	unsigned int m_nestedBlockCount;
+	//  A Unified Symbol Resolution (USR) is a string
+	// that identifies a particular entity
+	std::string m_usr;
+	int m_callerCount = 0;
 };
 
 } // namespace ccccc

@@ -18,7 +18,6 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-//#include <iostream>
 #include <sstream>
 
 #include "cccc_clang_api.h"
@@ -33,7 +32,10 @@ static void SetDoubleValue(ctemplate::TemplateDictionary& dict, const char* key,
 	dict.SetValue(key, ss.str());
 }
 
-void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FuncStat& funcStat,
+			  const std::string& namespacesName,
+			  const std::string& classesName,
+			  ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("ForEachFunctions");
 
@@ -44,6 +46,8 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 	sectionDict.SetIntValue("LOCcom", funcStat.getLineCount().getLineOfCode_comment());
 	sectionDict.SetIntValue("LOCbl", funcStat.getLineCount().getLineOfCode_blank());
 	sectionDict.SetIntValue("MVG", funcStat.getMcCabeCyclomaticNumber());
+
+	sectionDict.SetIntValue("CallerCount", funcStat.getCallerCount());
 
 	sectionDict.SetIntValue("Halstead_n", funcStat.getHalsteadMetric().getVocabularySize());
 	sectionDict.SetIntValue("Halstead_N", funcStat.getHalsteadMetric().getProgramLength());
@@ -63,7 +67,10 @@ void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName
 	sectionDict.SetValue("classesName", classesName);
 }
 
-void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesName, std::string classesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::ClassStat& classStat,
+			  const std::string& namespacesName,
+			  std::string classesName,
+			  ctemplate::TemplateDictionary* dict)
 {
 	if (classesName.empty() == false) {
 		classesName += "::";
@@ -78,7 +85,9 @@ void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesNa
 	}
 }
 
-void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesName, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::NamespaceStat& namespaceStat,
+			  std::string namespacesName,
+			  ctemplate::TemplateDictionary* dict)
 {
 	if (namespacesName.empty() == false) {
 		namespacesName += "::";
@@ -100,7 +109,8 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesN
 	}
 }
 
-void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FileStat& fileStat,
+			  ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary* sectionDict = dict->AddSectionDictionary("ForEachFiles");
 

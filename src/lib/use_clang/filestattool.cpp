@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,6 +20,7 @@
 
 #include "filestattool.h"
 
+#include "../classstat.h"
 #include "funcstattool.h"
 #include "linecounter.h"
 #include "localstattool.h"
@@ -55,14 +56,16 @@ public:
 class ClientData
 {
 public:
-	explicit ClientData(CXTranslationUnit tu, FileStat* stat) :
+	explicit ClientData(CXTranslationUnit tu, GlobalData& globalData, FileStat* stat) :
 		m_stat(stat),
-		m_tu(tu)
+		m_tu(tu),
+		m_globalData(globalData)
 	{}
 
 	FileStat& getFileStat() { return *m_stat; }
 	const char* getFilename() const { return m_stat->getFilename().c_str(); }
 	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
+	GlobalData& getGlobalData() { return m_globalData; }
 
 	void PushNamespace(const std::string& name) { namespaceNames.push_back(name);}
 	void PopNamespace() { namespaceNames.pop_back(); }
@@ -70,6 +73,7 @@ public:
 private:
 	FileStat* m_stat;
 	CXTranslationUnit m_tu;
+	GlobalData& m_globalData;
 	std::vector<std::string> namespaceNames;
 };
 
@@ -93,7 +97,10 @@ void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 
 }
 
-enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
+enum CXChildVisitResult
+FileStatTool::FileCursorVisitor(CXCursor cursor,
+								CXCursor /*parent*/,
+								CXClientData user_data)
 {
 	ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
 	if (isInFile(client_data->getFilename(), cursor) == false) {
@@ -112,7 +119,7 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			const unsigned int line = getStartLine(range);
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, funcStat);
+			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, client_data->getGlobalData(), funcStat);
 			return CXChildVisit_Continue;
 		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
 				   || clang_getCursorKind(cursor) == CXCursor_Constructor
@@ -129,7 +136,7 @@ enum CXChildVisitResult FileStatTool::FileCursorVisitor(CXCursor cursor, CXCurso
 			// TODO: get ClassStat.
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, funcStat);
+			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, client_data->getGlobalData(), funcStat);
 			return CXChildVisit_Continue;
 		} else {
 			return CXChildVisit_Recurse;
@@ -148,7 +155,7 @@ void FileStatTool::VisitNamespace(CXCursor cursor, CXClientData user_data)
 	client_data->PopNamespace();
 }
 
-void FileStatTool::Compute(const CXTranslationUnit& tu, FileStat* stat)
+void FileStatTool::Compute(const CXTranslationUnit& tu, GlobalData& globalData, FileStat* stat)
 {
 	CXCursor cursor = clang_getTranslationUnitCursor(tu);
 	FileStatFeeder fileStatFeeder(cursor);
@@ -160,8 +167,33 @@ void FileStatTool::Compute(const CXTranslationUnit& tu, FileStat* stat)
 	stat->m_lineCount.lineOfCode_program = fileStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = fileStatFeeder.m_lineCounter.getLineOfCode_blank();
 
-	ClientData clientData(tu, stat);
+	ClientData clientData(tu, globalData, stat);
 	clang_visitChildren(cursor, FileCursorVisitor, &clientData);
+}
+
+void FileStatTool::PostFeed(const GlobalData& globalData, NamespaceStat* stat)
+{
+	for (auto& funcStat : stat->m_funcStats) {
+		FuncStatTool::PostFeed(globalData, funcStat.get());
+	}
+	for (auto& p: stat->m_namespaces) {
+		FileStatTool::PostFeed(globalData, p.second.get());
+	}
+	for (auto& p: stat->m_classes) {
+		FileStatTool::PostFeed(globalData, p.second.get());
+	}
+}
+
+void FileStatTool::PostFeed(const GlobalData& globalData, ClassStat* stat)
+{
+	for (auto& funcStat : stat->m_methodStats) {
+		FuncStatTool::PostFeed(globalData, funcStat.get());
+	}
+}
+
+void FileStatTool::PostFeed(const GlobalData& globalData, FileStat* stat)
+{
+	PostFeed(globalData, &stat->m_root);
 }
 
 } // namespace use_clang

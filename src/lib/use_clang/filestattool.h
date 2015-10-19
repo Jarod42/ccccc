@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -26,15 +26,20 @@
 
 namespace ccccc
 {
+	struct GlobalData;
+
 namespace use_clang
 {
-
 
 class FileStatTool
 {
 public:
-	static void Compute(const CXTranslationUnit& tu, FileStat* stat);
+	static void Compute(const CXTranslationUnit& tu, GlobalData&, FileStat* stat);
+	static void PostFeed(const GlobalData& globalData, FileStat* stat);
 private:
+	static void PostFeed(const GlobalData& globalData, NamespaceStat* stat);
+	static void PostFeed(const GlobalData& globalData, ClassStat* stat);
+
 	static enum CXChildVisitResult FileCursorVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data);
 	static void VisitNamespace(CXCursor cursor, CXClientData user_data);
 };

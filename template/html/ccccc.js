@@ -36,6 +36,7 @@ function setClassToColumn() {
 	setClassToSpecificColumnBadForLowValue('Halstead_V', 10, 15);
 	setClassToSpecificColumnBadForHighValue('Halstead_B', 1, 2);
 	setClassToSpecificColumnBadForLowValue('MI', 65, 85);
+	setClassToSpecificColumnBadForLowValue('CallerCount', -1, 0);
 }
 
 function onDocLoaded() {

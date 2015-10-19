@@ -28,14 +28,18 @@
 
 namespace ccccc
 {
+namespace use_clang
+{
+class FileStatTool;
+}
 
 class FuncStat;
 class ClassStat;
 
 class NamespaceStat
 {
-	friend class FuncStatTool;
 	friend class FileStat;
+	friend class use_clang::FileStatTool;
 public:
 	using NamespaceMap = std::map<std::string, std::unique_ptr<NamespaceStat>>;
 	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
