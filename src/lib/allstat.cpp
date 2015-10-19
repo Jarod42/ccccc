@@ -21,6 +21,7 @@
 #include "allstat.h"
 
 #include "filestat.h"
+#include "globaldata.h"
 #include "parameters.h"
 #include "use_clang/filestattool.h"
 #include "use_clang/utils.h"
@@ -63,12 +64,13 @@ void AllStat::Compute(const Parameters& param)
 	std::vector<const char*> args;
 
 	GetClangParamFromParam(param, &args);
+	GlobalData globalData;
 	for (const std::string& filename : param.Filenames()) {
 		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
 
 		if (tu && use_clang::isValid(tu)) {
 			auto fileStat = std::make_unique<FileStat>(filename);
-			use_clang::FileStatTool::Compute(tu, fileStat.get());
+			use_clang::FileStatTool::Compute(tu, globalData, fileStat.get());
 			m_filesStat.push_back(std::move(fileStat));
 		} else {
 			// some errors (file not found)
@@ -76,6 +78,9 @@ void AllStat::Compute(const Parameters& param)
 		clang_disposeTranslationUnit(tu);
 	}
 	clang_disposeIndex(index);
+	for (auto& fileStat : m_filesStat) {
+		use_clang::FileStatTool::PostFeed(globalData, fileStat.get());
+	}
 }
 
 } // namespace ccccc

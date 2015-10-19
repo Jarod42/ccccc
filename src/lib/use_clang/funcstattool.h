@@ -26,13 +26,16 @@
 
 namespace ccccc
 {
+struct GlobalData;
+
 namespace use_clang
 {
 
 class FuncStatTool
 {
 public:
-	static void Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat);
+	static void Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat);
+	static void PostFeed(const GlobalData& globalData, FuncStat* stat);
 };
 
 } // namespace use_clang

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,6 +20,8 @@
 
 #include "funcstattool.h"
 
+#include "../caller_count.h"
+#include "../globaldata.h"
 #include "blockcounter.h"
 #include "localstattool.h"
 #include "linecounter.h"
@@ -53,10 +55,28 @@ public:
 	LineCounter m_lineCounter;
 };
 
+enum CXChildVisitResult
+CallerCounterVisitor(CXCursor cursor,
+					 CXCursor /*parent*/,
+					 CXClientData user_data)
+{
+	auto* callerCountData = reinterpret_cast<CallerCountData*>(user_data);
+	auto cursorKind = clang_getCursorKind(cursor);
+	if (cursorKind == CXCursorKind::CXCursor_CallExpr) {
+		const auto referencedCursor = clang_getCursorReferenced(cursor);
+		const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
+
+		callerCountData->m_counts[usr]++;
+	}
+	return CXChildVisitResult::CXChildVisit_Recurse;
+}
+
 } // anonymous namespace
 
-void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, FuncStat* stat)
+void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat)
 {
+	stat->m_usr = getStringAndDispose(clang_getCursorUSR(cursor));
+
 	FuncStatFeeder funcStatFeeder(cursor);
 	processTokens(tu, cursor, funcStatFeeder);
 
@@ -68,7 +88,18 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
 	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
 	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor) - 1;
+
+	clang_visitChildren(cursor, &CallerCounterVisitor, &globalData.m_callerCountData);
+}
+
+void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
+{
+	const auto& m = globalData.m_callerCountData.m_counts;
+
+	const auto it = m.find(stat->m_usr);
+	stat->m_callerCount = it == m.end() ? 0 : it->second;
 }
 
 } // namespace use_clang
+
 } // namespace ccccc
