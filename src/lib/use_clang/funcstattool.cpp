@@ -62,11 +62,17 @@ CallerCounterVisitor(CXCursor cursor,
 {
 	auto* callerCountData = reinterpret_cast<CallerCountData*>(user_data);
 	auto cursorKind = clang_getCursorKind(cursor);
-	if (cursorKind == CXCursorKind::CXCursor_CallExpr) {
+	if (cursorKind == CXCursorKind::CXCursor_DeclRefExpr
+		|| cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
 		const auto referencedCursor = clang_getCursorReferenced(cursor);
-		const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
+		auto refcursorKind = clang_getCursorKind(referencedCursor);
 
-		callerCountData->m_counts[usr]++;
+		if (refcursorKind == CXCursorKind::CXCursor_CXXMethod
+			|| refcursorKind == CXCursorKind::CXCursor_FunctionDecl) {
+
+			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
+			callerCountData->m_counts[usr]++;
+		}
 	}
 	return CXChildVisitResult::CXChildVisit_Recurse;
 }
