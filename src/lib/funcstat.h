@@ -40,6 +40,10 @@ public:
 	FuncStat(const std::string& funcname, unsigned int line);
 
 	const std::string& getName() const { return m_name; }
+	bool isConst() const { return m_isConst; }
+	bool isStatic() const { return m_isStatic; }
+	bool isVirtual() const { return m_isVirtual; }
+	bool isOverriden() const { return m_isOverriden; }
 	const LineCount& getLineCount() const { return m_lineCount; }
 	unsigned int getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	int getLineDefinition() const { return m_line; }
@@ -50,6 +54,10 @@ public:
 	unsigned int getCallerCount() const { return m_callerCount; }
 private:
 	std::string m_name;
+	bool m_isConst = false;
+	bool m_isStatic = false;
+	bool m_isVirtual = false;
+	bool m_isOverriden = false;
 	LineCount m_lineCount;
 	int m_line;
 	unsigned int m_mcCabeCyclomaticNumber; // MVG

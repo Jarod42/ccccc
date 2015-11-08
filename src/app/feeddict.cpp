@@ -40,6 +40,17 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("ForEachFunctions");
 
 	sectionDict.SetValue("funcName", funcStat.getName());
+	if (funcStat.isOverriden()) {
+		sectionDict.ShowSection("override");
+	} else if (funcStat.isVirtual()) {
+		sectionDict.ShowSection("virtual");
+	}
+	if (funcStat.isStatic()) {
+		sectionDict.ShowSection("static");
+	}
+	if (funcStat.isConst()) {
+		sectionDict.ShowSection("const");
+	}
 	sectionDict.SetIntValue("lineDefinition", funcStat.getLineDefinition());
 	sectionDict.SetIntValue("LOCphy", funcStat.getLineCount().getLineOfCode_physic());
 	sectionDict.SetIntValue("LOCpro", funcStat.getLineCount().getLineOfCode_program());
