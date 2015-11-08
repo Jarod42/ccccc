@@ -83,6 +83,15 @@ CallerCounterVisitor(CXCursor cursor,
 	return CXChildVisitResult::CXChildVisit_Recurse;
 }
 
+bool IsOverridenMethod(const CXCursor& cursor)
+{
+	CXCursor* overriden = nullptr;
+	unsigned int count;
+	clang_getOverriddenCursors(cursor, &overriden, &count);
+	clang_disposeOverriddenCursors(overriden);
+	return count != 0;
+}
+
 } // anonymous namespace
 
 void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat)
@@ -101,6 +110,10 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
 	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor) - 1;
 
+	stat->m_isConst = clang_CXXMethod_isConst(cursor);
+	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
+	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
+	stat->m_isOverriden = IsOverridenMethod(cursor);
 	CallerUserData userData(0, &globalData.m_callerCountData);
 	clang_visitChildren(cursor, &CallerCounterVisitor, &userData);
 	stat->m_callCount = userData.first;
