@@ -47,6 +47,7 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	sectionDict.SetIntValue("LOCbl", funcStat.getLineCount().getLineOfCode_blank());
 	sectionDict.SetIntValue("MVG", funcStat.getMcCabeCyclomaticNumber());
 
+	sectionDict.SetIntValue("CallCount", funcStat.getCallCount());
 	sectionDict.SetIntValue("CallerCount", funcStat.getCallerCount());
 
 	sectionDict.SetIntValue("Halstead_n", funcStat.getHalsteadMetric().getVocabularySize());

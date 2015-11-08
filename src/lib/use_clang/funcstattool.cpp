@@ -35,6 +35,9 @@ namespace use_clang
 
 namespace
 {
+
+using CallerUserData = std::pair<int, CallerCountData*>;
+
 class FuncStatFeeder
 {
 public:
@@ -60,7 +63,9 @@ CallerCounterVisitor(CXCursor cursor,
 					 CXCursor /*parent*/,
 					 CXClientData user_data)
 {
-	auto* callerCountData = reinterpret_cast<CallerCountData*>(user_data);
+	auto* callerUserData = reinterpret_cast<CallerUserData*>(user_data);
+	auto& callCount = callerUserData->first;
+	auto* callerCountData = callerUserData->second;
 	auto cursorKind = clang_getCursorKind(cursor);
 	if (cursorKind == CXCursorKind::CXCursor_DeclRefExpr
 		|| cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
@@ -72,6 +77,7 @@ CallerCounterVisitor(CXCursor cursor,
 
 			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
 			callerCountData->m_counts[usr]++;
+			callCount++;
 		}
 	}
 	return CXChildVisitResult::CXChildVisit_Recurse;
@@ -95,7 +101,9 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
 	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor) - 1;
 
-	clang_visitChildren(cursor, &CallerCounterVisitor, &globalData.m_callerCountData);
+	CallerUserData userData(0, &globalData.m_callerCountData);
+	clang_visitChildren(cursor, &CallerCounterVisitor, &userData);
+	stat->m_callCount = userData.first;
 }
 
 void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
