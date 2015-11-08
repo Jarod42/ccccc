@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -46,7 +46,8 @@ public:
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
 	const MaintainabilityIndex& getMaintainabilityIndex() const { return m_maintainabilityIndex; }
 	unsigned int getNestedBlockCount() const { return m_nestedBlockCount; }
-	int getCallerCount() const { return m_callerCount; }
+	unsigned int getCallCount() const { return m_callCount; }
+	unsigned int getCallerCount() const { return m_callerCount; }
 private:
 	std::string m_name;
 	LineCount m_lineCount;
@@ -58,7 +59,8 @@ private:
 	//  A Unified Symbol Resolution (USR) is a string
 	// that identifies a particular entity
 	std::string m_usr;
-	int m_callerCount = 0;
+	unsigned int m_callCount = 0; // How many function this function call
+	unsigned int m_callerCount = 0; // How many time this function is called
 };
 
 } // namespace ccccc
