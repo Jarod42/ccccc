@@ -26,6 +26,8 @@
 #include "maintainabilityindex.h"
 #include <string>
 
+#include <clang-c/Index.h>
+
 namespace ccccc
 {
 namespace use_clang
@@ -67,6 +69,7 @@ private:
 	//  A Unified Symbol Resolution (USR) is a string
 	// that identifies a particular entity
 	std::string m_usr;
+	CXCursor m_cursor; // Identifier
 	unsigned int m_callCount = 0; // How many function this function call
 	unsigned int m_callerCount = 0; // How many time this function is called
 };

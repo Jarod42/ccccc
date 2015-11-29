@@ -74,10 +74,29 @@ CallerCounterVisitor(CXCursor cursor,
 
 		if (refcursorKind == CXCursorKind::CXCursor_CXXMethod
 			|| refcursorKind == CXCursorKind::CXCursor_FunctionDecl) {
-
+			if (callerCountData->m_templatedVisited.count(cursor) != 0) {
+				return CXChildVisitResult::CXChildVisit_Recurse;
+			}
+			callerCountData->m_templatedVisited.insert(cursor);
 			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
-			callerCountData->m_counts[usr]++;
+			callerCountData->m_counts[referencedCursor]++;
+			callerCountData->m_usrCounts[usr]++;
 			callCount++;
+
+			if (clang_Cursor_getNumTemplateArguments(referencedCursor) != -1) {
+				// non specialized template instanciation
+				// counts for the generic template
+				if (callerCountData->m_templatedSpecializations.count(referencedCursor) == 0) {
+					auto templateCursor = clang_getSpecializedCursorTemplate(referencedCursor);
+					const auto templateusr = getStringAndDispose(clang_getCursorUSR(templateCursor));
+					callerCountData->m_counts[templateCursor]++;
+					callerCountData->m_usrCounts[templateusr]++;
+				}
+				// For template, follow the instantiation
+				// to be able to call dependent code.
+				CallerUserData userData(0, callerCountData);
+				clang_visitChildren(referencedCursor, &CallerCounterVisitor, &userData);
+			}
 		}
 	}
 	return CXChildVisitResult::CXChildVisit_Recurse;
@@ -92,11 +111,21 @@ bool IsOverridenMethod(const CXCursor& cursor)
 	return count != 0;
 }
 
+template <typename Map>
+auto Value(const Map& m,
+		   const typename Map::key_type& key,
+		   const typename Map::mapped_type& default_value)
+{
+	const auto it = m.find(key);
+	return it == m.end() ? default_value : it->second;
+}
+
 } // anonymous namespace
 
 void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat)
 {
 	stat->m_usr = getStringAndDispose(clang_getCursorUSR(cursor));
+	stat->m_cursor = cursor;
 
 	FuncStatFeeder funcStatFeeder(cursor);
 	processTokens(tu, cursor, funcStatFeeder);
@@ -114,6 +143,9 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
 	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
 	stat->m_isOverriden = IsOverridenMethod(cursor);
+	if (clang_Cursor_getNumTemplateArguments(cursor) != -1) {
+		globalData.m_callerCountData.m_templatedSpecializations.insert(cursor);
+	}
 	CallerUserData userData(0, &globalData.m_callerCountData);
 	clang_visitChildren(cursor, &CallerCounterVisitor, &userData);
 	stat->m_callCount = userData.first;
@@ -121,10 +153,11 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 
 void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
 {
-	const auto& m = globalData.m_callerCountData.m_counts;
+	const auto& data = globalData.m_callerCountData;
+	const std::size_t cursorCount = Value(data.m_counts, stat->m_cursor, 0u);
+	const std::size_t usrCount = Value(data.m_usrCounts, stat->m_usr, 0u);
 
-	const auto it = m.find(stat->m_usr);
-	stat->m_callerCount = it == m.end() ? 0 : it->second;
+	stat->m_callerCount = std::max(usrCount, cursorCount);
 }
 
 } // namespace use_clang
