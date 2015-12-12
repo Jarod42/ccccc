@@ -29,19 +29,21 @@ class Parameters
 public:
 	Parameters();
 
-	void Parse(int argc, char** argv);
+	void Parse(const std::string& cccccRoot, int argc, char** argv);
 
 	void AddFile(const std::string& filename) { m_files.push_back(filename); }
 	void AddInclude(const std::string& includePath) { m_includePaths.push_back(includePath); }
 	void AddDefine(const std::string& define) { m_defines.push_back(define); }
 	void SetPch(const std::string& pchFile) { m_pch = pchFile; }
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
+	void SetTemplateFilename(const std::string& templateFilename) { m_template = templateFilename; }
 
 	const std::vector<std::string>& Filenames() const { return m_files; }
 	const std::vector<std::string>& IncludePaths() const { return m_includePaths; }
 	const std::vector<std::string>& Defines() const { return m_defines; }
 	const std::vector<std::string>& Extras() const { return m_extras; }
 	const std::string& GetPch() const { return m_pch; }
+	const std::string& GetTemplateFilename() const { return m_template; }
 
 private:
 	std::vector<std::string> m_files;
@@ -49,7 +51,7 @@ private:
 	std::vector<std::string> m_defines;
 	std::string m_pch;
 	std::vector<std::string> m_extras;
+	std::string m_template;
 };
-
 
 }

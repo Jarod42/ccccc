@@ -80,56 +80,66 @@ TEST(PARAMETERS_ADD_PCH)
 
 TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 {
+	const std::string cccccRoot = ".";
 	const char* argv0 = "ccccc_test";
 	const char* includeFlag = "-I";
 	const char* defineFlag = "-D";
 	const char* extraFlag = "-e";
 	const char* pchFlag = "-p";
+	const char* templateFlag = "-t";
 	const std::vector<std::string> files{"a.c", "a.h"};
 	const std::vector<std::string> includes{"includeDir1", "includeDir2"};
 	const std::vector<std::string> defines{"FOO", "BAR=42"};
 	const std::vector<std::string> extras{"-std=c++0x"};
 	std::string pchFile = "pchFile";
+	std::string templateFile = "templateFile";
 	const char* argv[] = {argv0,
 						  includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
 						  pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
+						  templateFlag, templateFile.c_str(),
 						  files[0].c_str(), files[1].c_str()
 						 };
 	ccccc::Parameters param;
 
-	param.Parse(ArraySize(argv), const_cast<char**>(argv));
+	param.Parse(cccccRoot, ArraySize(argv), const_cast<char**>(argv));
 
 	CHECK(files == param.Filenames());
 	CHECK(includes == param.IncludePaths());
 	CHECK(defines == param.Defines());
 	CHECK(extras == param.Extras());
 	CHECK_EQUAL(pchFile, param.GetPch());
+	CHECK_EQUAL(templateFile, param.GetTemplateFilename());
 }
 
 TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 {
+	const std::string cccccRoot = ".";
 	const char* argv0 = "ccccc_test";
 	const char* includeFlag = "--include-dir";
 	const char* defineFlag = "--define";
 	const char* extraFlag = "--extra-option";
 	const char* pchFlag = "--pch";
+	const char* templateFlag = "--template-file";
 	const std::vector<std::string> files{"a.c", "a.h"};
 	const std::vector<std::string> includes{"includeDir1", "includeDir2"};
 	const std::vector<std::string> defines{"FOO", "BAR=42"};
 	const std::vector<std::string> extras{"-std=c++0x"};
 	std::string pchFile = "pchFile";
+	std::string templateFile = "templateFile";
 	const char* argv[] = {argv0,
 						  includeFlag, includes[0].c_str(), defineFlag, defines[0].c_str(), extraFlag, extras[0].c_str(),
 						  pchFlag, pchFile.c_str(), defineFlag, defines[1].c_str(), includeFlag, includes[1].c_str(),
+						  templateFlag, templateFile.c_str(),
 						  files[0].c_str(), files[1].c_str()
 						 };
 	ccccc::Parameters param;
 
-	param.Parse(ArraySize(argv), const_cast<char**>(argv));
+	param.Parse(cccccRoot, ArraySize(argv), const_cast<char**>(argv));
 
 	CHECK(files == param.Filenames());
 	CHECK(includes == param.IncludePaths());
 	CHECK(defines == param.Defines());
 	CHECK(extras == param.Extras());
 	CHECK_EQUAL(pchFile, param.GetPch());
+	CHECK_EQUAL(templateFile, param.GetTemplateFilename());
 }

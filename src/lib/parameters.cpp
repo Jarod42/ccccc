@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -33,7 +33,7 @@ Parameters::Parameters()
 {
 }
 
-void Parameters::Parse(int argc, char** argv)
+void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
 {
 	gengetopt_args_info args_info;
 
@@ -81,6 +81,12 @@ void Parameters::Parse(int argc, char** argv)
 
 	if (args_info.pch_given) {
 		SetPch(args_info.pch_arg);
+	}
+
+	if (args_info.template_file_given) {
+		SetTemplateFilename(args_info.template_file_arg);
+	} else {
+		SetTemplateFilename(cccccRoot + "/template/html/template.tpl");
 	}
 
 	cmdline_parser_free(&args_info);  /* release allocated memory */

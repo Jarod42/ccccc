@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2015 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -56,17 +56,17 @@ std::string getRootPath(const std::string& exePath)
 
 int main(int argc, char* argv[])
 {
+	const std::string cccccPath = normalizePath(getExePath());
+	const std::string cccccRoot = getRootPath(cccccPath);
 	ccccc::Parameters params;
 
-	params.Parse(argc, argv);
+	params.Parse(cccccRoot, argc, argv);
 	ccccc::AllStat allStat;
 
 	allStat.Compute(params);
 
-	const std::string cccccPath = normalizePath(getExePath());
-	const std::string cccccRoot = getRootPath(cccccPath);
 	ctemplate::TemplateDictionary dict("root");
-	const std::string templateFilename = cccccRoot + "/template/html/template.tpl";
+	const std::string templateFilename = params.GetTemplateFilename();
 
 	dict.SetFilename(templateFilename);
 	dict.SetValue("cccccPath", cccccPath);
