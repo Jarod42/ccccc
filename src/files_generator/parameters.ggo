@@ -1,7 +1,7 @@
 #if 0 // Hack for dependencies
 
 #
-# Copyright 2012-2014 Joris Dauphin
+# Copyright 2012-2015 Joris Dauphin
 #
 
 #
@@ -22,7 +22,7 @@
 #
 
 package "ccccc"
-version "1.2"
+version "1.3"
 #purpose "<purpose>"
 usage "ccccc [OPTIONS]... [FILES]... > output.html"
 description "Compute metrics from input files and output the report"
@@ -34,6 +34,7 @@ option "define" D "Predefine name as a macro, with definition" string typestr="n
 option "option-file" - "Read option from this file" string typestr="file" multiple optional
 option "pch" p "Compiled header path" string typestr="pch-file" optional
 option "extra-option" e "Extra option directly given to the clang parser" string typestr="option" multiple optional
+option "template-file" t "template file to use for the report (default is template/html/template.tpl)" string typestr="template-file" optional
 #option "ouput" o ""
 
 #endif // Hack for dependencies
