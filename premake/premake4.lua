@@ -97,12 +97,13 @@ function LinkToClang()
 		links { "clangIndex" }
 		
 	end
-		links { "clangFrontend", "clangDriver", "clangSerialization", "clangParse",
-						"clangSema", "clangAnalysis", "clangRewrite", "clangEdit",
-						"clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
+		links { "clang", "clangIndex", "clangFormat", "clangTooling",
+				"clangToolingCore", "clangFrontend", "clangDriver",
+				"clangSerialization", "clangParse", "clangSema",
+				"clangAnalysis", "clangRewrite", "clangEdit",
+				"clangAST", "clangLex", "clangBasic" }
 
-		links { "psapi", "imagehlp" }
-		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs support" .. ")" }
+		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs all support" .. ")" }
 end
 
 
@@ -187,7 +188,7 @@ solution "ccccc"
 		--flags "WinMain"
 		files { path.join(Root, "samples/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
-		--buildoptions "-std=c++11"
+		--buildoptions "-std=c++14"
 
 		DefaultConfiguration()
 	end
