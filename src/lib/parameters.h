@@ -27,7 +27,7 @@ namespace ccccc
 class Parameters
 {
 public:
-	Parameters();
+	Parameters() = default;
 
 	void Parse(const std::string& cccccRoot, int argc, char** argv);
 
