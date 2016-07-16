@@ -3,22 +3,11 @@ Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
-LLVMRoot = "D:/llvm/llvm-3.6.1/"
+LLVMRoot = "C:/Perso/msys/mingw/"
 UnitTestPPRoot = "C:/UnitTest++-1.3"
 CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
-ExtraPath = "D:\\msys\\1.0\\local\\bin"
 
 -- You should not modify this script below this line.
-
-GenGetOptExe = os.pathsearch("gengetopt.exe", os.getenv("PATH"), ExtraPath)
-
-if GenGetOptExe == nil then
-	print ("executable gengetopt not found. CANCEL premake")
-	GenGetOptExe = ""
-	return
-end
-GenGetOptExe = path.join(GenGetOptExe, "gengetopt")
-
 
 if (_ACTION == nil) then
 	return
@@ -39,12 +28,12 @@ CompilerData = {
 		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++14"},
 		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"},
 		["includedirs"] = {
-			"D:/Programs/TDM-GCC-32/include",
-			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++",
-			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++/mingw32",
-			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include/c++/backward",
-			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include",
-			"D:/Programs/TDM-GCC-32/lib/gcc/mingw32/4.9.2/include-fixed"
+			"C:/Perso/TDM-GCC-64/include",
+			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++",
+			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32",
+			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward",
+			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include",
+			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed"
 		}
 	},
 	["vc"] = {}
@@ -96,13 +85,14 @@ end
 function LinkToClang()
 	configuration "*WithDLL"
 	if (_ACTION == "codelite") then
-		links { "liblibclang" } -- hack for codelite which remove one prefix lib
+		links { "libclang" }
+		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs support" .. ")" }
 	else
 		links { "libclang" }
 	end
 	configuration "not *WithDLL"
 	if (_ACTION == "codelite") then
-		--links { "liblibclang" } -- hack for codelite which remove one prefix lib
+		--links { "libclang" }
 	else
 		links { "clangIndex" }
 		
@@ -112,7 +102,7 @@ function LinkToClang()
 						"clangAST", "clangLex", "clangBasic", "LLVMMC", "LLVMSupport" }
 
 		links { "psapi", "imagehlp" }
-		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --libs" .. ")" }
+		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs support" .. ")" }
 end
 
 
@@ -162,17 +152,6 @@ solution "ccccc"
 
 		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
 
-		links "files_generator" -- dependency
-
-		DefaultConfiguration()
-
--- --------------------------------------
-	project "files_generator"
-		kind "ConsoleApp"
-		language "C++"
-
-		files { path.join(Root, "src/files_generator/**.*") }
-		postbuildcommands { GenGetOptExe .. " -i " .. path.join(Root, "src/files_generator/parameters.ggo") }
 		DefaultConfiguration()
 
 -- --------------------------------------

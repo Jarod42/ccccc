@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2016 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,76 +20,97 @@
 
 #include "parameters.h"
 
-#include "../../generatedsrc/cmdline.h"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#include "../../generatedsrc/cmdline.cpp"
-#pragma GCC diagnostic pop
+#include <llvm/Support/CommandLine.h>
+
+#include <iostream>
 
 namespace ccccc
 {
 
-Parameters::Parameters()
-{
-}
-
-void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
-{
-	gengetopt_args_info args_info;
-
-	//cmdline_parser_init(&args_info);
-	/* let's call our cmdline parser */
-	if (cmdline_parser(argc, argv, &args_info) != 0) {
-		cmdline_parser_free(&args_info);  /* release allocated memory */
-		exit(1);
-	}
-
-	/* initialize the parameters structure */
-	struct cmdline_parser_params* params = cmdline_parser_params_create();
-
-	for (unsigned int i = 0; i != args_info.option_file_given; ++i) {
-		/*
-		  override command line options,
-		  but do not initialize args_info, check for required options.
-		  NOTICE: we must NOT skip the 0 assignment to initialize,
-		  since its default value is 1 and override defaults to 0
-		  while check_required is already set to its default value, 1
-		*/
-		params->initialize = 0;
-		params->override = 1;
-		/* call the config file parser */
-		if (cmdline_parser_config_file(args_info.option_file_arg[i], &args_info, params) != 0) {
-			cmdline_parser_free(&args_info);  /* release allocated memory */
-			exit(1);
+	namespace
+	{
+		void ShowVersion()
+		{
+			std::cerr << "CCCCC version 1.3" << std::endl;
 		}
 	}
 
-	for (unsigned i = 0 ; i != args_info.inputs_num ; ++i) {
-		AddFile(args_info.inputs[i]);
-	}
-	for (unsigned i = 0; i != args_info.define_given; ++i) {
-		AddDefine(args_info.define_arg[i]);
-	}
+void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
+{
+	llvm::cl::list<std::string> defines{
+		"define",
+		llvm::cl::desc("Specify define"),
+		llvm::cl::value_desc("define")
+	};
+	llvm::cl::alias defineAlias{
+		"D",
+		llvm::cl::desc("Alias for -define"),
+		llvm::cl::aliasopt(defines)
+	};
 
-	for (unsigned i = 0; i != args_info.include_dir_given; ++i) {
-		AddInclude(args_info.include_dir_arg[i]);
-	}
+	llvm::cl::list<std::string> extraOptions{
+		"extra-option",
+		llvm::cl::desc("Extra option directly given to the clang parser"),
+		llvm::cl::value_desc("extra-option")
+	};
+	llvm::cl::alias extraAlias{
+		"e",
+		llvm::cl::desc("Alias for -extra-option"),
+		llvm::cl::aliasopt(extraOptions)
+	};
+	llvm::cl::list<std::string> includes{
+		"include-dir",
+		llvm::cl::desc("Specify include path"),
+		llvm::cl::value_desc("path")
+	};
+	llvm::cl::alias includeAlias{
+		"I",
+		llvm::cl::desc("Alias for -include-dir"),
+		llvm::cl::aliasopt(includes)
+	};
+	llvm::cl::opt<std::string> templateFile{
+		"template-file",
+		llvm::cl::desc("template file to use for the report (default is template/html/template.tpl)"),
+		llvm::cl::value_desc("template-file"),
+		llvm::cl::init(cccccRoot + "/template/html/template.tpl")
+	};
+	llvm::cl::alias includeTemplate{
+		"t",
+		llvm::cl::desc("Alias for -template-file"),
+		llvm::cl::aliasopt(templateFile)
+	};
+	llvm::cl::opt<std::string> pch{
+		"pch",
+		llvm::cl::desc("Compiled header path"),
+		llvm::cl::value_desc("pch-file")
+	};
+	llvm::cl::list<std::string> inputFilenames{
+		llvm::cl::Positional,
+		llvm::cl::desc("<input files>"),
+		llvm::cl::Required
+	};
+	llvm::cl::SetVersionPrinter(ShowVersion);
+	llvm::cl::ParseCommandLineOptions(
+		argc,
+		argv,
+		"Compute metrics from input files and output the report");
 
-	for (unsigned i = 0; i != args_info.extra_option_given; ++i) {
-		AddExtra(args_info.extra_option_arg[i]);
+	for (const auto& f : inputFilenames) {
+		AddFile(f);
 	}
-
-	if (args_info.pch_given) {
-		SetPch(args_info.pch_arg);
+	for (const auto& d : defines) {
+		AddDefine(d);
 	}
-
-	if (args_info.template_file_given) {
-		SetTemplateFilename(args_info.template_file_arg);
-	} else {
-		SetTemplateFilename(cccccRoot + "/template/html/template.tpl");
+	for (const auto& i : includes) {
+		AddInclude(i);
 	}
-
-	cmdline_parser_free(&args_info);  /* release allocated memory */
+	for (const auto& e : extraOptions) {
+		AddExtra(e);
+	}
+	if (!pch.empty()) {
+		SetPch(pch);
+	}
+	SetTemplateFilename(templateFile);
 }
 
 }
