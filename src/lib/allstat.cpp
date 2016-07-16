@@ -66,7 +66,7 @@ void AllStat::Compute(const Parameters& param)
 	GetClangParamFromParam(param, &args);
 	GlobalData globalData;
 	for (const std::string& filename : param.Filenames()) {
-		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), &args[0], args.size(), 0, 0, 0);
+		CXTranslationUnit tu = clang_parseTranslationUnit(index, filename.c_str(), args.data(), args.size(), 0, 0, 0);
 
 		if (tu && use_clang::isValid(tu)) {
 			auto fileStat = std::make_unique<FileStat>(filename);
