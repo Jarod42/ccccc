@@ -99,7 +99,7 @@ const char* function_switch(int i)
 		case 4: return "friday";
 		case 5:
 		case 6: return "week end";
-		default: return NULL;
+		default: return 0;
 	}
 }
 
@@ -115,6 +115,5 @@ void function_block()
 		}
 		whichvalue += autoblock;
 	}
-	assert(whichvalue == 6);
+	whichvalue = 42;
 }
-
