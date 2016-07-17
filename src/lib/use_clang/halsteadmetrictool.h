@@ -40,10 +40,6 @@ public:
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
 	void update(HalsteadMetric* halsteadMetric);
-	unsigned int getOperatorCount() const { return m_operatorCount; }
-	unsigned int getOperandCount() const { return m_operandCount; }
-	unsigned int getUniqueOperatorCount() const { return m_uniqueOperatorCount; }
-	unsigned int getUniqueOperandCount() const { return m_uniqueOperandCount; }
 
 private:
 	void AddOperand(const std::string& spelling);
