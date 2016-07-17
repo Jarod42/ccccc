@@ -18,7 +18,7 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "UnitTest++.h"
+#include <UnitTest++/UnitTest++.h>
 
 int main()
 {

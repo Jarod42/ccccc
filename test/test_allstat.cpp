@@ -18,7 +18,7 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "UnitTest++.h"
+#include <UnitTest++/UnitTest++.h>
 
 #include "allstat.h"
 #include "filestat.h"
@@ -62,7 +62,7 @@ TEST(LINECOUNT_FILE_TEST_C)
 	const unsigned int expectedFileCount = 1;
 	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedFileStat(25, 13, 4, 8);
+	ccccc::LineCount expectedFileStat(23, 12, 3, 8);
 	CHECK_EQUAL_LOC(expectedFileStat, fileStat.getLineCount());
 	CHECK_EQUAL(filename, fileStat.getFilename());
 

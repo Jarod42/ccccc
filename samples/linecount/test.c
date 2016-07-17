@@ -1,8 +1,6 @@
 #define SIX 1 + 5
 #define NINE 8 + 1
 
-#include "stdlib.h"
-
 int main(int argc, char** argv);
 
 /* multi
