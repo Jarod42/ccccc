@@ -36,6 +36,22 @@ std::string getExePath()
 	return dirname(ownPth);
 }
 
+#elif defined(__linux__) || defined(__unix__)
+
+#include <climits>
+#include <unistd.h>
+
+std::string getExePath()
+{
+	char buff[PATH_MAX];
+
+	const auto len = ::readlink("/proc/self/exe", buff, sizeof (buff) - 1);
+	if (len != -1) {
+		buff[len] = '\0';
+		return buff;
+	}
+	return {};
+}
 #else
 
 //Mac OS X: _NSGetExecutablePath() (man 3 dyld)

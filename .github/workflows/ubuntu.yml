@@ -1,0 +1,61 @@
+name: Ubuntu
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: aptget premake
+      run: sudo apt-get install premake4
+
+    - name: aptget libunittest++
+      run: sudo apt-get install libunittest++
+
+    - name: aptget llvm
+      id: LLVM
+      run: |
+          sudo apt-get install clang-9 libclang-9-dev llvm-9-dev llvm-9-runtime llvm-9
+          echo "::set-output name=LLVM_ROOT::/usr/lib/llvm-9"
+
+    - name: DEBUG llvm
+      run: |
+          echo "LLVM_ROOT:" $LLVM_ROOT
+          echo "================ ls $LLVM_ROOT/lib" && ls $LLVM_ROOT/lib
+          echo "================ ls $LLVM_ROOT/bin" && ls $LLVM_ROOT/bin
+          echo "================ llvm-config --cppflags" && $LLVM_ROOT/bin/llvm-config --cppflags
+          echo "================ llvm-config --ldflags" && $LLVM_ROOT/bin/llvm-config --system-libs --ldflags --libs all support
+      env:
+          LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
+
+    - name: checkout ctemplate
+      uses: actions/checkout@v2
+      with:
+          repository: olafvdspek/ctemplate
+          ref: ctemplate-2.4
+    - name: build ctemplate
+      run: |
+          ./autogen.sh && ./configure
+          make
+          sudo make install
+          rm -Rf *
+
+    - uses: actions/checkout@v2
+
+    - name: premake gmake
+      run: premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+
+    - name: make config=releasewithdll
+      run: |
+          cd project/gmake && make config=releasewithdll verbose=1
+          cd ../../bin/gmake/ReleaseWithDLL && ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    - name: make config=release
+      run: |
+          cd project/gmake && make config=release verbose=1
+          cd ../../bin/gmake/Release && ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help

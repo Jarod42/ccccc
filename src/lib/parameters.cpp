@@ -29,9 +29,9 @@ namespace ccccc
 
 	namespace
 	{
-		void ShowVersion()
+		void ShowVersion(llvm::raw_ostream& os)
 		{
-			std::cerr << "CCCCC version 1.3" << std::endl;
+			os << "CCCCC version 1.3\n";
 		}
 	}
 

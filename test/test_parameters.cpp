@@ -78,6 +78,9 @@ TEST(PARAMETERS_ADD_PCH)
 	CHECK_EQUAL(pchFile, param.GetPch());
 }
 
+#if 0 // param.Parse is not reentrant :/
+// because of llvm::cl::ParseCommandLineOptions
+
 TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 {
 	const std::string cccccRoot = ".";
@@ -111,8 +114,10 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 	CHECK_EQUAL(templateFile, param.GetTemplateFilename());
 }
 
+#endif
+
 #if 0 // param.Parse is not reentrant :/
-// beccause of llvm::cl::ParseCommandLineOptions
+// because of llvm::cl::ParseCommandLineOptions
 
 TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 {

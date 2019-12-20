@@ -3,15 +3,29 @@ Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
-LLVMRoot = "C:/Perso/msys/mingw/"
 UnitTestPPRoot = "C:/UnitTest++-1.3"
-CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.2");
+CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.4");
 
 -- You should not modify this script below this line.
+
+newoption {
+   trigger = "llvm-root",
+   value = "path",
+   description = "path of llvm root (contains lib include bin/llvm-config)"
+}
 
 if (_ACTION == nil) then
 	return
 end
+
+LLVMRoot = _OPTIONS["llvm-root"]
+
+if (LLVMRoot == nil or LLVMRoot == "") then
+	print("No llvm-root provided")
+	print("Generation aborted")
+	return
+end
+
 
 ActionsData = {
 	["codelite"] = {["Dir"] = "CL", ["Compiler"] = "g++"},
@@ -23,18 +37,10 @@ ActionsData = {
 }
 
 CompilerData = {
-	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++14"}},
+	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++17"}},
 	["clang++"] = {
-		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++14"},
-		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"},
-		["includedirs"] = {
-			"C:/Perso/TDM-GCC-64/include",
-			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++",
-			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32",
-			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward",
-			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include",
-			"C:/Perso/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed"
-		}
+		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++17"},
+		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
 	},
 	["vc"] = {}
 }
@@ -58,7 +64,7 @@ LLVMBinDir = path.join(LLVMRoot, "bin")
 LLVMLibDir = path.join(LLVMRoot, "lib")
 
 UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
-UnitTestPPLibDir = path.join(UnitTestPPRoot, "Release")
+UnitTestPPLibDir = "/usr/local/lib"
 
 function DefaultConfiguration()
 	compilerData = CompilerData[ActionsData[_ACTION].Compiler]
@@ -82,39 +88,38 @@ function UseCTemplate()
 	links { "ctemplate_nothreads" }
 end
 
+function Llvm_config_cpp_flags()
+	buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+end
+
 function LinkToClang()
 	configuration "*WithDLL"
-	if (_ACTION == "codelite") then
-		links { "libclang" }
+		links { "clang", "LLVMSupport", "tinfo" }
 		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs support" .. ")" }
-	else
-		links { "libclang" }
-	end
+		linkoptions { "-pthread" }
+
 	configuration "not *WithDLL"
-	if (_ACTION == "codelite") then
-		--links { "libclang" }
-	else
-		links { "clangIndex" }
-		
-	end
 		links { "clang", "clangIndex", "clangFormat", "clangTooling",
 				"clangToolingCore", "clangFrontend", "clangDriver",
 				"clangSerialization", "clangParse", "clangSema",
 				"clangAnalysis", "clangRewrite", "clangEdit",
-				"clangAST", "clangLex", "clangBasic" }
+				"clangAST", "clangLex", "clangBasic", "LLVMSupport", "tinfo"}
 
 		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs all support" .. ")" }
+		linkoptions { "-pthread" }
+
 end
 
 
 solution "ccccc"
 	location ( LocationDir )
-	configurations { "Debug", "Release", "DebugWithDLL", "ReleaseWithDLL" }
+	configurations { "DebugWithDLL", "ReleaseWithDLL", "Debug", "Release" }
 
 	includedirs(LLVMIncludeDir)
 
 	configuration "*WithDLL"
 		libdirs(LLVMBinDir)
+		libdirs(LLVMLibDir)
 	configuration "not *WithDLL"
 		libdirs(LLVMLibDir)
 
@@ -128,9 +133,9 @@ solution "ccccc"
 
 		includedirs { path.join(Root, "src/lib/") }
 
-		UseCTemplate()
+		Llvm_config_cpp_flags()
 
-		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+		UseCTemplate()
 
 		links { "ccccc_lib"}
 		LinkToClang()
@@ -151,8 +156,7 @@ solution "ccccc"
 		files { path.join(Root, "src/lib/**.*") }
 		flags { "ExtraWarnings", "FatalWarnings"}
 
-		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
-
+		Llvm_config_cpp_flags()
 		DefaultConfiguration()
 
 -- --------------------------------------
@@ -167,10 +171,10 @@ solution "ccccc"
 		includedirs {UnitTestPPIncludeDir}
 		libdirs {UnitTestPPLibDir}
 
-		buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+		Llvm_config_cpp_flags()
 
 		links { "ccccc_lib" }
-		links { "unittest++" }
+		links { "UnitTest++" }
 		LinkToClang()
 
 		configuration "*"
