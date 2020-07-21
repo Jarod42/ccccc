@@ -1,0 +1,42 @@
+name: Windows
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
+
+    - name: build ctemplate
+      run: |
+          cd 3rd
+          unzip ctemplate-ctemplate-2.3.zip
+          cd ctemplate-ctemplate-2.3
+          cd src/htmlparser
+          ./generate_fsm.py htmlparser_fsm.config > htmlparser_fsm.h
+          ./generate_fsm.py jsparser_fsm.config > jsparser_fsm.h
+          ./generate_fsm.py ../tests/statemachine_test_fsm.config > ../tests/statemachine_test_fsm.h
+          cd ../..
+          devenv /Upgrade ctemplate.sln
+          MSBuild.exe /m ctemplate.sln /p:Configuration=release
+
+    - name: premake vs2017
+      run: premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" vs2017
+
+    - name: make config=releasewithdll
+      run: |
+          cd project/vs2017 && MSBuild.exe /m ccccc.sln /p:Configuration=ReleaseWithDll
+          cd ../../bin/vs2017/ReleaseWithDLL && ./ccccc_test
+      continue-on-error: true
+
+    - name: make config=release
+      run: |
+          cd project/vs2017 && MSBuild.exe /m ccccc.sln /p:Configuration=Release
+          cd ../../bin/vs2017/Release && ./ccccc_test
