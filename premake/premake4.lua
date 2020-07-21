@@ -4,14 +4,20 @@ ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
 UnitTestPPRoot = "C:/UnitTest++-1.3"
-CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.4");
+--CTemplateRoot = path.join(ThirdRoot, "ctemplate-ctemplate-2.4");
 
 -- You should not modify this script below this line.
 
 newoption {
-   trigger = "llvm-root",
-   value = "path",
-   description = "path of llvm root (contains lib include bin/llvm-config)"
+	trigger = "llvm-root",
+	value = "path",
+	description = "path of llvm root (contains lib include bin/llvm-config)"
+}
+
+-- tinfo is not part of msys
+newoption {
+	trigger = "with-tinfo",
+	description = "add tinfo library dependency"
 }
 
 if (_ACTION == nil) then
@@ -21,11 +27,13 @@ end
 LLVMRoot = _OPTIONS["llvm-root"]
 
 if (LLVMRoot == nil or LLVMRoot == "") then
-	print("No llvm-root provided")
-	print("Generation aborted")
-	return
+	LLVMConfig = "llvm-config"
+else
+	LLVMIncludeDir = path.join(LLVMRoot, "include")
+	LLVMBinDir = path.join(LLVMRoot, "bin")
+	LLVMLibDir = path.join(LLVMRoot, "lib")
+	LLVMConfig = path.join(LLVMBinDir, "llvm-config")
 end
-
 
 ActionsData = {
 	["codelite"] = {["Dir"] = "CL", ["Compiler"] = "g++"},
@@ -58,11 +66,6 @@ ConfigurationsData = {
 
 LocationDir = path.join(Root, "project/" .. ActionsData[_ACTION].Dir)
 
-
-LLVMIncludeDir = path.join(LLVMRoot, "include")
-LLVMBinDir = path.join(LLVMRoot, "bin")
-LLVMLibDir = path.join(LLVMRoot, "lib")
-
 UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
 UnitTestPPLibDir = "/usr/local/lib"
 
@@ -83,19 +86,25 @@ function DefaultConfiguration()
 end
 
 function UseCTemplate()
-	includedirs { path.join(CTemplateRoot, "src")}
-	libdirs { path.join(CTemplateRoot, ".libs") }
+	--includedirs { path.join(CTemplateRoot, "src")}
+	--libdirs { path.join(CTemplateRoot, ".libs") }
 	links { "ctemplate_nothreads" }
 end
 
 function Llvm_config_cpp_flags()
-	buildoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --cppflags" .. ")" }
+	buildoptions { "$(shell " .. LLVMConfig .. " --cppflags" .. ")" }
 end
 
 function LinkToClang()
 	configuration "*WithDLL"
-		links { "clang", "LLVMSupport", "tinfo" }
-		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs support" .. ")" }
+		links { "clang", "LLVMSupport" }
+		if (_OPTIONS["with-tinfo"]) then
+			links { "tinfo" }
+		end
+
+		if (ActionsData[_ACTION].Compiler ~= "vc") then
+			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs support" .. ")" }
+		end
 		linkoptions { "-pthread" }
 
 	configuration "not *WithDLL"
@@ -103,25 +112,28 @@ function LinkToClang()
 				"clangToolingCore", "clangFrontend", "clangDriver",
 				"clangSerialization", "clangParse", "clangSema",
 				"clangAnalysis", "clangRewrite", "clangEdit",
-				"clangAST", "clangLex", "clangBasic", "LLVMSupport", "tinfo"}
+				"clangAST", "clangLex", "clangBasic", "LLVMSupport" }
+		if (_OPTIONS["with-tinfo"]) then
+			links { "tinfo" }
+		end
 
-		linkoptions { "$(shell " .. path.join(LLVMBinDir, "llvm-config") .. " --system-libs --ldflags --libs all support" .. ")" }
+		if (ActionsData[_ACTION].Compiler ~= "vc") then
+			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs all support" .. ")" }
+		end
 		linkoptions { "-pthread" }
-
 end
-
 
 solution "ccccc"
 	location ( LocationDir )
 	configurations { "DebugWithDLL", "ReleaseWithDLL", "Debug", "Release" }
 
-	includedirs(LLVMIncludeDir)
+	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then includedirs(LLVMIncludeDir) end
 
 	configuration "*WithDLL"
-		libdirs(LLVMBinDir)
-		libdirs(LLVMLibDir)
+		if (LLVMBinDir ~= nil and LLVMBinDir ~= "") then libdirs(LLVMBinDir) end
+		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
 	configuration "not *WithDLL"
-		libdirs(LLVMLibDir)
+		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
 
 -- --------------------------------------
 	project "ccccc_app"

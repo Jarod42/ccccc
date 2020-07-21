@@ -1,3 +1,7 @@
+![Ubuntu badge](https://github.com/Jarod42/CCCCC/workflows/Ubuntu/badge.svg)
+![Mingw badge](https://github.com/Jarod42/CCCCC/workflows/Windows-Mingw/badge.svg)
+
+
 CCCCC
 ====
 

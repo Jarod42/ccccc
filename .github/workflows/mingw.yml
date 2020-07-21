@@ -1,0 +1,58 @@
+name: Windows-Mingw
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - uses: numworks/setup-msys2@v1
+
+    - name: pacman ctemplate build dependencies
+      run: msys2do pacman -S --noconfirm autoconf automake libtool make python3
+
+    - name: checkout ctemplate
+      uses: actions/checkout@v2
+      with:
+          repository: olafvdspek/ctemplate
+          ref: ctemplate-2.4
+    - name: build ctemplate
+      run: |
+          msys2do ./autogen.sh
+          msys2do ./configure
+          msys2do make
+          msys2do make install
+          rm -Rf *
+
+    - name: pacman llvm/clang
+      id: LLVM
+      run: |
+          msys2do pacman -S --noconfirm mingw-w64-x86_64-llvm mingw-w64-x86_64-clang 
+          echo "::set-output name=LLVM_ROOT::/c/mys64/mingw/"
+
+    - uses: actions/checkout@v2
+
+    - name: premake gmake
+      run: |
+          cd premake
+          premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+
+    - name: make config=releasewithdll
+      run: |
+          cd project/gmake
+          msys2do make config=releasewithdll verbose=1
+          cd ../../bin/gmake/ReleaseWithDLL
+          msys2do ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    - name: make config=release
+      shell: msys2
+      run: |
+          cd project/gmake
+          msys2do make config=release verbose=1
+          cd ../../bin/gmake/Release
+          msys2do ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help

@@ -46,7 +46,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: premake gmake
-      run: premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+      run: premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --with-tinfo gmake
 
     - name: make config=releasewithdll
       run: |
