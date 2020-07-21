@@ -1,0 +1,70 @@
+name: Windows
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'samples/**'
+      - 'src/**'
+      - 'test/**'
+      - '.github/workflows/windows.yml'
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1.3
+
+    - name: build ctemplate
+      run: |
+          cd 3rd
+          unzip ctemplate-ctemplate-2.4.zip
+          cd ctemplate-ctemplate-2.4
+          cd src/htmlparser
+          python generate_fsm.py htmlparser_fsm.config > htmlparser_fsm.h
+          python generate_fsm.py jsparser_fsm.config > jsparser_fsm.h
+          python generate_fsm.py ../tests/statemachine_test_fsm.config > ../tests/statemachine_test_fsm.h
+          cd ../..
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe" ctemplate.sln /Upgrade
+          MSBuild.exe /m ctemplate.sln /p:Configuration=release
+      shell: cmd
+
+    - name: Cache LLVM and Clang
+      id: cache-llvm
+      uses: actions/cache@v3
+      with:
+        path: |
+          C:/Program Files/LLVM
+          ./llvm
+        key: llvm-15
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@v1
+      with:
+        version: "15"
+        cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+
+    - name: premake vs2022
+      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="C:/Program Files/LLVM" vs2022
+
+    - name: LLVM debug
+      run: |
+          dir "C:/Program Files/LLVM"
+          dir "C:/Program Files/LLVM/include"
+          dir "C:/Program Files/LLVM/include/llvm/Support"
+
+    - name: make config=releasewithdll
+      run: |
+          cd project/vs2022 && MSBuild.exe /m ccccc.sln /p:Configuration=ReleaseWithDll
+          cd ../../bin/vs2022/ReleaseWithDLL && ./ccccc_test
+      continue-on-error: true
+
+    - name: make config=release
+      run: |
+          cd project/vs2022 && MSBuild.exe /m ccccc.sln /p:Configuration=Release
+          cd ../../bin/vs2022/Release && ./ccccc_test
