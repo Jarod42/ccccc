@@ -1,3 +1,5 @@
+![Ubuntu badge](https://github.com/Jarod42/CCCCC/workflows/Ubuntu/badge.svg)
+
 CCCCC
 ====
 
