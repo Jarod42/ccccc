@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2016 Joris Dauphin
+** Copyright 2012-2020 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -87,7 +87,7 @@ void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
 	llvm::cl::list<std::string> inputFilenames{
 		llvm::cl::Positional,
 		llvm::cl::desc("<input files>"),
-		llvm::cl::Required
+		llvm::cl::OneOrMore
 	};
 	llvm::cl::SetVersionPrinter(ShowVersion);
 	llvm::cl::ParseCommandLineOptions(
