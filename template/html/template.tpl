@@ -65,6 +65,6 @@ Computed from line count, mvg and halstead metrics.
   </li>
 <ul>
 <br/>
-<span class="footer">File generated {{Date}} by <a href="https://bitbucket.org/jarod42/ccccc">ccccc</a>.</span>
+<span class="footer">File generated {{Date}} by <a href="https://github.com/Jarod42/ccccc">ccccc</a>.</span>
 </body>
 </html>
