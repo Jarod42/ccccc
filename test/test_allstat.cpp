@@ -246,7 +246,7 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_if(int, int)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelse(int, int)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelif(int, int, int)"));
-	//CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_ifif(int, int, int)")); // KNOW BUG.
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_ifif(int, int, int)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_while(const char *)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_for_noblock(const char *)"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])"));

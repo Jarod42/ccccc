@@ -1,5 +1,5 @@
 /*
-** Copyright 2013-2014 Joris Dauphin
+** Copyright 2013-2021 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -25,6 +25,9 @@
 #include "../filestat.h"
 #include "utils.h"
 
+#include <cassert>
+#include <optional>
+
 namespace ccccc
 {
 namespace use_clang
@@ -32,23 +35,42 @@ namespace use_clang
 
 namespace
 {
+enum class IfStatus
+{
+	InCondition,
+	InIfBranch,
+	InElseBranch
+};
+
 class ClientData
 {
 public:
-	explicit ClientData(const char* filename) :
+	ClientData(const char* filename, std::optional<IfStatus> ifStatus) :
 		m_filename(filename),
-		m_nestedCount(0)
+		m_ifStatus(ifStatus)
 	{}
 
 	const char* getFilename() const { return m_filename; }
 	unsigned int getNestedCount() const { return m_nestedCount; }
+	const std::optional<IfStatus>& getIfStatus() const { return m_ifStatus; }
+	void nextIfStatus()
+	{
+		assert(m_ifStatus);
+		switch (*m_ifStatus) {
+			case IfStatus::InCondition: m_ifStatus = IfStatus::InIfBranch; break;
+			case IfStatus::InIfBranch: m_ifStatus = IfStatus::InElseBranch; break;
+			default: assert(false);
+		}
+	}
+
 	void updateNestedCount(unsigned int nestedCount)
 	{
 		m_nestedCount = std::max(m_nestedCount, nestedCount);
 	}
 private:
 	const char* m_filename;
-	unsigned int m_nestedCount;
+	unsigned int m_nestedCount = 0;
+	std::optional<IfStatus> m_ifStatus;
 };
 
 enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
@@ -59,18 +81,44 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 	if (isInFile(filename, cursor) == false) {
 		return CXChildVisit_Continue;
 	}
-	if (clang_getCursorKind(parent) == CXCursor_IfStmt
-		&& clang_getCursorKind(cursor) == CXCursor_IfStmt) { // try to manage 'else if' : create bug with if() if() :-/
+	// special treatment to not increase block count for `else if`
+	if (client_data->getIfStatus())
+	{
+		const unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
+
+		if (*client_data->getIfStatus() == IfStatus::InElseBranch) {
+			if (clang_getCursorKind(cursor) == CXCursor_IfStmt) {
+				client_data->updateNestedCount(childNestedBlockCount);
+			} else {
+				client_data->updateNestedCount(1 + childNestedBlockCount);
+			}
+		} else {
+			client_data->updateNestedCount(childNestedBlockCount + 1);
+			client_data->nextIfStatus();
+		}
+		return CXChildVisit_Continue;
+	}
+	if (clang_getCursorKind(cursor) == CXCursor_IfStmt) {
 		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
 		client_data->updateNestedCount(childNestedBlockCount);
 		return CXChildVisit_Continue;
 	}
-	if (clang_getCursorKind(parent) == CXCursor_IfStmt
-		|| clang_getCursorKind(parent) == CXCursor_ForStmt
-		|| clang_getCursorKind(parent) == CXCursor_WhileStmt
-		|| clang_getCursorKind(parent) == CXCursor_DoStmt
-		|| clang_getCursorKind(parent) == CXCursor_SwitchStmt
-		|| clang_getCursorKind(cursor) == CXCursor_CompoundStmt) {
+	if (clang_getCursorKind(cursor) == CXCursor_CompoundStmt) {
+		const bool parentMightUseBlock =
+			(clang_getCursorKind(parent) == CXCursor_IfStmt
+			|| clang_getCursorKind(parent) == CXCursor_ForStmt
+			|| clang_getCursorKind(parent) == CXCursor_WhileStmt
+			|| clang_getCursorKind(parent) == CXCursor_DoStmt
+			|| clang_getCursorKind(parent) == CXCursor_SwitchStmt);
+		const unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
+
+		client_data->updateNestedCount(childNestedBlockCount + (parentMightUseBlock ? 0 : 1));
+		return CXChildVisit_Continue;
+	}
+	if (clang_getCursorKind(cursor) == CXCursor_ForStmt
+		|| clang_getCursorKind(cursor) == CXCursor_WhileStmt
+		|| clang_getCursorKind(cursor) == CXCursor_DoStmt
+		|| clang_getCursorKind(cursor) == CXCursor_SwitchStmt) {
 		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
 		client_data->updateNestedCount(1 + childNestedBlockCount);
 		return CXChildVisit_Continue;
@@ -82,7 +130,8 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 
 unsigned int BlockCounter::ComputeNestedBlockCount(const char* filename, const CXCursor& cursor)
 {
-	ClientData clientData(filename);
+	ClientData clientData(filename,
+		clang_getCursorKind(cursor) == CXCursor_IfStmt ? std::optional{IfStatus::InCondition} : std::nullopt);
 	clang_visitChildren(cursor, BlockCounterVisitor, &clientData);
 	return clientData.getNestedCount();
 }
