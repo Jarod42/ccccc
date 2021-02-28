@@ -42,7 +42,10 @@ public:
 
 	const char* getFilename() const { return m_filename; }
 	unsigned int getNestedCount() const { return m_nestedCount; }
-	void setNestedCount(unsigned int nestedCount) { m_nestedCount = nestedCount; }
+	void updateNestedCount(unsigned int nestedCount)
+	{
+		m_nestedCount = std::max(m_nestedCount, nestedCount);
+	}
 private:
 	const char* m_filename;
 	unsigned int m_nestedCount;
@@ -59,7 +62,7 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 	if (clang_getCursorKind(parent) == CXCursor_IfStmt
 		&& clang_getCursorKind(cursor) == CXCursor_IfStmt) { // try to manage 'else if' : create bug with if() if() :-/
 		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
-		client_data->setNestedCount(childNestedBlockCount);
+		client_data->updateNestedCount(childNestedBlockCount);
 		return CXChildVisit_Continue;
 	}
 	if (clang_getCursorKind(parent) == CXCursor_IfStmt
@@ -69,7 +72,7 @@ enum CXChildVisitResult BlockCounterVisitor(CXCursor cursor, CXCursor parent, CX
 		|| clang_getCursorKind(parent) == CXCursor_SwitchStmt
 		|| clang_getCursorKind(cursor) == CXCursor_CompoundStmt) {
 		unsigned int childNestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor);
-		client_data->setNestedCount(1 + childNestedBlockCount);
+		client_data->updateNestedCount(1 + childNestedBlockCount);
 		return CXChildVisit_Continue;
 	}
 	return CXChildVisit_Recurse;

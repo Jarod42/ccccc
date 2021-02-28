@@ -58,7 +58,7 @@ int function_while(const char *s)
 	return i;
 }
 
-// block = 0
+// block = 1
 int function_for_noblock(const char *s)
 {
 	int i;
@@ -78,7 +78,7 @@ int function_forfor(const char (&a)[5][5])
 	return sum;
 }
 
-// block = 0
+// block = 2
 int function_forfor_no_block(const char (&a)[5][5])
 {
 	int sum = 0;
@@ -117,3 +117,21 @@ void function_block()
 	}
 	whichvalue = 42;
 }
+
+// block = 2
+void function_max_block()
+{
+	{}
+	int whichvalue = 0;
+	{
+		int autoblock = 2;
+		{
+			int autoblock = 4;
+			whichvalue += autoblock;
+		}
+		whichvalue += autoblock;
+	}
+	whichvalue = 42;
+	{}
+}
+

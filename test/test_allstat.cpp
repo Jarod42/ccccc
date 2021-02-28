@@ -253,4 +253,6 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor_no_block(const char (&)[5][5])"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch(int)"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_block()"));
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_max_block()"));
 }
+
