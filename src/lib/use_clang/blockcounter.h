@@ -1,5 +1,5 @@
 /*
-** Copyright 2013 Joris Dauphin
+** Copyright 2013-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,9 +23,7 @@
 
 #include <clang-c/Index.h>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class BlockCounter
@@ -34,7 +32,6 @@ public:
 	static unsigned int ComputeNestedBlockCount(const char* filename, const CXCursor& cursor);
 };
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // BLOCKCOUNTER_H

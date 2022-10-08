@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,14 +20,13 @@
 
 #include "linecounter.h"
 
+#include "utils.h"
+
 #include <clang-c/Index.h>
 
-#include "utils.h"
 #include <algorithm>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 LineCounter::LineCounter(const CXCursor& cursor)
@@ -57,6 +56,4 @@ void LineCounter::operator()(const CXTranslationUnit& tu, const CXCursor& /*curs
 	lastLine[type] = endLine;
 }
 
-} //namespace use_clang
-} // namespace ccccc
-
+} // namespace ccccc::use_clang

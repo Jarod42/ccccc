@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,9 +20,7 @@
 
 #include "utils.h"
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 std::string getStringAndDispose(CXString cxStr)
@@ -93,5 +91,4 @@ bool isValid(CXTranslationUnit tu)
 	return cursorStartLine != 0 && cursorStartLine <= cursorEndLine;
 }
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,14 +22,16 @@
 #define HALSTEAD_METRIC_TOOL_H
 
 #include <clang-c/Index.h>
-#include <string>
+
 #include <set>
+#include <string>
 
 namespace ccccc
 {
 class HalsteadMetric;
+} // namespace ccccc
 
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class HalsteadMetricTool
@@ -44,6 +46,7 @@ public:
 private:
 	void AddOperand(const std::string& spelling);
 	void AddOperator(const std::string& spelling);
+
 private:
 	std::set<std::string> m_operatorSet;
 	std::set<std::string> m_operandSet;
@@ -54,7 +57,6 @@ private:
 	unsigned int m_uniqueOperandCount;
 };
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // HALSTEAD_METRIC_TOOL_H

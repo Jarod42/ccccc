@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,12 +22,11 @@
 #define LOCALSTATTOOL_H
 
 #include "../linecount.h"
-#include <clang-c/Index.h>
 #include "utils.h"
 
-namespace ccccc
-{
-namespace use_clang
+#include <clang-c/Index.h>
+
+namespace ccccc::use_clang
 {
 
 template <typename FUNC>
@@ -60,7 +59,6 @@ static void processTokens(const CXTranslationUnit& tu, const CXCursor& cursor, F
 	clang_disposeTokens(tu, tokens, numToken);
 }
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // LOCALSTATTOOL_H

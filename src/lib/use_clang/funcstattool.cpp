@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,14 +23,12 @@
 #include "../caller_count.h"
 #include "../globaldata.h"
 #include "blockcounter.h"
-#include "localstattool.h"
-#include "linecounter.h"
-#include "mccabecyclomaticnumber.h"
 #include "halsteadmetrictool.h"
+#include "linecounter.h"
+#include "localstattool.h"
+#include "mccabecyclomaticnumber.h"
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 namespace
@@ -41,7 +39,8 @@ using CallerUserData = std::pair<int, CallerCountData*>;
 class FuncStatFeeder
 {
 public:
-	explicit FuncStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor)
+	explicit FuncStatFeeder(const CXCursor& cursor) :
+		m_lineCounter(cursor)
 	{
 	}
 
@@ -60,20 +59,20 @@ public:
 
 enum CXChildVisitResult
 CallerCounterVisitor(CXCursor cursor,
-					 CXCursor /*parent*/,
-					 CXClientData user_data)
+                     CXCursor /*parent*/,
+                     CXClientData user_data)
 {
 	auto* callerUserData = reinterpret_cast<CallerUserData*>(user_data);
 	auto& callCount = callerUserData->first;
 	auto* callerCountData = callerUserData->second;
 	auto cursorKind = clang_getCursorKind(cursor);
 	if (cursorKind == CXCursorKind::CXCursor_DeclRefExpr
-		|| cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
+	    || cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
 		const auto referencedCursor = clang_getCursorReferenced(cursor);
 		auto refcursorKind = clang_getCursorKind(referencedCursor);
 
 		if (refcursorKind == CXCursorKind::CXCursor_CXXMethod
-			|| refcursorKind == CXCursorKind::CXCursor_FunctionDecl) {
+		    || refcursorKind == CXCursorKind::CXCursor_FunctionDecl) {
 			if (callerCountData->m_templatedVisited.count(cursor) != 0) {
 				return CXChildVisitResult::CXChildVisit_Recurse;
 			}
@@ -113,8 +112,8 @@ bool IsOverridenMethod(const CXCursor& cursor)
 
 template <typename Map>
 auto Value(const Map& m,
-		   const typename Map::key_type& key,
-		   const typename Map::mapped_type& default_value)
+           const typename Map::key_type& key,
+           const typename Map::mapped_type& default_value)
 {
 	const auto it = m.find(key);
 	return it == m.end() ? default_value : it->second;
@@ -160,6 +159,4 @@ void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
 	stat->m_callerCount = std::max(usrCount, cursorCount);
 }
 
-} // namespace use_clang
-
-} // namespace ccccc
+} // namespace ccccc::use_clang

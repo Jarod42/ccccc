@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,13 +22,15 @@
 #define FUNCSTATTOOL_H
 
 #include "../funcstat.h"
+
 #include <clang-c/Index.h>
 
 namespace ccccc
 {
 struct GlobalData;
+} // namespace ccccc
 
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class FuncStatTool
@@ -38,7 +40,6 @@ public:
 	static void PostFeed(const GlobalData& globalData, FuncStat* stat);
 };
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // FUNCSTATTOOL_H

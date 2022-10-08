@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,15 +20,14 @@
 
 #include "halsteadmetrictool.h"
 
-#include <clang-c/Index.h>
-
-#include <math.h>
 #include "../halsteadmetric.h"
 #include "utils.h"
 
-namespace ccccc
-{
-namespace use_clang
+#include <clang-c/Index.h>
+
+#include <math.h>
+
+namespace ccccc::use_clang
 {
 
 HalsteadMetricTool::HalsteadMetricTool() :
@@ -41,10 +40,8 @@ HalsteadMetricTool::HalsteadMetricTool() :
 
 void HalsteadMetricTool::update(HalsteadMetric* halsteadMetric)
 {
-	halsteadMetric->set(m_operatorCount, m_uniqueOperatorCount,
-						m_operandCount, m_uniqueOperandCount);
+	halsteadMetric->set(m_operatorCount, m_uniqueOperatorCount, m_operandCount, m_uniqueOperandCount);
 }
-
 
 void HalsteadMetricTool::AddOperand(const std::string& spelling)
 {
@@ -85,5 +82,4 @@ void HalsteadMetricTool::operator()(const CXTranslationUnit& tu, const CXCursor&
 	}
 }
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang

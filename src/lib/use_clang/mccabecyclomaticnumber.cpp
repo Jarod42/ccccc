@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,18 +20,17 @@
 
 #include "mccabecyclomaticnumber.h"
 
-#include <clang-c/Index.h>
-
 #include "utils.h"
+
+#include <clang-c/Index.h>
 
 #include <algorithm>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
-McCabeCyclomaticNumber::McCabeCyclomaticNumber() : m_value(1)
+McCabeCyclomaticNumber::McCabeCyclomaticNumber() :
+	m_value(1)
 {
 }
 
@@ -58,5 +57,4 @@ void McCabeCyclomaticNumber::operator()(const CXTranslationUnit& tu, const CXCur
 	}
 }
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang

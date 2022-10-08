@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,9 +23,7 @@
 
 #include <clang-c/Index.h>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class McCabeCyclomaticNumber
@@ -36,12 +34,11 @@ public:
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
 	unsigned int getValue() const { return m_value; }
+
 private:
 	unsigned int m_value;
 };
 
-
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // MCCABECYCLOMATICNUMBER_H

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,11 +22,10 @@
 #define UTILS_H
 
 #include <clang-c/Index.h>
+
 #include <string>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 std::string getStringAndDispose(CXString cxStr);
@@ -39,7 +38,6 @@ bool isInFile(const char* filename, CXCursor cursor);
 
 bool isValid(CXTranslationUnit tu);
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // UTILS_H

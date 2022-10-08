@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,13 +22,15 @@
 #define FILESTATTOOL_H
 
 #include "../filestat.h"
+
 #include <clang-c/Index.h>
 
 namespace ccccc
 {
-	struct GlobalData;
+struct GlobalData;
+} // namespace ccccc
 
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class FileStatTool
@@ -36,6 +38,7 @@ class FileStatTool
 public:
 	static void Compute(const CXTranslationUnit& tu, GlobalData&, FileStat* stat);
 	static void PostFeed(const GlobalData& globalData, FileStat* stat);
+
 private:
 	static void PostFeed(const GlobalData& globalData, NamespaceStat* stat);
 	static void PostFeed(const GlobalData& globalData, ClassStat* stat);
@@ -44,7 +47,6 @@ private:
 	static void VisitNamespace(CXCursor cursor, CXClientData user_data);
 };
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // FILESTATTOOL_H

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,9 +23,7 @@
 
 #include <clang-c/Index.h>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 class LineCounter
@@ -47,7 +45,6 @@ private:
 	unsigned int lineOfCode[3];
 };
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
 
 #endif // LINECOUNTER_H

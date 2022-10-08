@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -24,13 +24,11 @@
 #include "funcstattool.h"
 #include "linecounter.h"
 #include "localstattool.h"
-
 #include "utils.h"
+
 #include <vector>
 
-namespace ccccc
-{
-namespace use_clang
+namespace ccccc::use_clang
 {
 
 namespace
@@ -39,7 +37,8 @@ namespace
 class FileStatFeeder
 {
 public:
-	explicit FileStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor)
+	explicit FileStatFeeder(const CXCursor& cursor) :
+		m_lineCounter(cursor)
 	{
 	}
 
@@ -51,7 +50,6 @@ public:
 public:
 	LineCounter m_lineCounter;
 };
-
 
 class ClientData
 {
@@ -67,9 +65,10 @@ public:
 	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
 	GlobalData& getGlobalData() { return m_globalData; }
 
-	void PushNamespace(const std::string& name) { namespaceNames.push_back(name);}
+	void PushNamespace(const std::string& name) { namespaceNames.push_back(name); }
 	void PopNamespace() { namespaceNames.pop_back(); }
 	const std::vector<std::string>& GetNamespaceNames() const { return namespaceNames; }
+
 private:
 	FileStat* m_stat;
 	CXTranslationUnit m_tu;
@@ -80,11 +79,10 @@ private:
 bool IsAKindOfClass(CXCursor cursor)
 {
 	return clang_getCursorKind(cursor) == CXCursor_StructDecl
-		   || clang_getCursorKind(cursor) == CXCursor_ClassDecl
-		   || clang_getCursorKind(cursor) == CXCursor_ClassTemplate
-		   || clang_getCursorKind(cursor) == CXCursor_ClassTemplatePartialSpecialization;
+	    || clang_getCursorKind(cursor) == CXCursor_ClassDecl
+	    || clang_getCursorKind(cursor) == CXCursor_ClassTemplate
+	    || clang_getCursorKind(cursor) == CXCursor_ClassTemplatePartialSpecialization;
 }
-
 
 void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 {
@@ -94,13 +92,12 @@ void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 	}
 }
 
-
-}
+} // namespace
 
 enum CXChildVisitResult
 FileStatTool::FileCursorVisitor(CXCursor cursor,
-								CXCursor /*parent*/,
-								CXClientData user_data)
+                                CXCursor /*parent*/,
+                                CXClientData user_data)
 {
 	ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
 	if (isInFile(client_data->getFilename(), cursor) == false) {
@@ -112,7 +109,7 @@ FileStatTool::FileCursorVisitor(CXCursor cursor,
 		return CXChildVisit_Continue;
 	} else if (clang_isCursorDefinition(cursor)) {
 		if (clang_getCursorKind(cursor) == CXCursor_FunctionDecl
-			|| clang_getCursorKind(cursor) == CXCursor_FunctionTemplate) {
+		    || clang_getCursorKind(cursor) == CXCursor_FunctionTemplate) {
 			std::vector<std::string> parentClasses; // empty
 			const std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
 			const CXSourceRange range = clang_getCursorExtent(cursor);
@@ -122,9 +119,9 @@ FileStatTool::FileCursorVisitor(CXCursor cursor,
 			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, client_data->getGlobalData(), funcStat);
 			return CXChildVisit_Continue;
 		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
-				   || clang_getCursorKind(cursor) == CXCursor_Constructor
-				   || clang_getCursorKind(cursor) == CXCursor_Destructor
-				   || clang_getCursorKind(cursor) == CXCursor_ConversionFunction) {
+		           || clang_getCursorKind(cursor) == CXCursor_Constructor
+		           || clang_getCursorKind(cursor) == CXCursor_Destructor
+		           || clang_getCursorKind(cursor) == CXCursor_ConversionFunction) {
 			//CXCursor_ClassTemplate
 			//CXCursor_ClassTemplatePartialSpecialization
 			std::vector<std::string> parentClasses;
@@ -176,10 +173,10 @@ void FileStatTool::PostFeed(const GlobalData& globalData, NamespaceStat* stat)
 	for (auto& funcStat : stat->m_funcStats) {
 		FuncStatTool::PostFeed(globalData, funcStat.get());
 	}
-	for (auto& p: stat->m_namespaces) {
+	for (auto& p : stat->m_namespaces) {
 		FileStatTool::PostFeed(globalData, p.second.get());
 	}
-	for (auto& p: stat->m_classes) {
+	for (auto& p : stat->m_classes) {
 		FileStatTool::PostFeed(globalData, p.second.get());
 	}
 }
@@ -196,5 +193,4 @@ void FileStatTool::PostFeed(const GlobalData& globalData, FileStat* stat)
 	PostFeed(globalData, &stat->m_root);
 }
 
-} // namespace use_clang
-} // namespace ccccc
+} // namespace ccccc::use_clang
