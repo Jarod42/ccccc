@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -27,12 +27,13 @@ namespace use_clang
 {
 class FileStatTool;
 class FuncStatTool;
-}
+} // namespace use_clang
 
 class LineCount
 {
 	friend class use_clang::FileStatTool;
 	friend class use_clang::FuncStatTool;
+
 public:
 	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
 	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
@@ -40,17 +41,17 @@ public:
 	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
 
 	//private:
-	LineCount();
+	LineCount() = default;
 	LineCount(unsigned int lineOfCode_physic,
-			  unsigned int lineOfCode_program,
-			  unsigned int lineOfCode_blank,
-			  unsigned int lineOfCode_comment);
+	          unsigned int lineOfCode_program,
+	          unsigned int lineOfCode_blank,
+	          unsigned int lineOfCode_comment);
 
 private:
-	unsigned int lineOfCode_physic;      // LOCphy
-	unsigned int lineOfCode_program;     // LOCpro
-	unsigned int lineOfCode_blank;       // LOCbl
-	unsigned int lineOfCode_comment;     // LOCcom
+	unsigned int lineOfCode_physic = 0; // LOCphy
+	unsigned int lineOfCode_program = 0; // LOCpro
+	unsigned int lineOfCode_blank = 0; // LOCbl
+	unsigned int lineOfCode_comment = 0; // LOCcom
 };
 
 } // namespace ccccc

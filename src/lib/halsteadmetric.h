@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -27,12 +27,16 @@ namespace ccccc
 class HalsteadMetric
 {
 public:
-	HalsteadMetric();
-	HalsteadMetric(unsigned int operatorCount, unsigned int uniqueOperatorCount,
-				   unsigned int operandCount, unsigned int uniqueOperandCount);
+	HalsteadMetric() = default;
+	HalsteadMetric(unsigned int operatorCount,
+	               unsigned int uniqueOperatorCount,
+	               unsigned int operandCount,
+	               unsigned int uniqueOperandCount);
 
-	void set(unsigned int operatorCount, unsigned int uniqueOperatorCount,
-			 unsigned int operandCount, unsigned int uniqueOperandCount);
+	void set(unsigned int operatorCount,
+	         unsigned int uniqueOperatorCount,
+	         unsigned int operandCount,
+	         unsigned int uniqueOperandCount);
 
 	unsigned int getVocabularySize() const { return m_vocabularySize; }
 	unsigned int getProgramLength() const { return m_programLength; }
@@ -43,13 +47,13 @@ public:
 	double getDeliveredBugCount() const { return m_deliveredBugCount; }
 
 private:
-	unsigned int m_vocabularySize;
-	unsigned int m_programLength;
-	double m_volume;
-	double m_difficulty;
-	double m_effort;
-	double m_timeToImplement;
-	double m_deliveredBugCount;
+	unsigned int m_vocabularySize = 0;
+	unsigned int m_programLength = 0;
+	double m_volume = 0.;
+	double m_difficulty = 0.;
+	double m_effort = 0.;
+	double m_timeToImplement = 0.;
+	double m_deliveredBugCount = 0.;
 };
 
 } // namespace ccccc

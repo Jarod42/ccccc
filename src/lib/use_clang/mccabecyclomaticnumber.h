@@ -29,14 +29,14 @@ namespace ccccc::use_clang
 class McCabeCyclomaticNumber
 {
 public:
-	McCabeCyclomaticNumber();
+	McCabeCyclomaticNumber() = default;
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
 	unsigned int getValue() const { return m_value; }
 
 private:
-	unsigned int m_value;
+	unsigned int m_value = 1;
 };
 
 } // namespace ccccc::use_clang

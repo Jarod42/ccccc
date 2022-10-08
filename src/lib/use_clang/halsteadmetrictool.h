@@ -37,7 +37,7 @@ namespace ccccc::use_clang
 class HalsteadMetricTool
 {
 public:
-	HalsteadMetricTool();
+	HalsteadMetricTool() = default;
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
@@ -51,10 +51,10 @@ private:
 	std::set<std::string> m_operatorSet;
 	std::set<std::string> m_operandSet;
 
-	unsigned int m_operatorCount;
-	unsigned int m_operandCount;
-	unsigned int m_uniqueOperatorCount;
-	unsigned int m_uniqueOperandCount;
+	unsigned int m_operatorCount = 0;
+	unsigned int m_operandCount = 0;
+	unsigned int m_uniqueOperatorCount = 0;
+	unsigned int m_uniqueOperandCount = 0;
 };
 
 } // namespace ccccc::use_clang

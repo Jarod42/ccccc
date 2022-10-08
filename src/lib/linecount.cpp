@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,17 +23,10 @@
 namespace ccccc
 {
 
-LineCount::LineCount() :
-	lineOfCode_physic(0),
-	lineOfCode_program(0),
-	lineOfCode_blank(0),
-	lineOfCode_comment(0)
-{}
-
 LineCount::LineCount(unsigned int lineOfCode_physic,
-					 unsigned int lineOfCode_program,
-					 unsigned int lineOfCode_blank,
-					 unsigned int lineOfCode_comment) :
+                     unsigned int lineOfCode_program,
+                     unsigned int lineOfCode_blank,
+                     unsigned int lineOfCode_comment) :
 	lineOfCode_physic(lineOfCode_physic),
 	lineOfCode_program(lineOfCode_program),
 	lineOfCode_blank(lineOfCode_blank),

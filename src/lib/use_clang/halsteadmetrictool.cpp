@@ -30,14 +30,6 @@
 namespace ccccc::use_clang
 {
 
-HalsteadMetricTool::HalsteadMetricTool() :
-	m_operatorCount(0),
-	m_operandCount(0),
-	m_uniqueOperatorCount(0),
-	m_uniqueOperandCount(0)
-{
-}
-
 void HalsteadMetricTool::update(HalsteadMetric* halsteadMetric)
 {
 	halsteadMetric->set(m_operatorCount, m_uniqueOperatorCount, m_operandCount, m_uniqueOperandCount);

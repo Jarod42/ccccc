@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -33,15 +33,17 @@ class FuncStat;
 class NamespaceStat;
 namespace use_clang
 {
-	class FileStatTool;
-}
+class FileStatTool;
+} // namespace use_clang
 
 class ClassStat
 {
 	friend class use_clang::FileStatTool;
 	friend class NamespaceStat;
+
 public:
 	using ClassMap = std::map<std::string, std::unique_ptr<ClassStat>>;
+
 public:
 	ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent);
 	~ClassStat();
@@ -58,12 +60,13 @@ public:
 private:
 	FuncStat* AddMethodStat(const std::string& funcname, unsigned int line);
 	ClassStat& GetOrCreateClass(const std::string& funcname);
+
 private:
 	std::string m_name;
 	std::vector<std::unique_ptr<FuncStat>> m_methodStats;
 	ClassMap m_classes;
-	NamespaceStat* m_namespaceParent;
-	ClassStat* m_classParent;
+	NamespaceStat* m_namespaceParent = nullptr;
+	ClassStat* m_classParent = nullptr;
 };
 
 } // namespace ccccc

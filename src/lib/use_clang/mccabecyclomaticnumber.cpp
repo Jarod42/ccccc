@@ -29,11 +29,6 @@
 namespace ccccc::use_clang
 {
 
-McCabeCyclomaticNumber::McCabeCyclomaticNumber() :
-	m_value(1)
-{
-}
-
 void McCabeCyclomaticNumber::operator()(const CXTranslationUnit& tu, const CXCursor& /*cursor*/, const CXToken& token)
 {
 	if (clang_getTokenKind(token) == CXToken_Keyword) {

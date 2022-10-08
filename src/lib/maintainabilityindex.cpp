@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -20,7 +20,6 @@
 
 #include "maintainabilityindex.h"
 
-
 #include "halsteadmetric.h"
 #include "linecount.h"
 
@@ -29,23 +28,21 @@
 namespace ccccc
 {
 
-MaintainabilityIndex::MaintainabilityIndex() :
-	m_maintainabilityIndexWithoutComments(0),
-	m_maintainabilityIndexCommentWeight(0),
-	m_maintainabilityIndex(0)
-{}
-
-MaintainabilityIndex::MaintainabilityIndex(const LineCount& lineCount, unsigned int mvg, const HalsteadMetric& halsteadMetric)
+MaintainabilityIndex::MaintainabilityIndex(const LineCount& lineCount,
+                                           unsigned int mvg,
+                                           const HalsteadMetric& halsteadMetric)
 {
 	set(lineCount, mvg, halsteadMetric);
 }
 
-void MaintainabilityIndex::set(const LineCount& lineCount, unsigned int mvg, const HalsteadMetric& halsteadMetric)
+void MaintainabilityIndex::set(const LineCount& lineCount,
+                               unsigned int mvg,
+                               const HalsteadMetric& halsteadMetric)
 {
-	const double MIwoc = 171 - 5.2 * log(halsteadMetric.getVolume())
-						 - 0.23 * mvg
-						 - 16.2 * log(lineCount.getLineOfCode_physic());
-	const double perCM = double(lineCount.getLineOfCode_comment()) / lineCount.getLineOfCode_physic();
+	const double MIwoc = 171 - 5.2 * log(halsteadMetric.getVolume()) - 0.23 * mvg
+	                   - 16.2 * log(lineCount.getLineOfCode_physic());
+	const double perCM =
+		double(lineCount.getLineOfCode_comment()) / lineCount.getLineOfCode_physic();
 	const double MIcw = 50 * sin(sqrt(2.4 * perCM));
 
 	m_maintainabilityIndexWithoutComments = MIwoc;

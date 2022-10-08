@@ -1,5 +1,5 @@
 /*
-** Copyright 2012 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -29,19 +29,27 @@ class LineCount;
 class MaintainabilityIndex
 {
 public:
-	double getMaintainabilityIndexWithoutComments() const { return m_maintainabilityIndexWithoutComments; }
-	double getMaintainabilityIndexCommentWeight() const { return m_maintainabilityIndexCommentWeight; }
+	double getMaintainabilityIndexWithoutComments() const
+	{
+		return m_maintainabilityIndexWithoutComments;
+	}
+	double getMaintainabilityIndexCommentWeight() const
+	{
+		return m_maintainabilityIndexCommentWeight;
+	}
 	double getMaintainabilityIndex() const { return m_maintainabilityIndex; }
 
-	MaintainabilityIndex();
-	MaintainabilityIndex(const LineCount& lineCount, unsigned int mvg, const HalsteadMetric& halsteadMetric);
+	MaintainabilityIndex() = default;
+	MaintainabilityIndex(const LineCount& lineCount,
+	                     unsigned int mvg,
+	                     const HalsteadMetric& halsteadMetric);
 
 	void set(const LineCount& lineCount, unsigned int mvg, const HalsteadMetric& halsteadMetric);
 
 private:
-	double m_maintainabilityIndexWithoutComments; // MIwoc
-	double m_maintainabilityIndexCommentWeight; // MIcw
-	double m_maintainabilityIndex; // MI
+	double m_maintainabilityIndexWithoutComments = 0.; // MIwoc
+	double m_maintainabilityIndexCommentWeight = 0.; // MIcw
+	double m_maintainabilityIndex = 0.; // MI
 };
 
 } // namespace ccccc
