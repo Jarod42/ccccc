@@ -25,6 +25,8 @@
 
 #include <clang-c/Index.h>
 
+#include <filesystem>
+
 namespace ccccc
 {
 struct GlobalData;
@@ -36,7 +38,11 @@ namespace ccccc::use_clang
 class FuncStatTool
 {
 public:
-	static void Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat);
+	static void Compute(const std::filesystem::path& filename,
+	                    const CXTranslationUnit& tu,
+	                    const CXCursor& cursor,
+	                    GlobalData& globalData,
+	                    FuncStat* stat);
 	static void PostFeed(const GlobalData& globalData, FuncStat* stat);
 };
 

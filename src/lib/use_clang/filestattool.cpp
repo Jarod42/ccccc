@@ -37,10 +37,7 @@ namespace
 class FileStatFeeder
 {
 public:
-	explicit FileStatFeeder(const CXCursor& cursor) :
-		m_lineCounter(cursor)
-	{
-	}
+	explicit FileStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor) {}
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
 	{
@@ -61,7 +58,7 @@ public:
 	{}
 
 	FileStat& getFileStat() { return *m_stat; }
-	const char* getFilename() const { return m_stat->getFilename().c_str(); }
+	const std::filesystem::path& getFilename() const { return m_stat->getFilename(); }
 	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
 	GlobalData& getGlobalData() { return m_globalData; }
 
@@ -86,7 +83,8 @@ bool IsAKindOfClass(CXCursor cursor)
 
 void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 {
-	for (CXCursor parent = clang_getCursorSemanticParent(cursor); IsAKindOfClass(parent); parent = clang_getCursorSemanticParent(parent)) {
+	for (CXCursor parent = clang_getCursorSemanticParent(cursor); IsAKindOfClass(parent);
+	     parent = clang_getCursorSemanticParent(parent)) {
 		std::string parentStr = getStringAndDispose(clang_getCursorDisplayName(parent));
 		(*parentClasses).insert(parentClasses->begin(), parentStr);
 	}
@@ -95,9 +93,7 @@ void getParentClasses(CXCursor cursor, std::vector<std::string>* parentClasses)
 } // namespace
 
 enum CXChildVisitResult
-FileStatTool::FileCursorVisitor(CXCursor cursor,
-                                CXCursor /*parent*/,
-                                CXClientData user_data)
+FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
 {
 	ClientData* client_data = reinterpret_cast<ClientData*>(user_data);
 	if (isInFile(client_data->getFilename(), cursor) == false) {
@@ -114,9 +110,14 @@ FileStatTool::FileCursorVisitor(CXCursor cursor,
 			const std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
 			const CXSourceRange range = clang_getCursorExtent(cursor);
 			const unsigned int line = getStartLine(range);
-			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(
+				client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, client_data->getGlobalData(), funcStat);
+			FuncStatTool::Compute(client_data->getFilename(),
+			                      client_data->getCXTranslationUnit(),
+			                      cursor,
+			                      client_data->getGlobalData(),
+			                      funcStat);
 			return CXChildVisit_Continue;
 		} else if (clang_getCursorKind(cursor) == CXCursor_CXXMethod
 		           || clang_getCursorKind(cursor) == CXCursor_Constructor
@@ -131,9 +132,14 @@ FileStatTool::FileCursorVisitor(CXCursor cursor,
 			const CXSourceRange range = clang_getCursorExtent(cursor);
 			const int line = getStartLine(range);
 			// TODO: get ClassStat.
-			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
+			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(
+				client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
-			FuncStatTool::Compute(client_data->getFilename(), client_data->getCXTranslationUnit(), cursor, client_data->getGlobalData(), funcStat);
+			FuncStatTool::Compute(client_data->getFilename(),
+			                      client_data->getCXTranslationUnit(),
+			                      cursor,
+			                      client_data->getGlobalData(),
+			                      funcStat);
 			return CXChildVisit_Continue;
 		} else {
 			return CXChildVisit_Recurse;

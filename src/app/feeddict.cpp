@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,11 +18,10 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <sstream>
-
 #include "cccc_clang_api.h"
 
 #include <ctemplate/template.h>
+#include <sstream>
 
 static void SetDoubleValue(ctemplate::TemplateDictionary& dict, const char* key, double value)
 {
@@ -33,9 +32,9 @@ static void SetDoubleValue(ctemplate::TemplateDictionary& dict, const char* key,
 }
 
 void feedDict(const ccccc::FuncStat& funcStat,
-			  const std::string& namespacesName,
-			  const std::string& classesName,
-			  ctemplate::TemplateDictionary* dict)
+              const std::string& namespacesName,
+              const std::string& classesName,
+              ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("ForEachFunctions");
 
@@ -69,8 +68,12 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	SetDoubleValue(sectionDict, "Halstead_B", funcStat.getHalsteadMetric().getDeliveredBugCount());
 	SetDoubleValue(sectionDict, "Halstead_T", funcStat.getHalsteadMetric().getTimeToImplement());
 
-	SetDoubleValue(sectionDict, "MIwoc", funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments());
-	SetDoubleValue(sectionDict, "MIcw", funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
+	SetDoubleValue(sectionDict,
+	               "MIwoc",
+	               funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments());
+	SetDoubleValue(sectionDict,
+	               "MIcw",
+	               funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
 	SetDoubleValue(sectionDict, "MI", funcStat.getMaintainabilityIndex().getMaintainabilityIndex());
 
 	sectionDict.SetIntValue("NestedBlockCount", funcStat.getNestedBlockCount());
@@ -80,9 +83,9 @@ void feedDict(const ccccc::FuncStat& funcStat,
 }
 
 void feedDict(const ccccc::ClassStat& classStat,
-			  const std::string& namespacesName,
-			  std::string classesName,
-			  ctemplate::TemplateDictionary* dict)
+              const std::string& namespacesName,
+              std::string classesName,
+              ctemplate::TemplateDictionary* dict)
 {
 	if (classesName.empty() == false) {
 		classesName += "::";
@@ -98,8 +101,8 @@ void feedDict(const ccccc::ClassStat& classStat,
 }
 
 void feedDict(const ccccc::NamespaceStat& namespaceStat,
-			  std::string namespacesName,
-			  ctemplate::TemplateDictionary* dict)
+              std::string namespacesName,
+              ctemplate::TemplateDictionary* dict)
 {
 	if (namespacesName.empty() == false) {
 		namespacesName += "::";
@@ -121,12 +124,11 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 	}
 }
 
-void feedDict(const ccccc::FileStat& fileStat,
-			  ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary* sectionDict = dict->AddSectionDictionary("ForEachFiles");
 
-	sectionDict->SetValue("filename", fileStat.getFilename());
+	sectionDict->SetValue("filename", fileStat.getFilename().string());
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}

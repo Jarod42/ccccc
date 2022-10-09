@@ -23,6 +23,7 @@
 
 #include <clang-c/Index.h>
 
+#include <filesystem>
 #include <string>
 
 namespace ccccc::use_clang
@@ -34,7 +35,7 @@ unsigned int getStartLine(CXSourceRange range);
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
 void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
 
-bool isInFile(const char* filename, CXCursor cursor);
+bool isInFile(const std::filesystem::path& filename, CXCursor cursor);
 
 bool isValid(CXTranslationUnit tu);
 

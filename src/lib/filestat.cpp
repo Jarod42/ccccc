@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -23,17 +23,18 @@
 namespace ccccc
 {
 
-FileStat::FileStat(const std::string& filename) :
+FileStat::FileStat(const std::filesystem::path& filename) :
 	m_filename(filename),
 	m_root("", nullptr)
-{
-}
+{}
 
 FileStat::~FileStat()
-{
-}
+{}
 
-FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames, const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line)
+FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames,
+                                const std::vector<std::string>& classeNames,
+                                const std::string& funcname,
+                                unsigned int line)
 {
 	NamespaceStat* namespaceStat = &m_root;
 	for (const auto& namespaceName : namespaceNames) {

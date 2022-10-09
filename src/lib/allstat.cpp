@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -66,12 +66,13 @@ static std::vector<const char*> CStringView(const std::vector<std::string>& v)
 }
 
 AllStat::~AllStat()
-{
-}
+{}
 
-std::vector<std::string> GetCompileArgumentsFromDatabase(CXCompilationDatabase compilationDatabase, const std::string& filename)
+std::vector<std::string> GetCompileArgumentsFromDatabase(CXCompilationDatabase compilationDatabase,
+                                                         const std::filesystem::path& filename)
 {
-	CXCompileCommands compileCommands = clang_CompilationDatabase_getCompileCommands(compilationDatabase, filename.c_str());
+	CXCompileCommands compileCommands = clang_CompilationDatabase_getCompileCommands(
+		compilationDatabase, filename.string().c_str());
 	const unsigned int compileCommandsCount = clang_CompileCommands_getSize(compileCommands);
 
 	if (compileCommandsCount == 0) { // No entries in database
@@ -84,7 +85,8 @@ std::vector<std::string> GetCompileArgumentsFromDatabase(CXCompilationDatabase c
 
 	std::vector<std::string> res;
 	for (unsigned int i = 0; i != argumentsCount; ++i) {
-		res.push_back(use_clang::getStringAndDispose(clang_CompileCommand_getArg(compileCommand, i)));
+		res.push_back(
+			use_clang::getStringAndDispose(clang_CompileCommand_getArg(compileCommand, i)));
 	}
 	clang_CompileCommands_dispose(compileCommands);
 	return res;
@@ -97,15 +99,22 @@ void AllStat::Compute(const Parameters& param)
 	CXIndex index = clang_createIndex(excludeDeclsFromPCH, displayDiagnostics);
 
 	CXCompilationDatabase_Error compilationDatabaseError;
-	CXCompilationDatabase compilationDatabase = clang_CompilationDatabase_fromDirectory(".", &compilationDatabaseError);
+	CXCompilationDatabase compilationDatabase =
+		clang_CompilationDatabase_fromDirectory(".", &compilationDatabaseError);
 	std::vector<const char*> argsFromCommandLine = GetClangParamFromParam(param);
 	GlobalData globalData;
-	for (const std::string& filename : param.Filenames()) {
+	for (const std::filesystem::path& filename : param.Filenames()) {
 		auto argsFromDatabase = GetCompileArgumentsFromDatabase(compilationDatabase, filename);
 		CXTranslationUnit tu;
 
 		if (argsFromDatabase.empty()) {
-			tu = clang_parseTranslationUnit(index, filename.c_str(), argsFromCommandLine.data(), argsFromCommandLine.size(), 0, 0, 0);
+			tu = clang_parseTranslationUnit(index,
+			                                filename.string().c_str(),
+			                                argsFromCommandLine.data(),
+			                                argsFromCommandLine.size(),
+			                                0,
+			                                0,
+			                                0);
 		} else {
 			auto args = CStringView(argsFromDatabase);
 			tu = clang_parseTranslationUnit(index, nullptr, args.data(), args.size(), 0, 0, 0);

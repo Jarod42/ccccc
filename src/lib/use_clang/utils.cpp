@@ -62,7 +62,7 @@ void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* end
 	clang_getExpansionLocation(end, nullptr, nullptr, nullptr, endOffset);
 }
 
-bool isInFile(const char* filename, CXCursor cursor)
+bool isInFile(const std::filesystem::path& filename, CXCursor cursor)
 {
 	const CXSourceRange range = clang_getCursorExtent(cursor);
 	if (clang_Range_isNull(range)) {
@@ -79,7 +79,7 @@ bool isInFile(const char* filename, CXCursor cursor)
 	}
 	clang_disposeString(cxCursorFilename);
 	const std::string cursorFilename = cstr;
-	return cursorFilename.compare(filename) == 0;
+	return cursorFilename.compare(filename.string()) == 0;
 }
 
 bool isValid(CXTranslationUnit tu)

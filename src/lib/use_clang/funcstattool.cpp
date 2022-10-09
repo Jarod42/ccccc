@@ -39,10 +39,7 @@ using CallerUserData = std::pair<int, CallerCountData*>;
 class FuncStatFeeder
 {
 public:
-	explicit FuncStatFeeder(const CXCursor& cursor) :
-		m_lineCounter(cursor)
-	{
-	}
+	explicit FuncStatFeeder(const CXCursor& cursor) : m_lineCounter(cursor) {}
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token)
 	{
@@ -58,9 +55,7 @@ public:
 };
 
 enum CXChildVisitResult
-CallerCounterVisitor(CXCursor cursor,
-                     CXCursor /*parent*/,
-                     CXClientData user_data)
+CallerCounterVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
 {
 	auto* callerUserData = reinterpret_cast<CallerUserData*>(user_data);
 	auto& callCount = callerUserData->first;
@@ -87,7 +82,8 @@ CallerCounterVisitor(CXCursor cursor,
 				// counts for the generic template
 				if (callerCountData->m_templatedSpecializations.count(referencedCursor) == 0) {
 					auto templateCursor = clang_getSpecializedCursorTemplate(referencedCursor);
-					const auto templateusr = getStringAndDispose(clang_getCursorUSR(templateCursor));
+					const auto templateusr =
+						getStringAndDispose(clang_getCursorUSR(templateCursor));
 					callerCountData->m_counts[templateCursor]++;
 					callerCountData->m_usrCounts[templateusr]++;
 				}
@@ -121,7 +117,11 @@ auto Value(const Map& m,
 
 } // anonymous namespace
 
-void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, const CXCursor& cursor, GlobalData& globalData, FuncStat* stat)
+void FuncStatTool::Compute(const std::filesystem::path& filename,
+                           const CXTranslationUnit& tu,
+                           const CXCursor& cursor,
+                           GlobalData& globalData,
+                           FuncStat* stat)
 {
 	stat->m_usr = getStringAndDispose(clang_getCursorUSR(cursor));
 	stat->m_cursor = cursor;
@@ -135,7 +135,8 @@ void FuncStatTool::Compute(const char* filename, const CXTranslationUnit& tu, co
 	stat->m_lineCount.lineOfCode_blank = funcStatFeeder.m_lineCounter.getLineOfCode_blank();
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
-	stat->m_maintainabilityIndex.set(stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
+	stat->m_maintainabilityIndex.set(
+		stat->m_lineCount, stat->m_mcCabeCyclomaticNumber, stat->getHalsteadMetric());
 	stat->m_nestedBlockCount = BlockCounter::ComputeNestedBlockCount(filename, cursor) - 1;
 
 	stat->m_isConst = clang_CXXMethod_isConst(cursor);

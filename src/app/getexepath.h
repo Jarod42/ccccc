@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -21,9 +21,8 @@
 #ifndef GETEXEPATH_H
 #define GETEXEPATH_H
 
-#include <string>
+#include <filesystem>
 
-
-std::string getExePath();
+std::filesystem::path getExePath();
 
 #endif // GETEXEPATH_H

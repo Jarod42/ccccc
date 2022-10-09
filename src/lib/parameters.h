@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,8 +18,9 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <vector>
+#include <filesystem>
 #include <string>
+#include <vector>
 
 namespace ccccc
 {
@@ -29,29 +30,32 @@ class Parameters
 public:
 	Parameters() = default;
 
-	void Parse(const std::string& cccccRoot, int argc, char** argv);
+	void Parse(const std::filesystem::path& cccccRoot, int argc, char** argv);
 
-	void AddFile(const std::string& filename) { m_files.push_back(filename); }
+	void AddFile(const std::filesystem::path& filename) { m_files.push_back(filename); }
 	void AddInclude(const std::string& includePath) { m_includePaths.push_back(includePath); }
 	void AddDefine(const std::string& define) { m_defines.push_back(define); }
 	void SetPch(const std::string& pchFile) { m_pch = pchFile; }
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
-	void SetTemplateFilename(const std::string& templateFilename) { m_template = templateFilename; }
+	void SetTemplateFilename(const std::filesystem::path& templateFilename)
+	{
+		m_template = templateFilename;
+	}
 
-	const std::vector<std::string>& Filenames() const { return m_files; }
+	const std::vector<std::filesystem::path>& Filenames() const { return m_files; }
 	const std::vector<std::string>& IncludePaths() const { return m_includePaths; }
 	const std::vector<std::string>& Defines() const { return m_defines; }
 	const std::vector<std::string>& Extras() const { return m_extras; }
 	const std::string& GetPch() const { return m_pch; }
-	const std::string& GetTemplateFilename() const { return m_template; }
+	const std::filesystem::path& GetTemplateFilename() const { return m_template; }
 
 private:
-	std::vector<std::string> m_files;
+	std::vector<std::filesystem::path> m_files;
 	std::vector<std::string> m_includePaths;
 	std::vector<std::string> m_defines;
 	std::string m_pch;
 	std::vector<std::string> m_extras;
-	std::string m_template;
+	std::filesystem::path m_template;
 };
 
-}
+} // namespace ccccc

@@ -23,13 +23,16 @@
 
 #include <clang-c/Index.h>
 
+#include <filesystem>
+
 namespace ccccc::use_clang
 {
 
 class BlockCounter
 {
 public:
-	static unsigned int ComputeNestedBlockCount(const char* filename, const CXCursor& cursor);
+	static unsigned int ComputeNestedBlockCount(const std::filesystem::path& filename,
+	                                            const CXCursor& cursor);
 };
 
 } // namespace ccccc::use_clang

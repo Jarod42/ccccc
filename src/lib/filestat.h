@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -21,10 +21,11 @@
 #ifndef FILE_STAT_H
 #define FILE_STAT_H
 
-#include "namespacestat.h"
-#include "linecount.h"
 #include "funcstat.h"
+#include "linecount.h"
+#include "namespacestat.h"
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -33,36 +34,49 @@ namespace ccccc
 namespace use_clang
 {
 class FileStatTool;
-}
+} // namespace use_clang
 
 class FileStat
 {
 	friend class use_clang::FileStatTool;
+
 public:
 	using NamespaceMap = NamespaceStat::NamespaceMap;
 	using ClassMap = NamespaceStat::ClassMap;
+
 public:
-	explicit FileStat(const std::string& filename);
+	explicit FileStat(const std::filesystem::path& filename);
 	~FileStat();
 
-	const std::string& getFilename() const { return m_filename; }
+	const std::filesystem::path& getFilename() const { return m_filename; }
 	const LineCount& getLineCount() const { return m_lineCount; }
 	unsigned int getFunctionCount() const { return m_root.getFunctionCount(); }
 	const FuncStat& getFuncStat(unsigned int index) const { return m_root.getFuncStat(index); }
-	const FuncStat* getFuncStatByName(const char* funcNameId) const { return m_root.getFuncStatByName(funcNameId); }
+	const FuncStat* getFuncStatByName(const char* funcNameId) const
+	{
+		return m_root.getFuncStatByName(funcNameId);
+	}
 
 	unsigned int getNamespaceCount() const { return m_root.getNamespaceCount(); }
 	const NamespaceMap& getNamespaces() const { return m_root.getNamespaces(); }
-	const NamespaceStat* getNamespaceByName(const char* name) const { return m_root.getNamespaceByName(name); }
+	const NamespaceStat* getNamespaceByName(const char* name) const
+	{
+		return m_root.getNamespaceByName(name);
+	}
 
 	unsigned int getClassCount() const { return m_root.getClassCount(); }
 	const ClassMap& getClasses() const { return m_root.getClasses(); }
 	const ClassStat* getClassByName(const char* name) const { return m_root.getClassByName(name); }
+
 private:
-	FuncStat* AddFuncStat(const std::vector<std::string>& namespaceNames, const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line);
+	FuncStat* AddFuncStat(const std::vector<std::string>& namespaceNames,
+	                      const std::vector<std::string>& classeNames,
+	                      const std::string& funcname,
+	                      unsigned int line);
 	NamespaceStat* AddNamespace(const std::string& name);
+
 private:
-	std::string m_filename;
+	std::filesystem::path m_filename;
 	LineCount m_lineCount;
 	NamespaceStat m_root;
 };

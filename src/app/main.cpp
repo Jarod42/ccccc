@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,46 +18,29 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <sstream>
-
 #include "cccc_clang_api.h"
 #include "feeddict.h"
 #include "getexepath.h"
 
 #include <ctemplate/template.h>
-
-std::string normalizePath(const std::string& path)
-{
-	std::string res = path;
-
-	for (std::string::size_type t = res.find("\\"); t != std::string::npos; t = res.find("\\", t)) {
-		res[t] = '/';
-	}
-	return res;
-}
+#include <filesystem>
+#include <iostream>
+#include <sstream>
 
 // Default bin location is Root/bin/$IDE/$Config
-std::string getRootPath(const std::string& exePath)
+std::filesystem::path getRootPath(const std::filesystem::path& exePath)
 {
-	std::string::size_type slashPos = exePath.rfind("/");
-	for (int i = 0; i != 2; ++i) {
-		if (slashPos == std::string::npos) {
-			return exePath;
-		}
-		slashPos = exePath.rfind("/", slashPos - 1);
-	}
-	if (exePath.compare(slashPos + 1, 4, "bin/") != 0) {
+	auto res = exePath.parent_path().parent_path();
+	if (res.filename() != "bin") {
 		return exePath;
 	}
-	std::string res = exePath.substr(0, slashPos);
-	return res;
+	return res.parent_path();
 }
 
 int main(int argc, char* argv[])
 {
-	const std::string cccccPath = normalizePath(getExePath());
-	const std::string cccccRoot = getRootPath(cccccPath);
+	const std::filesystem::path cccccPath = getExePath();
+	const std::filesystem::path cccccRoot = getRootPath(cccccPath);
 	ccccc::Parameters params;
 
 	params.Parse(cccccRoot, argc, argv);
@@ -66,11 +49,11 @@ int main(int argc, char* argv[])
 	allStat.Compute(params);
 
 	ctemplate::TemplateDictionary dict("root");
-	const std::string templateFilename = params.GetTemplateFilename();
+	const std::filesystem::path templateFilename = params.GetTemplateFilename();
 
-	dict.SetFilename(templateFilename);
-	dict.SetValue("cccccPath", cccccPath);
-	dict.SetValue("cccccRoot", cccccRoot);
+	dict.SetFilename(templateFilename.string());
+	dict.SetValue("cccccPath", cccccPath.string());
+	dict.SetValue("cccccRoot", cccccRoot.string());
 	{
 		time_t now;
 		time(&now);
@@ -83,7 +66,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::string output;
-	ctemplate::ExpandTemplate(templateFilename, ctemplate::DO_NOT_STRIP, &dict, &output);
+	ctemplate::ExpandTemplate(templateFilename.string(), ctemplate::DO_NOT_STRIP, &dict, &output);
 	std::cout << output;
 	return 0;
 }

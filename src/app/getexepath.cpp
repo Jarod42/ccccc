@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -22,10 +22,10 @@
 
 #ifdef _WIN32
 
-#include <windows.h>
-#include <libgen.h>
+# include <libgen.h>
+# include <windows.h>
 
-std::string getExePath()
+std::filesystem::path getExePath()
 {
 	char ownPth[MAX_PATH];
 	HMODULE hModule = GetModuleHandle(nullptr);
@@ -38,14 +38,14 @@ std::string getExePath()
 
 #elif defined(__linux__) || defined(__unix__)
 
-#include <climits>
-#include <unistd.h>
+# include <climits>
+# include <unistd.h>
 
-std::string getExePath()
+std::filesystem::path getExePath()
 {
 	char buff[PATH_MAX];
 
-	const auto len = ::readlink("/proc/self/exe", buff, sizeof (buff) - 1);
+	const auto len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
 	if (len != -1) {
 		buff[len] = '\0';
 		return buff;
@@ -60,11 +60,10 @@ std::string getExePath()
 //FreeBSD: sysctl CTL_KERN KERN_PROC KERN_PROC_PATHNAME -1
 //BSD with procfs: readlink /proc/curproc/file
 
-std::string getExePath()
+std::filesystem::path getExePath()
 {
-#warning "platform not supported: getExePath will return empty"
+# warning "platform not supported: getExePath will return empty"
 	return std::string();
 }
 
 #endif
-

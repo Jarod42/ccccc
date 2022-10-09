@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2020 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -27,73 +27,46 @@
 namespace ccccc
 {
 
-	namespace
-	{
-		void ShowVersion(llvm::raw_ostream& os)
-		{
-			os << "CCCCC version 1.3\n";
-		}
-	}
+namespace
+{
+void ShowVersion(llvm::raw_ostream& os)
+{
+	os << "CCCCC version 1.3\n";
+}
+} // namespace
 
-void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
+void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** argv)
 {
 	llvm::cl::list<std::string> defines{
-		"define",
-		llvm::cl::desc("Specify define"),
-		llvm::cl::value_desc("define")
-	};
+		"define", llvm::cl::desc("Specify define"), llvm::cl::value_desc("define")};
 	llvm::cl::alias defineAlias{
-		"D",
-		llvm::cl::desc("Alias for -define"),
-		llvm::cl::aliasopt(defines)
-	};
+		"D", llvm::cl::desc("Alias for -define"), llvm::cl::aliasopt(defines)};
 
 	llvm::cl::list<std::string> extraOptions{
 		"extra-option",
 		llvm::cl::desc("Extra option directly given to the clang parser"),
-		llvm::cl::value_desc("extra-option")
-	};
+		llvm::cl::value_desc("extra-option")};
 	llvm::cl::alias extraAlias{
-		"e",
-		llvm::cl::desc("Alias for -extra-option"),
-		llvm::cl::aliasopt(extraOptions)
-	};
+		"e", llvm::cl::desc("Alias for -extra-option"), llvm::cl::aliasopt(extraOptions)};
 	llvm::cl::list<std::string> includes{
-		"include-dir",
-		llvm::cl::desc("Specify include path"),
-		llvm::cl::value_desc("path")
-	};
+		"include-dir", llvm::cl::desc("Specify include path"), llvm::cl::value_desc("path")};
 	llvm::cl::alias includeAlias{
-		"I",
-		llvm::cl::desc("Alias for -include-dir"),
-		llvm::cl::aliasopt(includes)
-	};
+		"I", llvm::cl::desc("Alias for -include-dir"), llvm::cl::aliasopt(includes)};
 	llvm::cl::opt<std::string> templateFile{
 		"template-file",
-		llvm::cl::desc("template file to use for the report (default is template/html/template.tpl)"),
+		llvm::cl::desc(
+			"template file to use for the report (default is template/html/template.tpl)"),
 		llvm::cl::value_desc("template-file"),
-		llvm::cl::init(cccccRoot + "/template/html/template.tpl")
-	};
+		llvm::cl::init((cccccRoot / "template/html/template.tpl").string())};
 	llvm::cl::alias includeTemplate{
-		"t",
-		llvm::cl::desc("Alias for -template-file"),
-		llvm::cl::aliasopt(templateFile)
-	};
+		"t", llvm::cl::desc("Alias for -template-file"), llvm::cl::aliasopt(templateFile)};
 	llvm::cl::opt<std::string> pch{
-		"pch",
-		llvm::cl::desc("Compiled header path"),
-		llvm::cl::value_desc("pch-file")
-	};
+		"pch", llvm::cl::desc("Compiled header path"), llvm::cl::value_desc("pch-file")};
 	llvm::cl::list<std::string> inputFilenames{
-		llvm::cl::Positional,
-		llvm::cl::desc("<input files>"),
-		llvm::cl::OneOrMore
-	};
+		llvm::cl::Positional, llvm::cl::desc("<input files>"), llvm::cl::OneOrMore};
 	llvm::cl::SetVersionPrinter(ShowVersion);
 	llvm::cl::ParseCommandLineOptions(
-		argc,
-		argv,
-		"Compute metrics from input files and output the report");
+		argc, argv, "Compute metrics from input files and output the report");
 
 	for (const auto& f : inputFilenames) {
 		AddFile(f);
@@ -110,7 +83,7 @@ void Parameters::Parse(const std::string& cccccRoot, int argc, char** argv)
 	if (!pch.empty()) {
 		SetPch(pch);
 	}
-	SetTemplateFilename(templateFile);
+	SetTemplateFilename(std::string(templateFile));
 }
 
-}
+} // namespace ccccc
