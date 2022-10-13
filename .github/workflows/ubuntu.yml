@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      -'src/**'
-
+      - 'src/**'
+      - 'test/**'
+      - '.github/workflows/ubuntu.yml'
 jobs:
   build:
 
