@@ -20,6 +20,8 @@
 
 #include "utils.h"
 
+#include <iostream>
+
 namespace ccccc::use_clang
 {
 
@@ -78,8 +80,8 @@ bool isInFile(const std::filesystem::path& filename, CXCursor cursor)
 		return false;
 	}
 	clang_disposeString(cxCursorFilename);
-	const std::string cursorFilename = cstr;
-	return cursorFilename.compare(filename.string()) == 0;
+	const std::filesystem::path cursorFilename = cstr;
+	return cursorFilename == filename;
 }
 
 bool isValid(CXTranslationUnit tu)

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,10 +18,10 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef FEEDDICT_H
 #define FEEDDICT_H
 
+#include <filesystem>
 #include <string>
 
 namespace ccccc
@@ -30,16 +30,26 @@ class ClassStat;
 class FileStat;
 class FuncStat;
 class NamespaceStat;
-}
+} // namespace ccccc
 
 namespace ctemplate
 {
 class TemplateDictionary;
-}
+} // namespace ctemplate
 
-void feedDict(const ccccc::FuncStat& funcStat, const std::string& namespacesName, const std::string& classesName, ctemplate::TemplateDictionary* dict);
-void feedDict(const ccccc::ClassStat& classStat, const std::string& namespacesName, std::string classesName, ctemplate::TemplateDictionary* dict);
-void feedDict(const ccccc::NamespaceStat& namespaceStat, std::string namespacesName, ctemplate::TemplateDictionary* dict);
-void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict);
+void feedDict(const ccccc::FuncStat&,
+              const std::string& namespacesName,
+              const std::string& classesName,
+              ctemplate::TemplateDictionary*);
+void feedDict(const ccccc::ClassStat&,
+              const std::string& namespacesName,
+              std::string classesName,
+              ctemplate::TemplateDictionary*);
+void feedDict(const ccccc::NamespaceStat&,
+              std::string namespacesName,
+              ctemplate::TemplateDictionary*);
+void feedDict(const ccccc::FileStat&,
+              const std::filesystem::path& root,
+              ctemplate::TemplateDictionary*);
 
 #endif // FEEDDICT_H

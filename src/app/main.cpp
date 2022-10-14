@@ -59,10 +59,12 @@ int main(int argc, char* argv[])
 		time(&now);
 		dict.SetValue("Date", ctime(&now));
 	}
+	const std::filesystem::path root = std::filesystem::current_path();
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
+		std::cerr << "feed dict: " << filestat.getFilename() << std::endl;
 
-		feedDict(filestat, &dict);
+		feedDict(filestat, root, &dict);
 	}
 
 	std::string output;

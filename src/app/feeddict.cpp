@@ -124,11 +124,14 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 	}
 }
 
-void feedDict(const ccccc::FileStat& fileStat, ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FileStat& fileStat,
+              const std::filesystem::path& root,
+              ctemplate::TemplateDictionary* dict)
 {
 	ctemplate::TemplateDictionary* sectionDict = dict->AddSectionDictionary("ForEachFiles");
 
-	sectionDict->SetValue("filename", fileStat.getFilename().string());
+	sectionDict->SetValue("filename",
+	                      std::filesystem::relative(fileStat.getFilename(), root).string());
 	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}
