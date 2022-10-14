@@ -32,28 +32,10 @@
  CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic()); \
  CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
 
-void InitHardCodedMingwPath(ccccc::Parameters& param)
-{
-	// Hard coded system headers
-#define MINGWPATH "d:/Programs/mingw-4.8.1"
-#define MINGW_LIB_PATH "/lib/gcc/mingw32/4.8.1"
-
-	param.AddInclude(MINGWPATH "/include");
-	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++");
-	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++/mingw32");
-	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include/c++/backward");
-	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include");
-	param.AddInclude(MINGWPATH MINGW_LIB_PATH "/include-fixed");
-
-#undef MINGW_LIB_PATH
-#undef MINGWPATH
-}
-
 TEST(LINECOUNT_FILE_TEST_C)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/linecount/test.c";
 	param.AddFile(filename);
 
@@ -83,7 +65,6 @@ TEST(LINECOUNT_FILE_TEST_H)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/linecount/test.h";
 
 	param.AddFile(filename);
@@ -101,7 +82,6 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/linecount/test_include.cpp";
 
 	param.AddInclude("../../../samples/linecount");
@@ -121,7 +101,6 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/namespace.cpp";
 
 	//param.AddInclude("../../../samples");
@@ -147,7 +126,6 @@ TEST(FILE_TEST_CLASS_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/class.cpp";
 
 	//param.AddInclude("../../../samples");
@@ -189,7 +167,6 @@ TEST(FILE_TEST_MVG_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/mvg.cpp";
 
 	//param.AddInclude("../../../samples");
@@ -230,7 +207,6 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
-	InitHardCodedMingwPath(param);
 	const std::filesystem::path filename = "../../../samples/blockcount.cpp";
 
 	//param.AddInclude("../../../samples");
