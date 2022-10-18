@@ -23,14 +23,9 @@
 #include "filestat.h"
 #include "linecount.h"
 #include "parameters.h"
+#include "utils.h"
 
 #include <UnitTest++/UnitTest++.h>
-
-#define CHECK_EQUAL_LOC(lhs, rhs) \
- CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank()); \
- CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment()); \
- CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic()); \
- CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
 
 TEST(LINECOUNT_FILE_TEST_C)
 {
@@ -95,60 +90,4 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 	ccccc::LineCount expectedStat(24, 14, 4, 6);
 	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
 	CHECK_EQUAL(std::filesystem::absolute(filename), fileStat.getFilename());
-}
-
-TEST(FILE_TEST_NAMESPACE_CPP)
-{
-	ccccc::AllStat stat;
-	ccccc::Parameters param;
-	const std::filesystem::path filename = "../../../samples/namespace.cpp";
-
-	//param.AddInclude("../../../samples");
-	//param.AddExtra("-std=c++11");
-	param.AddFile(filename);
-	stat.Compute(param);
-
-	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
-	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-	ccccc::LineCount expectedStat(4, 4, 0, 0);
-	const unsigned int expectedMvg = 1;
-	CHECK(fileStat.getFuncStatByName("sum(int, int)") == nullptr);
-	const ccccc::NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
-	CHECK(namespaceStat != nullptr);
-	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
-	CHECK(funcStat != nullptr);
-	CHECK_EQUAL_LOC(expectedStat, funcStat->getLineCount());
-	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
-}
-
-TEST(FILE_TEST_CLASS_CPP)
-{
-	ccccc::AllStat stat;
-	ccccc::Parameters param;
-	const std::filesystem::path filename = "../../../samples/class.cpp";
-
-	//param.AddInclude("../../../samples");
-	param.AddExtra("-std=c++11");
-	param.AddFile(filename);
-	stat.Compute(param);
-
-	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
-	const ccccc::FileStat& fileStat = stat.getFileStat(0);
-
-	const ccccc::ClassStat* classFooStat = fileStat.getClassByName("Foo");
-	CHECK(classFooStat != nullptr);
-	CHECK(classFooStat->getMethodCount() == 4);
-	CHECK(classFooStat->getMethodStatByName("Foo()") != nullptr);
-	CHECK(classFooStat->getMethodStatByName("Foo(Foo &&)") != nullptr);
-	CHECK(classFooStat->getMethodStatByName("bar()") != nullptr);
-	CHECK(classFooStat->getMethodStatByName("isNul()") != nullptr);
-
-	CHECK(classFooStat->getClassCount() == 1);
-	const ccccc::ClassStat* classInnerStat = classFooStat->getClassByName("InnerClass");
-	CHECK(classInnerStat != nullptr);
-	CHECK(classInnerStat->getMethodStatByName("InnerClass()") != nullptr);
-	CHECK(classInnerStat->getMethodStatByName("~InnerClass()") != nullptr);
-	CHECK(classInnerStat->getMethodStatByName("bar()") == nullptr);
 }
