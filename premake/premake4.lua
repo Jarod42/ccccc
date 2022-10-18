@@ -47,9 +47,9 @@ ActionsData = {
 }
 
 CompilerData = {
-	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++17"}},
+	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++20"}},
 	["clang++"] = {
-		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++17"},
+		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++20"},
 		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
 	},
 	["vc"] = {}
