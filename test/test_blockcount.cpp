@@ -54,10 +54,15 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelif(int, int, int)"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_ifif(int, int, int)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_while(const char *)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_do_while(int)"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_for_noblock(const char *)"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor_no_block(const char (&)[5][5])"));
 	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch(int)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch_case(int)"));
+	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_try()"));
+	CHECK_EQUAL(0, CheckBlockCount(fileStat, "function_try_function()"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_block()"));
+	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_lambda()"));
 	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_max_block()"));
 }

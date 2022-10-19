@@ -28,7 +28,7 @@ int function_ifelif(int a, int b, int c)
 {
 	if (a < b) {
 		return -1;
-	} else if (a > c){
+	} else if (a > c) {
 		return 2;
 	} else if (a == b) {
 		return 0;
@@ -49,7 +49,7 @@ int function_ifif(int a, int b, int c)
 }
 
 // block = 1
-int function_while(const char *s)
+int function_while(const char* s)
 {
 	int i = 0;
 	while (s[i] != '\0') {
@@ -59,7 +59,16 @@ int function_while(const char *s)
 }
 
 // block = 1
-int function_for_noblock(const char *s)
+void function_do_while(int n)
+{
+	do {
+		++n;
+	} while (n != 42);
+}
+
+
+// block = 1
+int function_for_noblock(const char* s)
 {
 	int i;
 	for (i = 0; s[i] != '\0'; ++i);
@@ -103,6 +112,61 @@ const char* function_switch(int i)
 	}
 }
 
+// block = 1
+const char* function_switch_case(int i)
+{
+	switch (i) {
+		case 0:
+		{
+			return "monday";
+		}
+		case 1:
+		{
+			return "tuesday";
+		}
+		case 2:
+		{
+			return "wesnesday";
+		}
+		case 3:
+		{
+			return "thursday";
+		}
+		case 4:
+		{
+			return "friday";
+		}
+		case 5:
+		case 6:
+		{
+			return "week end";
+		}
+		default:
+		{
+			return 0;
+		}
+	}
+}
+
+// block = 1
+void function_try()
+{
+	try {
+		throw 42;
+	} catch (...) {
+		return;
+	}
+}
+
+// block = 0
+void function_try_function()
+try
+{
+	throw 42;
+} catch (...) {
+	return;
+}
+
 // block = 2
 void function_block()
 {
@@ -116,6 +180,12 @@ void function_block()
 		whichvalue += autoblock;
 	}
 	whichvalue = 42;
+}
+
+// block = 2
+void function_lambda()
+{
+	[](){return [](){};}();
 }
 
 // block = 2
@@ -134,4 +204,3 @@ void function_max_block()
 	whichvalue = 42;
 	{}
 }
-
