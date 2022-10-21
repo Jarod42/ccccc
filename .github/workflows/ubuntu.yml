@@ -14,8 +14,9 @@ jobs:
 
     steps:
 
-    - name: aptget premake
-      run: sudo apt-get install premake4
+    - name: gcc version
+      run: |
+          g++ --version
 
     - name: aptget libunittest++
       run: sudo apt-get install libunittest++
@@ -24,7 +25,7 @@ jobs:
       id: LLVM
       run: |
           sudo apt-get install clang-9 libclang-9-dev llvm-9-dev llvm-9-runtime llvm-9
-          echo "::set-output name=LLVM_ROOT::/usr/lib/llvm-9"
+          echo "LLVM_ROOT=/usr/lib/llvm-9" >> $GITHUB_OUTPUT
 
     - name: DEBUG llvm
       run: |
@@ -50,8 +51,22 @@ jobs:
 
     - uses: actions/checkout@v2
 
+    - name: checkout premake5
+      uses: actions/checkout@v2
+      with:
+          repository: premake/premake-core
+          path: premake-build
+
+    - name: Build premake5
+      run: |
+        cd premake-build
+        make -f Bootstrap.mak linux CONFIG=release
+        cp bin/release/premake5 ../
+        cd ..
+        rm -Rf premake-build
+
     - name: premake gmake
-      run: premake4 --file="premake/premake4.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+      run: ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
 
     - name: make config=releasewithdll
       run: |

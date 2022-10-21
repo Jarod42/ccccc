@@ -36,55 +36,6 @@ else
 	LLVMConfig = path.join(LLVMBinDir, "llvm-config")
 end
 
-
-ActionsData = {
-	["codelite"] = {["Dir"] = "CL", ["Compiler"] = "g++"},
-	["codeblocks"] = {["Dir"] = "codeblocks", ["Compiler"] = "g++"},
-	["vs2005"] = {["Dir"] = "vs2005", ["Compiler"] = "vc"},
-	["vs2008"] = {["Dir"] = "vs2008", ["Compiler"] = "vc"},
-	["vs2010"] = {["Dir"] = "vs2010", ["Compiler"] = "vc"},
-	["gmake"] = {["Dir"] = "gmake", ["Compiler"] = "g++"}
-}
-
-CompilerData = {
-	["g++"] = { ["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++20"}},
-	["clang++"] = {
-		["buildoptions"] = {"-Wextra", "-Wno-unused-parameter", "-std=c++20"},
-		["defines"] = {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
-	},
-	["vc"] = {}
-}
-
-if (ActionsData[_ACTION] == nil) then
-	error (_ACTION .. " unsupported")
-end
-
-ConfigurationsData = {
-	["Debug"] = {["Dir"] = "Debug", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
-	["Release"] = {["Dir"] = "Release", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}},
-	["DebugWithDLL"] = {["Dir"] = "DebugWithDLL", ["Flags"] = {"Symbols"}, ["Defines"] = {"DEBUG"}},
-	["ReleaseWithDLL"] = {["Dir"] = "ReleaseWithDLL", ["Flags"] = {"Optimize"}, ["Defines"] = {"NDEBUG"}}
-}
-
-LocationDir = path.join(Root, "project/" .. ActionsData[_ACTION].Dir)
-
-
-function DefaultConfiguration()
-	compilerData = CompilerData[ActionsData[_ACTION].Compiler]
-	for config,data in pairs(ConfigurationsData) do
-		configuration(config)
-			objdir(path.join(Root, "obj/" .. ActionsData[_ACTION].Dir)) -- premake add $(configName)/$(AppName)
-			targetdir(path.join(Root, "bin/" .. ActionsData[_ACTION].Dir .. "/" .. data.Dir))
-			flags (data.Flags)
-			defines(data.Defines)
-			if (compilerData ~= nil) then
-				if compilerData.buildoptions ~= nil then buildoptions(compilerData.buildoptions) end
-				if compilerData.defines ~= nil then defines(compilerData.defines) end
-				if compilerData.includedirs ~= nil then includedirs(compilerData.includedirs) end
-			end
-	end
-end
-
 function UseCTemplate()
 	--includedirs { path.join(CTemplateRoot, "src")}
 	--libdirs { path.join(CTemplateRoot, ".libs") }
@@ -96,33 +47,37 @@ function Llvm_config_cpp_flags()
 end
 
 function LinkToClang()
-	configuration "*WithDLL"
-		links { "clang", "LLVMSupport"}
+	filter "configurations:*WithDLL"
+		--links { "clang"} -- order issue between link and linkoptions
+		linkoptions {"-lclang"}
 
 		if not (_OPTIONS["without-tinfo"]) then
 			links { "tinfo" }
 		end
 
-		if (ActionsData[_ACTION].Compiler ~= "vc") then
+	filter {"configurations:*WithDLL", "toolset:not msc"}
 			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs support" .. ")" }
-		end
+
+	filter {"configurations:*WithDLL"}
 		linkoptions { "-pthread" }
 
-	configuration "not *WithDLL"
+	filter "configurations:not *WithDLL"
 		links { "clang", "clangIndex", "clangFormat", "clangTooling",
 				"clangToolingCore", "clangFrontend", "clangDriver",
 				"clangSerialization", "clangParse", "clangSema",
 				"clangAnalysis", "clangRewrite", "clangEdit",
-				"clangAST", "clangLex", "clangBasic", "LLVMSupport"}
+				"clangAST", "clangLex", "clangBasic"}
 		if not (_OPTIONS["without-tinfo"]) then
 			links { "tinfo" }
 		end
 
-		if (ActionsData[_ACTION].Compiler ~= "vc") then
-			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs all support" .. ")" }
-		end
+	filter {"configurations:not *WithDLL", "toolset:not msc"}
+		linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs all support" .. ")" }
+
+	filter {"configurations:not *WithDLL"}
 		linkoptions { "-pthread" }
-	configuration "*"
+
+	filter {}
 end
 
 --UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
@@ -135,16 +90,41 @@ end
 
 
 solution "ccccc"
-	location ( LocationDir )
+	location ( path.join(Root, "project/" .. _ACTION))
 	configurations { "DebugWithDLL", "ReleaseWithDLL", "Debug", "Release" }
+
+	objdir(path.join(Root, "obj", _ACTION)) -- premake add $(configName)/$(AppName)
+	targetdir(path.join(Root, "bin", _ACTION, "%{cfg.buildcfg}"))
+
+	cppdialect "C++17"
 
 	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then includedirs(LLVMIncludeDir) end
 
-	configuration "*WithDLL"
+	filter "action:codelite"
+		toolset "gcc"
+	filter "action:codeblocks"
+		toolset "gcc"
+
+	filter "toolset:clang"
+		defines {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
+
+	filter "configurations:Debug*"
+		optimize "On"
+		symbols "Off"
+		defines "NDEBUG"
+	filter "configurations:Release*"
+		optimize "On"
+		symbols "Off"
+		defines "NDEBUG"
+
+	filter "configurations:*WithDLL"
 		if (LLVMBinDir ~= nil and LLVMBinDir ~= "") then libdirs(LLVMBinDir) end
 		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
-	configuration "not *WithDLL"
+	filter "configurations:not *WithDLL"
 		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
+
+	filter {}
+	startproject "ccccc_app"
 
 -- --------------------------------------
 	project "ccccc_app"
@@ -152,7 +132,8 @@ solution "ccccc"
 		language "C++"
 		targetname("ccccc")
 		files { path.join(Root, "src/app/**.*") }
-		flags { "ExtraWarnings", "FatalWarnings"}
+		warnings "Extra"
+		flags { "FatalWarnings"}
 
 		includedirs { path.join(Root, "src/lib/") }
 
@@ -160,15 +141,16 @@ solution "ccccc"
 
 		UseCTemplate()
 
-		links { "ccccc_lib"}
+		links { "ccccc_lib" }
+		filter { "system:windows" }
+			linkoptions{path.join("%{cfg.targetdir}", "ccccc.lib")} -- order issue between link and linkoptions
+		filter { "system:not windows" }
+			linkoptions{path.join("%{cfg.targetdir}", "libccccc.a")} -- order issue between link and linkoptions
+		filter {}
 		LinkToClang()
 
-		if (_PREMAKE_VERSION >= "4.4") then
-			--debugdir(Root)
-			debugargs {"../../../samples/namespace.cpp"}
-		end
-
-		DefaultConfiguration()
+		--debugdir(Root)
+		debugargs {"../../../samples/namespace.cpp"}
 
 -- --------------------------------------
 	project "ccccc_lib"
@@ -176,40 +158,39 @@ solution "ccccc"
 		language "C++"
 		targetname("ccccc")
 		files { path.join(Root, "src/lib/**.*") }
-		flags { "ExtraWarnings", "FatalWarnings"}
+		warnings "Extra"
+		flags { "FatalWarnings"}
 
 		Llvm_config_cpp_flags()
-		DefaultConfiguration()
 
 -- --------------------------------------
 	project "ccccc_test"
 		kind "ConsoleApp"
 		language "C++"
-		--flags "WinMain"
 		files { path.join(Root, "test/**.*") }
-		flags { "ExtraWarnings", "FatalWarnings"}
+		warnings "Extra"
+		flags { "FatalWarnings"}
 
 		includedirs { path.join(Root, "src/lib/") }
 
 		Llvm_config_cpp_flags()
 
 		links { "ccccc_lib" }
+		filter { "system:windows" }
+			linkoptions{path.join("%{cfg.targetdir}", "ccccc.lib")} -- order issue between link and linkoptions
+		filter { "system:not windows" }
+			linkoptions{path.join("%{cfg.targetdir}", "libccccc.a")} -- order issue between link and linkoptions
+		filter {}
+
 		LinkToClang()
 		UseUnitTestPP()
 
-		if (_PREMAKE_VERSION >= "4.4") then
-			--debugdir(Root)
-		end
-
-		DefaultConfiguration()
+		--debugdir(Root)
 
 -- --------------------------------------
-	if (_ACTION ~= "gmake") then -- project to see examples
 	project "sample"
-		kind "StaticLib" -- "None"
+		kind "None"
 		language "C++"
 		files { path.join(Root, "samples/**.*") }
-		flags { "ExtraWarnings", "FatalWarnings"}
-
-		DefaultConfiguration()
-	end
+		warnings "Extra"
+		flags { "FatalWarnings"}
