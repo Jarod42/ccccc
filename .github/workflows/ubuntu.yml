@@ -38,7 +38,7 @@ jobs:
           LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
 
     - name: checkout ctemplate
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
           repository: olafvdspek/ctemplate
           ref: ctemplate-2.4
@@ -49,10 +49,10 @@ jobs:
           sudo make install
           rm -Rf *
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: checkout premake5
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
           repository: premake/premake-core
           path: premake-build
