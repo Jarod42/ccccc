@@ -23,6 +23,7 @@
 #include "../caller_count.h"
 #include "../globaldata.h"
 #include "blockcounter.h"
+#include "callcounter.h"
 #include "halsteadmetrictool.h"
 #include "linecounter.h"
 #include "localstattool.h"
@@ -33,8 +34,6 @@ namespace ccccc::use_clang
 
 namespace
 {
-
-using CallerUserData = std::pair<int, CallerCountData*>;
 
 class FuncStatFeeder
 {
@@ -57,9 +56,7 @@ public:
 enum CXChildVisitResult
 CallerCounterVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
 {
-	auto* callerUserData = reinterpret_cast<CallerUserData*>(user_data);
-	auto& callCount = callerUserData->first;
-	auto* callerCountData = callerUserData->second;
+	auto* callerCountData = reinterpret_cast<CallerCountData*>(user_data);
 	auto cursorKind = clang_getCursorKind(cursor);
 	if (cursorKind == CXCursorKind::CXCursor_DeclRefExpr
 	    || cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
@@ -75,10 +72,9 @@ CallerCounterVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_dat
 			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
 			callerCountData->m_counts[referencedCursor]++;
 			callerCountData->m_usrCounts[usr]++;
-			callCount++;
 
 			if (clang_Cursor_getNumTemplateArguments(referencedCursor) != -1) {
-				// non specialized template instanciation
+				// non specialized template instantiation
 				// counts for the generic template
 				if (callerCountData->m_templatedSpecializations.count(referencedCursor) == 0) {
 					auto templateCursor = clang_getSpecializedCursorTemplate(referencedCursor);
@@ -89,8 +85,7 @@ CallerCounterVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_dat
 				}
 				// For template, follow the instantiation
 				// to be able to call dependent code.
-				CallerUserData userData(0, callerCountData);
-				clang_visitChildren(referencedCursor, &CallerCounterVisitor, &userData);
+				clang_visitChildren(referencedCursor, &CallerCounterVisitor, callerCountData);
 			}
 		}
 	}
@@ -146,9 +141,8 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	if (clang_Cursor_getNumTemplateArguments(cursor) != -1) {
 		globalData.m_callerCountData.m_templatedSpecializations.insert(cursor);
 	}
-	CallerUserData userData(0, &globalData.m_callerCountData);
-	clang_visitChildren(cursor, &CallerCounterVisitor, &userData);
-	stat->m_callCount = userData.first;
+	clang_visitChildren(cursor, &CallerCounterVisitor, &globalData.m_callerCountData);
+	stat->m_callCount = CountCall(cursor);
 }
 
 void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
