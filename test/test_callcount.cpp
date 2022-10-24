@@ -78,7 +78,7 @@ getCallCount(const ccccc::FileStat& fileStat, const char* className, const char*
 }
 } // namespace
 
-TEST(CALLER_COUNT_FILE)
+TEST(CALL_COUNT_FILE)
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;

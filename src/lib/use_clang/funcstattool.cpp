@@ -53,45 +53,6 @@ public:
 	LineCounter m_lineCounter;
 };
 
-enum CXChildVisitResult
-CallerCounterVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientData user_data)
-{
-	auto* callerCountData = reinterpret_cast<CallerCountData*>(user_data);
-	auto cursorKind = clang_getCursorKind(cursor);
-	if (cursorKind == CXCursorKind::CXCursor_DeclRefExpr
-	    || cursorKind == CXCursorKind::CXCursor_MemberRefExpr) {
-		const auto referencedCursor = clang_getCursorReferenced(cursor);
-		auto refcursorKind = clang_getCursorKind(referencedCursor);
-
-		if (refcursorKind == CXCursorKind::CXCursor_CXXMethod
-		    || refcursorKind == CXCursorKind::CXCursor_FunctionDecl) {
-			if (callerCountData->m_templatedVisited.count(cursor) != 0) {
-				return CXChildVisitResult::CXChildVisit_Recurse;
-			}
-			callerCountData->m_templatedVisited.insert(cursor);
-			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
-			callerCountData->m_counts[referencedCursor]++;
-			callerCountData->m_usrCounts[usr]++;
-
-			if (clang_Cursor_getNumTemplateArguments(referencedCursor) != -1) {
-				// non specialized template instantiation
-				// counts for the generic template
-				if (callerCountData->m_templatedSpecializations.count(referencedCursor) == 0) {
-					auto templateCursor = clang_getSpecializedCursorTemplate(referencedCursor);
-					const auto templateusr =
-						getStringAndDispose(clang_getCursorUSR(templateCursor));
-					callerCountData->m_counts[templateCursor]++;
-					callerCountData->m_usrCounts[templateusr]++;
-				}
-				// For template, follow the instantiation
-				// to be able to call dependent code.
-				clang_visitChildren(referencedCursor, &CallerCounterVisitor, callerCountData);
-			}
-		}
-	}
-	return CXChildVisitResult::CXChildVisit_Recurse;
-}
-
 bool IsOverridenMethod(const CXCursor& cursor)
 {
 	CXCursor* overriden = nullptr;
@@ -115,7 +76,6 @@ auto Value(const Map& m,
 void FuncStatTool::Compute(const std::filesystem::path& filename,
                            const CXTranslationUnit& tu,
                            const CXCursor& cursor,
-                           GlobalData& globalData,
                            FuncStat* stat)
 {
 	stat->m_usr = getStringAndDispose(clang_getCursorUSR(cursor));
@@ -138,10 +98,7 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
 	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
 	stat->m_isOverriden = IsOverridenMethod(cursor);
-	if (clang_Cursor_getNumTemplateArguments(cursor) != -1) {
-		globalData.m_callerCountData.m_templatedSpecializations.insert(cursor);
-	}
-	clang_visitChildren(cursor, &CallerCounterVisitor, &globalData.m_callerCountData);
+
 	stat->m_callCount = CountCall(cursor);
 }
 

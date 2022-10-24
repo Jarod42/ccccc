@@ -38,12 +38,9 @@ namespace ccccc::use_clang
 class FuncStatTool
 {
 public:
-	static void Compute(const std::filesystem::path& filename,
-	                    const CXTranslationUnit& tu,
-	                    const CXCursor& cursor,
-	                    GlobalData& globalData,
-	                    FuncStat* stat);
-	static void PostFeed(const GlobalData& globalData, FuncStat* stat);
+	static void
+	Compute(const std::filesystem::path&, const CXTranslationUnit&, const CXCursor&, FuncStat*);
+	static void PostFeed(const GlobalData&, FuncStat*);
 };
 
 } // namespace ccccc::use_clang
