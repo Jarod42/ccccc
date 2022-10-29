@@ -35,28 +35,20 @@ jobs:
           MSBuild.exe /m ctemplate.sln /p:Configuration=release
       shell: cmd
 
-    - name: Cache LLVM and Clang
-      id: cache-llvm
-      uses: actions/cache@v3
-      with:
-        path: |
-          C:/Program Files/LLVM
-          ./llvm
-        key: llvm-15
-    - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@v1
-      with:
-        version: "15"
-        cached: ${{ steps.cache-llvm.outputs.cache-hit }}
-
-    - name: premake vs2022
-      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="C:/Program Files/LLVM" vs2022
+    - name: Install LLVM
+      run: |
+        curl -fsSL -o "LLVM-10.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe"
+        ./LLVM-10.0.0-win64.exe /S
 
     - name: LLVM debug
       run: |
+          dir "C:/Program Files"
           dir "C:/Program Files/LLVM"
           dir "C:/Program Files/LLVM/include"
           dir "C:/Program Files/LLVM/include/llvm/Support"
+
+    - name: premake vs2022
+      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="C:/Program Files/LLVM" vs2022
 
     - name: make config=releasewithdll
       run: |
