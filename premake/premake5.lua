@@ -98,7 +98,7 @@ solution "ccccc"
 
 	cppdialect "C++17"
 
-	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then includedirs(LLVMIncludeDir) end
+	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
 
 	filter "action:codelite"
 		toolset "gcc"
