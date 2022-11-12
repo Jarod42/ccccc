@@ -37,18 +37,17 @@ jobs:
 
     - name: Install LLVM
       run: |
-        curl -fsSL -o "LLVM-10.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe"
-        ./LLVM-10.0.0-win64.exe /S
+        curl -fsSL -o "libclang-release_140-based-windows-vs2019_64.7z" "https://ftp2.nluug.nl/languages/qt/development_releases/prebuilt/libclang/libclang-release_140-based-windows-vs2019_64.7z"
+        7z x libclang-release_140-based-windows-vs2019_64.7z -oLLVM
 
-    - name: LLVM debug
+    - name: debug
       run: |
-          dir "C:/Program Files"
-          dir "C:/Program Files/LLVM"
-          dir "C:/Program Files/LLVM/include"
-          dir "C:/Program Files/LLVM/include/llvm/Support"
+          dir LLVM/libclang
+          dir 3rd/ctemplate-ctemplate-2.4/Release
+          dir -s 3rd/ctemplate-ctemplate-2.4/src
 
     - name: premake vs2022
-      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="C:/Program Files/LLVM" vs2022
+      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="../LLVM/libclang" --ctemplate-root="../3rd/ctemplate-ctemplate-2.4" vs2022
 
     - name: make config=releasewithdll
       run: |

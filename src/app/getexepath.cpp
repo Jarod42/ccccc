@@ -21,12 +21,14 @@
 #include "getexepath.h"
 
 #ifdef _WIN32
-
+# ifndef UNICODE
+#  define UNICODE
+# endif
 # include <windows.h>
 
 std::filesystem::path getExePath()
 {
-	char ownPth[MAX_PATH];
+	wchar_t ownPth[MAX_PATH];
 	HMODULE hModule = GetModuleHandle(nullptr);
 
 	if (hModule != nullptr) {

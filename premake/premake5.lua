@@ -2,15 +2,18 @@
 Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
--- Some path to customize with your config.
---CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.4");
-
 -- You should not modify this script below this line.
 
 newoption {
 	trigger = "llvm-root",
 	value = "path",
 	description = "path of llvm root (contains lib include bin/llvm-config)"
+}
+
+newoption {
+	trigger = "ctemplate-root",
+	value = "path",
+	description = "path of ctemplate root (contains Release and src/windows)"
 }
 
 -- tinfo is not part of msys
@@ -24,40 +27,65 @@ if (_ACTION == nil) then
 end
 
 LLVMRoot = _OPTIONS["llvm-root"]
+CTemplateRoot = _OPTIONS["ctemplate-root"] --path.join(ThirdRoot, "ctemplate-ctemplate-2.4");
 
 if (LLVMRoot == nil or LLVMRoot == "") then
 	-- assume llvm is installed in system
 	LLVMConfig = "llvm-config"
 else
+	LLVMRoot = path.getabsolute(LLVMRoot)
+	print("llvm-root: ", LLVMRoot)
 	LLVMIncludeDir = path.join(LLVMRoot, "include")
 	LLVMBinDir = path.join(LLVMRoot, "bin")
 	LLVMLibDir = path.join(LLVMRoot, "lib")
 	LLVMConfig = path.join(LLVMBinDir, "llvm-config")
 end
 
+if (CTemplateRoot ~= nil and CTemplateRoot ~= "") then
+	CTemplateRoot = path.getabsolute(CTemplateRoot)
+	print("ctemplate-root: ", CTemplateRoot)
+end
+
 function UseCTemplate()
-	--includedirs { path.join(CTemplateRoot, "src")}
-	--libdirs { path.join(CTemplateRoot, ".libs") }
-	links { "ctemplate_nothreads" }
+	if (CTemplateRoot ~= nil and CTemplateRoot ~= "") then
+		externalincludedirs { path.join(CTemplateRoot, "src/windows")}
+		libdirs { path.join(CTemplateRoot, "Release") }
+	end
+	filter {"toolset:not msc*"}
+		links { "ctemplate_nothreads" }
+	filter {"toolset:msc*"}
+		links { "libctemplate" }
+
+	filter{}
 end
 
 function Llvm_config_cpp_flags()
-	buildoptions { "$(shell " .. LLVMConfig .. " --cppflags" .. ")" }
+	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
+	filter {"toolset:not msc*"}
+		buildoptions { "$(shell " .. LLVMConfig .. " --cppflags" .. ")" }
+	filter {}
 end
 
 function LinkToClang()
 	filter "configurations:*WithDLL"
-		--links { "clang"} -- order issue between link and linkoptions
-		linkoptions {"-lclang"}
+		if (LLVMBinDir ~= nil and LLVMBinDir ~= "") then libdirs(LLVMBinDir) end
+		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
 
+	filter "configurations:not *WithDLL"
+		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
+
+	filter {"toolset:msc*"}
+		links {"libclang"}
+
+	filter {"configurations:*WithDLL", "toolset:not msc*"}
+		--links {"clang"} -- order issue between link and linkoptions
+		linkoptions {"-lclang"}
 		if not (_OPTIONS["without-tinfo"]) then
 			links { "tinfo" }
 		end
 
-	filter {"configurations:*WithDLL", "toolset:not msc"}
-			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs support" .. ")" }
-
-	filter {"configurations:*WithDLL"}
+	filter {"configurations:*WithDLL", "toolset:not msc*"}
+		linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs support" .. ")" }
 		linkoptions { "-pthread" }
 
 	filter "configurations:not *WithDLL"
@@ -70,10 +98,8 @@ function LinkToClang()
 			links { "tinfo" }
 		end
 
-	filter {"configurations:not *WithDLL", "toolset:not msc"}
+	filter {"configurations:not *WithDLL", "toolset:not msc*"}
 		linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs all support" .. ")" }
-
-	filter {"configurations:not *WithDLL"}
 		linkoptions { "-pthread" }
 
 	filter {}
@@ -88,7 +114,7 @@ solution "ccccc"
 
 	cppdialect "C++17"
 
-	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
+	externalwarnings "Off"
 
 	filter "action:codelite"
 		toolset "gcc"
@@ -106,14 +132,8 @@ solution "ccccc"
 		optimize "On"
 		symbols "Off"
 		defines "NDEBUG"
-
-	filter "configurations:*WithDLL"
-		if (LLVMBinDir ~= nil and LLVMBinDir ~= "") then libdirs(LLVMBinDir) end
-		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
-	filter "configurations:not *WithDLL"
-		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
-
 	filter {}
+
 	startproject "ccccc_app"
 
 -- --------------------------------------
