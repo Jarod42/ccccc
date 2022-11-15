@@ -22,7 +22,6 @@
 
 #ifdef _WIN32
 
-# include <libgen.h>
 # include <windows.h>
 
 std::filesystem::path getExePath()
@@ -33,7 +32,7 @@ std::filesystem::path getExePath()
 	if (hModule != nullptr) {
 		GetModuleFileName(hModule, ownPth, sizeof(ownPth));
 	}
-	return dirname(ownPth);
+	return std::filesystem::path(ownPth).parent_path();
 }
 
 #elif defined(__linux__) || defined(__unix__)
