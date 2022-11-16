@@ -57,7 +57,10 @@ int main(int argc, char* argv[])
 	{
 		time_t now;
 		time(&now);
-		dict.SetValue("Date", ctime(&now));
+		struct tm* timeinfo = localtime(&now);
+		char formattedDate[32]; // as "Thu Aug 23 14:55:02 2001"
+		strftime(formattedDate, sizeof(formattedDate), "%c", timeinfo);
+		dict.SetValue("Date", formattedDate);
 	}
 	const std::filesystem::path root = std::filesystem::current_path();
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
