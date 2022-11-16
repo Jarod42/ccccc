@@ -20,7 +20,7 @@
 
 #include "parameters.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 
 template <typename T, std::size_t N>
 static constexpr std::size_t ArraySize(const T (&)[N])
@@ -28,7 +28,7 @@ static constexpr std::size_t ArraySize(const T (&)[N])
 	return N;
 }
 
-TEST(PARAMETERS_ADD_FILE)
+TEST_CASE("PARAMETERS_ADD_FILE")
 {
 	const std::vector<std::filesystem::path> files{"a.c", "a.h", "b.c", "b.h"};
 	ccccc::Parameters param;
@@ -39,7 +39,7 @@ TEST(PARAMETERS_ADD_FILE)
 	CHECK(files == param.Filenames());
 }
 
-TEST(PARAMETERS_ADD_INCLUDE)
+TEST_CASE("PARAMETERS_ADD_INCLUDE")
 {
 	const std::vector<std::string> includes{"/usr/include", "./", "c:\\foo"};
 	ccccc::Parameters param;
@@ -50,7 +50,7 @@ TEST(PARAMETERS_ADD_INCLUDE)
 	CHECK(includes == param.IncludePaths());
 }
 
-TEST(PARAMETERS_ADD_DEFINE)
+TEST_CASE("PARAMETERS_ADD_DEFINE")
 {
 	const std::vector<std::string> defines{"FOO", "BAR=42"};
 	ccccc::Parameters param;
@@ -61,7 +61,7 @@ TEST(PARAMETERS_ADD_DEFINE)
 	CHECK(defines == param.Defines());
 }
 
-TEST(PARAMETERS_ADD_EXTRA)
+TEST_CASE("PARAMETERS_ADD_EXTRA")
 {
 	const std::vector<std::string> extras{"-std=c++14"};
 	ccccc::Parameters param;
@@ -72,19 +72,19 @@ TEST(PARAMETERS_ADD_EXTRA)
 	CHECK(extras == param.Extras());
 }
 
-TEST(PARAMETERS_ADD_PCH)
+TEST_CASE("PARAMETERS_ADD_PCH")
 {
 	std::string pchFile = "pchFile";
 	ccccc::Parameters param;
 
 	param.SetPch(pchFile);
-	CHECK_EQUAL(pchFile, param.GetPch());
+	CHECK(pchFile == param.GetPch());
 }
 
 #if 0 // param.Parse is not reentrant :/
 // because of llvm::cl::ParseCommandLineOptions
 
-TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
+TEST_CASE("PARAMETERS_PARSING_SHORT_OPTIONS")
 {
 	const std::string cccccRoot = ".";
 	const char* argv0 = "ccccc_test";
@@ -125,8 +125,8 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 	CHECK(includes == param.IncludePaths());
 	CHECK(defines == param.Defines());
 	CHECK(extras == param.Extras());
-	CHECK_EQUAL(pchFile, param.GetPch());
-	CHECK_EQUAL(templateFile, param.GetTemplateFilename());
+	CHECK(pchFile == param.GetPch());
+	CHECK(templateFile == param.GetTemplateFilename());
 }
 
 #endif
@@ -134,7 +134,7 @@ TEST(PARAMETERS_PARSING_SHORT_OPTIONS)
 #if 0 // param.Parse is not reentrant :/
 // because of llvm::cl::ParseCommandLineOptions
 
-TEST(PARAMETERS_PARSING_LONG_OPTIONS)
+TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 {
 	const std::string cccccRoot = ".";
 	const char* argv0 = "ccccc_test";
@@ -175,7 +175,7 @@ TEST(PARAMETERS_PARSING_LONG_OPTIONS)
 	CHECK(includes == param.IncludePaths());
 	CHECK(defines == param.Defines());
 	CHECK(extras == param.Extras());
-	CHECK_EQUAL(pchFile, param.GetPch());
-	CHECK_EQUAL(templateFile, param.GetTemplateFilename());
+	CHECK(pchFile == param.GetPch());
+	CHECK(templateFile == param.GetTemplateFilename());
 }
 #endif

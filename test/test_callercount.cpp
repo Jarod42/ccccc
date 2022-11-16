@@ -25,7 +25,7 @@
 #include "parameters.h"
 #include "utils.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 #include <iostream>
 
 namespace
@@ -87,7 +87,7 @@ getCallerCount(const ccccc::FileStat& fileStat, const char* className, const cha
 }
 } // namespace
 
-TEST(CALLER_COUNT_FILE)
+TEST_CASE("CALLER_COUNT_FILE")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -98,49 +98,49 @@ TEST(CALLER_COUNT_FILE)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
-	CHECK_EQUAL(2, getCallerCount(fileStat, "ADL(void *)"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "ADL(S *)"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "f<>(S &)"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "f(T &)"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "callADL(S &)"));
+	CHECK(2 == getCallerCount(fileStat, "ADL(void *)"));
+	CHECK(1 == getCallerCount(fileStat, "ADL(S *)"));
+	CHECK(1 == getCallerCount(fileStat, "f<>(S &)"));
+	CHECK(0 == getCallerCount(fileStat, "f(T &)"));
+	CHECK(0 == getCallerCount(fileStat, "callADL(S &)"));
 
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "Base", "f1()"));
-	//CHECK_EQUAL(0, getCallerCount(fileStat, "Base", "f2()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "Base", "f3()"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "Base", "f4()"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "Derived", "f1()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "Derived", "f2()"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "Derived", "f3()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "Derived", "f4()"));
+	//CHECK(1 == getCallerCount(fileStat, "Base", "f1()"));
+	//CHECK(0 == getCallerCount(fileStat, "Base", "f2()"));
+	CHECK(1 == getCallerCount(fileStat, "Base", "f3()"));
+	CHECK(0 == getCallerCount(fileStat, "Base", "f4()"));
+	CHECK(0 == getCallerCount(fileStat, "Derived", "f1()"));
+	CHECK(1 == getCallerCount(fileStat, "Derived", "f2()"));
+	CHECK(0 == getCallerCount(fileStat, "Derived", "f3()"));
+	CHECK(1 == getCallerCount(fileStat, "Derived", "f4()"));
 
-	CHECK_EQUAL(0, getCallerCount(fileStat, "UseOperator(Operator &)"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "Operator", "operator int()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "Operator", "operator*()"));
+	CHECK(0 == getCallerCount(fileStat, "UseOperator(Operator &)"));
+	CHECK(1 == getCallerCount(fileStat, "Operator", "operator int()"));
+	CHECK(1 == getCallerCount(fileStat, "Operator", "operator*()"));
 
-	CHECK_EQUAL(1, getCallerCount(fileStat, "call(void (*)())"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "someFunc()"));
-	CHECK_EQUAL(0, getCallerCount(fileStat, "callSomeFunc()"));
+	CHECK(1 == getCallerCount(fileStat, "call(void (*)())"));
+	CHECK(1 == getCallerCount(fileStat, "someFunc()"));
+	CHECK(0 == getCallerCount(fileStat, "callSomeFunc()"));
 
 	// implicit destructors call doesn't count
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "Implicit", "Implicit()"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "Implicit", "Implicit(const Implicit &)"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "Implicit", "~Implicit()"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "DefaultCount", "DefaultCount()"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "DefaultCount", "DefaultCount(const DefaultCount &)"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "DefaultCount", "~DefaultCount()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "UserProvided", "UserProvided()"));
-	CHECK_EQUAL(1, getCallerCount(fileStat, "UserProvided", "UserProvided(const UserProvided &)"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "UserProvided", "~UserProvided()"));
+	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit()"));
+	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit(const Implicit &)"));
+	//CHECK(1 == getCallerCount(fileStat, "Implicit", "~Implicit()"));
+	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "DefaultCount()"));
+	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "DefaultCount(const DefaultCount &)"));
+	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "~DefaultCount()"));
+	CHECK(1 == getCallerCount(fileStat, "UserProvided", "UserProvided()"));
+	CHECK(1 == getCallerCount(fileStat, "UserProvided", "UserProvided(const UserProvided &)"));
+	//CHECK(1 == getCallerCount(fileStat, "UserProvided", "~UserProvided()"));
 
-	CHECK_EQUAL(1, getCallerCount(fileStat, "New", "New()"));
-	//CHECK_EQUAL(1, getCallerCount(fileStat, "New", "~New()"));
+	CHECK(1 == getCallerCount(fileStat, "New", "New()"));
+	//CHECK(1 == getCallerCount(fileStat, "New", "~New()"));
 
-	CHECK_EQUAL(4, getCallerCount(fileStat, "parameter()"));
+	CHECK(4 == getCallerCount(fileStat, "parameter()"));
 
-	CHECK_EQUAL(1, getCallerCount(fileStat, "initialize_global()"));
+	CHECK(1 == getCallerCount(fileStat, "initialize_global()"));
 
-	CHECK_EQUAL(0, getCallerCount(fileStat, "main()"));
+	CHECK(0 == getCallerCount(fileStat, "main()"));
 }

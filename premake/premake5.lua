@@ -3,7 +3,6 @@ Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
 -- Some path to customize with your config.
---UnitTestPPRoot = "C:/UnitTest++-1.3"
 --CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.4");
 
 -- You should not modify this script below this line.
@@ -79,15 +78,6 @@ function LinkToClang()
 
 	filter {}
 end
-
---UnitTestPPIncludeDir = path.join(UnitTestPPRoot, "src")
---UnitTestPPLibDir = "/usr/local/lib"
-function UseUnitTestPP()
-	--includedirs {UnitTestPPIncludeDir}
-	--libdirs {UnitTestPPLibDir}
-	links { "UnitTest++" }
-end
-
 
 solution "ccccc"
 	location ( path.join(Root, "project/" .. _ACTION))
@@ -172,6 +162,7 @@ solution "ccccc"
 		flags { "FatalWarnings"}
 
 		includedirs { path.join(Root, "src/lib/") }
+		externalincludedirs { path.join(ThirdRoot, "doctest/") }
 
 		Llvm_config_cpp_flags()
 
@@ -183,7 +174,6 @@ solution "ccccc"
 		filter {}
 
 		LinkToClang()
-		UseUnitTestPP()
 
 		--debugdir(Root)
 

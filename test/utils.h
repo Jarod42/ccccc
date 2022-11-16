@@ -22,9 +22,9 @@
 #define TEST_UTILS_H
 
 #define CHECK_EQUAL_LOC(lhs, rhs) \
- CHECK_EQUAL((lhs).getLineOfCode_blank(), (rhs).getLineOfCode_blank()); \
- CHECK_EQUAL((lhs).getLineOfCode_comment(), (rhs).getLineOfCode_comment()); \
- CHECK_EQUAL((lhs).getLineOfCode_physic(), (rhs).getLineOfCode_physic()); \
- CHECK_EQUAL((lhs).getLineOfCode_program(), (rhs).getLineOfCode_program());
+ CHECK((lhs).getLineOfCode_blank() == (rhs).getLineOfCode_blank()); \
+ CHECK((lhs).getLineOfCode_comment() == (rhs).getLineOfCode_comment()); \
+ CHECK((lhs).getLineOfCode_physic() == (rhs).getLineOfCode_physic()); \
+ CHECK((lhs).getLineOfCode_program() == (rhs).getLineOfCode_program());
 
 #endif

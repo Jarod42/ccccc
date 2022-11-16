@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2014 Joris Dauphin
+** Copyright 2012-2022 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -18,9 +18,5 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <UnitTest++/UnitTest++.h>
-
-int main()
-{
-	return UnitTest::RunAllTests();
-}
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <doctest.h>

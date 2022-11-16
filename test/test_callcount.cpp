@@ -25,7 +25,7 @@
 #include "parameters.h"
 #include "utils.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 #include <iostream>
 
 namespace
@@ -78,7 +78,7 @@ getCallCount(const ccccc::FileStat& fileStat, const char* className, const char*
 }
 } // namespace
 
-TEST(CALL_COUNT_FILE)
+TEST_CASE("CALL_COUNT_FILE")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -89,31 +89,31 @@ TEST(CALL_COUNT_FILE)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
-	CHECK_EQUAL(0, getCallCount(fileStat, "ADL(void *)"));
-	CHECK_EQUAL(0, getCallCount(fileStat, "ADL(S *)"));
-	CHECK_EQUAL(3, getCallCount(fileStat, "f<>(S &)"));
-	CHECK_EQUAL(3, getCallCount(fileStat, "f(T &)"));
-	CHECK_EQUAL(1, getCallCount(fileStat, "callADL(S &)"));
+	CHECK(0 == getCallCount(fileStat, "ADL(void *)"));
+	CHECK(0 == getCallCount(fileStat, "ADL(S *)"));
+	CHECK(3 == getCallCount(fileStat, "f<>(S &)"));
+	CHECK(3 == getCallCount(fileStat, "f(T &)"));
+	CHECK(1 == getCallCount(fileStat, "callADL(S &)"));
 
-	CHECK_EQUAL(2, getCallCount(fileStat, "UseOperator(Operator &)"));
-	CHECK_EQUAL(0, getCallCount(fileStat, "Operator", "operator int()"));
-	CHECK_EQUAL(0, getCallCount(fileStat, "Operator", "operator*()"));
+	CHECK(2 == getCallCount(fileStat, "UseOperator(Operator &)"));
+	CHECK(0 == getCallCount(fileStat, "Operator", "operator int()"));
+	CHECK(0 == getCallCount(fileStat, "Operator", "operator*()"));
 
-	CHECK_EQUAL(1, getCallCount(fileStat, "call(void (*)())"));
-	CHECK_EQUAL(0, getCallCount(fileStat, "someFunc()"));
-	CHECK_EQUAL(1, getCallCount(fileStat, "callSomeFunc()"));
+	CHECK(1 == getCallCount(fileStat, "call(void (*)())"));
+	CHECK(0 == getCallCount(fileStat, "someFunc()"));
+	CHECK(1 == getCallCount(fileStat, "callSomeFunc()"));
 
 	// implicit destructors call doesn't count
-	CHECK_EQUAL(2, getCallCount(fileStat, "ImplicitCount()"));
-	CHECK_EQUAL(2, getCallCount(fileStat, "DefaultCount()"));
-	CHECK_EQUAL(2, getCallCount(fileStat, "UserProvidedCount()"));
+	CHECK(2 == getCallCount(fileStat, "ImplicitCount()"));
+	CHECK(2 == getCallCount(fileStat, "DefaultCount()"));
+	CHECK(2 == getCallCount(fileStat, "UserProvidedCount()"));
 
-	CHECK_EQUAL(2, getCallCount(fileStat, "newDelete()"));
+	CHECK(2 == getCallCount(fileStat, "newDelete()"));
 
-	CHECK_EQUAL(5, getCallCount(fileStat, "function_as_parameter()"));
+	CHECK(5 == getCallCount(fileStat, "function_as_parameter()"));
 
-	CHECK_EQUAL(0, getCallCount(fileStat, "main()"));
+	CHECK(0 == getCallCount(fileStat, "main()"));
 }

@@ -25,9 +25,9 @@
 #include "parameters.h"
 #include "utils.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 
-TEST(FILE_TEST_NAMESPACE_CPP)
+TEST_CASE("FILE_TEST_NAMESPACE_CPP")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -38,7 +38,7 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(4, 4, 0, 0);
 	const unsigned int expectedMvg = 1;
@@ -48,10 +48,10 @@ TEST(FILE_TEST_NAMESPACE_CPP)
 	const ccccc::FuncStat* funcStat = namespaceStat->getFuncStatByName("sum(int, int)");
 	CHECK(funcStat != nullptr);
 	CHECK_EQUAL_LOC(expectedStat, funcStat->getLineCount());
-	CHECK_EQUAL(expectedMvg, funcStat->getMcCabeCyclomaticNumber());
+	CHECK(expectedMvg == funcStat->getMcCabeCyclomaticNumber());
 }
 
-TEST(FILE_TEST_CLASS_CPP)
+TEST_CASE("FILE_TEST_CLASS_CPP")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -62,7 +62,7 @@ TEST(FILE_TEST_CLASS_CPP)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
 	const ccccc::ClassStat* classFooStat = fileStat.getClassByName("Foo");

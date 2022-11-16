@@ -1,6 +1,6 @@
 3rd Parties:
 
-+premake4:
++premake5:
 http://industriousone.com/premake
 
 +clang:
@@ -8,6 +8,9 @@ http://clang.llvm.org/
 
 +ctemplate:
 http://code.google.com/p/ctemplate/
+
++doctest:
+https://github.com/doctest
 
 +jquery:
 http://jquery.com/

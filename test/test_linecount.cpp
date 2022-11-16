@@ -25,9 +25,9 @@
 #include "parameters.h"
 #include "utils.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 
-TEST(LINECOUNT_FILE_TEST_C)
+TEST_CASE("LINECOUNT_FILE_TEST_C")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -37,26 +37,26 @@ TEST(LINECOUNT_FILE_TEST_C)
 	stat.Compute(param);
 
 	const unsigned int expectedFileCount = 1;
-	CHECK_EQUAL(expectedFileCount, stat.getFileCount());
+	CHECK(expectedFileCount == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedFileStat(23, 12, 3, 8);
 	CHECK_EQUAL_LOC(expectedFileStat, fileStat.getLineCount());
-	CHECK_EQUAL(std::filesystem::absolute(filename), fileStat.getFilename());
+	CHECK(std::filesystem::absolute(filename) == fileStat.getFilename());
 
 	const unsigned int expectedFuncCount = 1;
-	CHECK_EQUAL(expectedFuncCount, fileStat.getFunctionCount());
+	CHECK(expectedFuncCount == fileStat.getFunctionCount());
 
 	const ccccc::FuncStat& funcStat = fileStat.getFuncStat(0);
 	ccccc::LineCount expectedFuncStat(11, 9, 1, 2);
 	const unsigned int expectedMvg = 2;
 	CHECK_EQUAL_LOC(expectedFuncStat, funcStat.getLineCount());
-	CHECK_EQUAL(expectedMvg, funcStat.getMcCabeCyclomaticNumber());
+	CHECK(expectedMvg == funcStat.getMcCabeCyclomaticNumber());
 
 	const ccccc::FuncStat* funcStatName = fileStat.getFuncStatByName("main(int, char **)");
-	CHECK_EQUAL(&funcStat, funcStatName);
+	CHECK(&funcStat == funcStatName);
 }
 
-TEST(LINECOUNT_FILE_TEST_H)
+TEST_CASE("LINECOUNT_FILE_TEST_H")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -66,14 +66,14 @@ TEST(LINECOUNT_FILE_TEST_H)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(13, 8, 4, 0);
 	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
-	CHECK_EQUAL(std::filesystem::absolute(filename), fileStat.getFilename());
+	CHECK(std::filesystem::absolute(filename) == fileStat.getFilename());
 }
 
-TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
+TEST_CASE("LINECOUNT_FILE_TEST_INCLUDE_CPP")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -85,9 +85,9 @@ TEST(LINECOUNT_FILE_TEST_INCLUDE_CPP)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(24, 14, 4, 6);
 	CHECK_EQUAL_LOC(expectedStat, fileStat.getLineCount());
-	CHECK_EQUAL(std::filesystem::absolute(filename), fileStat.getFilename());
+	CHECK(std::filesystem::absolute(filename) == fileStat.getFilename());
 }

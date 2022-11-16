@@ -23,7 +23,7 @@
 #include "filestat.h"
 #include "parameters.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 
 static int CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName)
 {
@@ -35,7 +35,7 @@ static int CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName
 	return funcStat->getNestedBlockCount();
 }
 
-TEST(FILE_TEST_BLOCKCOUNT_CPP)
+TEST_CASE("FILE_TEST_BLOCKCOUNT_CPP")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -45,24 +45,24 @@ TEST(FILE_TEST_BLOCKCOUNT_CPP)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
-	CHECK_EQUAL(0, CheckBlockCount(fileStat, "function_comparaison(int, int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_if(int, int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelse(int, int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_ifelif(int, int, int)"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_ifif(int, int, int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_while(const char *)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_do_while(int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_for_noblock(const char *)"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_forfor_no_block(const char (&)[5][5])"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch(int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_switch_case(int)"));
-	CHECK_EQUAL(1, CheckBlockCount(fileStat, "function_try()"));
-	CHECK_EQUAL(0, CheckBlockCount(fileStat, "function_try_function()"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_block()"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_lambda()"));
-	CHECK_EQUAL(2, CheckBlockCount(fileStat, "function_max_block()"));
+	CHECK(0 == CheckBlockCount(fileStat, "function_comparaison(int, int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_if(int, int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_ifelse(int, int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_ifelif(int, int, int)"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_ifif(int, int, int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_while(const char *)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_do_while(int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_for_noblock(const char *)"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_forfor(const char (&)[5][5])"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_forfor_no_block(const char (&)[5][5])"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_switch(int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_switch_case(int)"));
+	CHECK(1 == CheckBlockCount(fileStat, "function_try()"));
+	CHECK(0 == CheckBlockCount(fileStat, "function_try_function()"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_block()"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_lambda()"));
+	CHECK(2 == CheckBlockCount(fileStat, "function_max_block()"));
 }

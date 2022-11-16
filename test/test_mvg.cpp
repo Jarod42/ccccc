@@ -24,7 +24,7 @@
 #include "linecount.h"
 #include "parameters.h"
 
-#include <UnitTest++/UnitTest++.h>
+#include <doctest.h>
 
 static bool CheckMvg(const ccccc::FileStat& fileStat, const char* funcName, unsigned expectedMvg)
 {
@@ -36,7 +36,7 @@ static bool CheckMvg(const ccccc::FileStat& fileStat, const char* funcName, unsi
 	return expectedMvg == funcStat->getMcCabeCyclomaticNumber();
 }
 
-TEST(FILE_TEST_MVG_CPP)
+TEST_CASE("FILE_TEST_MVG_CPP")
 {
 	ccccc::AllStat stat;
 	ccccc::Parameters param;
@@ -47,7 +47,7 @@ TEST(FILE_TEST_MVG_CPP)
 	stat.Compute(param);
 
 	const unsigned int expected = 1;
-	CHECK_EQUAL(expected, stat.getFileCount());
+	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 
 	CHECK(CheckMvg(fileStat, "function_comparaison(int, int)", 1));
