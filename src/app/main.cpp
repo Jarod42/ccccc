@@ -27,6 +27,9 @@
 #include <iostream>
 #include <sstream>
 
+namespace
+{
+
 // Default bin location is Root/bin/$IDE/$Config
 std::filesystem::path getRootPath(const std::filesystem::path& exePath)
 {
@@ -36,6 +39,26 @@ std::filesystem::path getRootPath(const std::filesystem::path& exePath)
 	}
 	return res.parent_path();
 }
+
+std::string getLocalTime()
+{
+	time_t now;
+	time(&now);
+
+	std::tm timeinfo;
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+	localtime_s(&timeinfo, &now);
+#else // POSIX
+	localtime_r(&now, &timeinfo);
+#endif
+
+	char formattedDate[32]; // as "Thu Aug 23 14:55:02 2001"
+	strftime(formattedDate, sizeof(formattedDate), "%c", &timeinfo);
+
+	return formattedDate;
+}
+
+} // namespace
 
 int main(int argc, char* argv[])
 {
@@ -54,14 +77,7 @@ int main(int argc, char* argv[])
 	dict.SetFilename(templateFilename.string());
 	dict.SetValue("cccccPath", cccccPath.string());
 	dict.SetValue("cccccRoot", cccccRoot.string());
-	{
-		time_t now;
-		time(&now);
-		struct tm* timeinfo = localtime(&now);
-		char formattedDate[32]; // as "Thu Aug 23 14:55:02 2001"
-		strftime(formattedDate, sizeof(formattedDate), "%c", timeinfo);
-		dict.SetValue("Date", formattedDate);
-	}
+	dict.SetValue("Date", getLocalTime());
 	const std::filesystem::path root = std::filesystem::current_path();
 	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
