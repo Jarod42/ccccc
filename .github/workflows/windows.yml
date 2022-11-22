@@ -48,7 +48,7 @@ jobs:
           dir -s 3rd/ctemplate-ctemplate-2.4/src
 
     - name: premake vs2022
-      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="../LLVM/libclang" --ctemplate-root="../3rd/ctemplate-ctemplate-2.4" vs2022
+      run: premake/premake5.exe --file="premake/premake5.lua" --llvm-root="../LLVM/libclang" --ctemplate-root="../3rd/ctemplate-ctemplate-2.4" --without-tinfo vs2022
 
     - name: make config=releasewithdll
       run: |
