@@ -59,5 +59,5 @@ Build Dependencies
 ----
 
 - LLVM/Clang
-- ctemplate
-- unittest-cpp (for unit tests)
+- ctemplate (zip included)
+- doctest (for unit tests) (included (header-only))
