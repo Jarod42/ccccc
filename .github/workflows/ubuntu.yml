@@ -24,8 +24,8 @@ jobs:
     - name: aptget llvm
       id: LLVM
       run: |
-          sudo apt-get install clang-10 libclang-10-dev llvm-10-dev llvm-10-runtime llvm-10
-          echo "LLVM_ROOT=/usr/lib/llvm-10" >> $GITHUB_OUTPUT
+          sudo apt-get install clang-14 libclang-14-dev llvm-14-dev llvm-14-runtime llvm-14
+          echo "LLVM_ROOT=/usr/lib/llvm-14" >> $GITHUB_OUTPUT
 
     - name: DEBUG llvm
       run: |
