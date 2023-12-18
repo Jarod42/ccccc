@@ -133,9 +133,9 @@ solution "ccccc"
 
 		links { "ccccc_lib" }
 		filter { "system:windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "ccccc.lib")} -- order issue between link and linkoptions
+			linkoptions{path.join("%{cfg.targetdir}", "ccccc_lib.lib")} -- order issue between link and linkoptions
 		filter { "system:not windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "libccccc.a")} -- order issue between link and linkoptions
+			linkoptions{path.join("%{cfg.targetdir}", "libccccc_lib.a")} -- order issue between link and linkoptions
 		filter {}
 		LinkToClang()
 
@@ -146,7 +146,7 @@ solution "ccccc"
 	project "ccccc_lib"
 		kind "StaticLib"
 		language "C++"
-		targetname("ccccc")
+		targetname("ccccc_lib")
 		files { path.join(Root, "src/lib/**.*") }
 		warnings "Extra"
 		flags { "FatalWarnings"}
@@ -168,9 +168,9 @@ solution "ccccc"
 
 		links { "ccccc_lib" }
 		filter { "system:windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "ccccc.lib")} -- order issue between link and linkoptions
+			linkoptions{path.join("%{cfg.targetdir}", "ccccc_lib.lib")} -- order issue between link and linkoptions
 		filter { "system:not windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "libccccc.a")} -- order issue between link and linkoptions
+			linkoptions{path.join("%{cfg.targetdir}", "libccccc_lib.a")} -- order issue between link and linkoptions
 		filter {}
 
 		LinkToClang()
