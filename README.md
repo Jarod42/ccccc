@@ -1,4 +1,4 @@
-![Ubuntu badge](https://github.com/Jarod42/CCCCC/workflows/Ubuntu/badge.svg)
+![Ubuntu badge](https://github.com/Jarod42/CCCCC/actions/workflows/ubuntu.yml/badge.svg)
 
 ----------
 
