@@ -89,7 +89,7 @@ function LinkToClang()
 		linkoptions { "-pthread" }
 
 	filter "configurations:not *WithDLL"
-		links { "clangIndex", "clangFormat", "clangTooling",
+		links { "clang", "clangIndex", "clangFormat", "clangTooling",
 				"clangToolingCore", "clangFrontend", "clangDriver",
 				"clangSerialization", "clangParse", "clangSema",
 				"clangAnalysis", "clangRewrite", "clangEdit",
