@@ -74,7 +74,7 @@ GetCompileArgumentsFromDatabase(CXCompilationDatabase compilationDatabase,
 {
 	CXCompileCommands compileCommands = clang_CompilationDatabase_getCompileCommands(
 		compilationDatabase, filename.string().c_str());
-	const unsigned int compileCommandsCount = clang_CompileCommands_getSize(compileCommands);
+	const std::size_t compileCommandsCount = clang_CompileCommands_getSize(compileCommands);
 
 	if (compileCommandsCount == 0) { // No entries in database
 		clang_CompileCommands_dispose(compileCommands);
@@ -118,14 +118,14 @@ void AllStat::Compute(const Parameters& param)
 			tu = clang_parseTranslationUnit(index,
 			                                absFilename.string().c_str(),
 			                                argsFromCommandLine.data(),
-			                                argsFromCommandLine.size(),
+			                                static_cast<int>(argsFromCommandLine.size()),
 			                                0,
 			                                0,
 			                                0);
 		} else {
 			std::filesystem::current_path(workingDirectory);
 			auto args = CStringView(argsFromDatabase);
-			tu = clang_parseTranslationUnit(index, nullptr, args.data(), args.size(), 0, 0, 0);
+			tu = clang_parseTranslationUnit(index, nullptr, args.data(), static_cast<int>(args.size()), 0, 0, 0);
 			std::filesystem::current_path(currentWorkingDirectory);
 		}
 

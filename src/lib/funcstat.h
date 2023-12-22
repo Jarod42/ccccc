@@ -39,7 +39,7 @@ class FuncStat
 {
 	friend class use_clang::FuncStatTool;
 public:
-	FuncStat(const std::string& funcname, unsigned int line);
+	FuncStat(const std::string& funcname, std::size_t line);
 
 	const std::string& getName() const { return m_name; }
 	bool isConst() const { return m_isConst; }
@@ -47,13 +47,13 @@ public:
 	bool isVirtual() const { return m_isVirtual; }
 	bool isOverriden() const { return m_isOverriden; }
 	const LineCount& getLineCount() const { return m_lineCount; }
-	unsigned int getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
-	int getLineDefinition() const { return m_line; }
+	std::size_t getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
+	std::size_t getLineDefinition() const { return m_line; }
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
 	const MaintainabilityIndex& getMaintainabilityIndex() const { return m_maintainabilityIndex; }
-	unsigned int getNestedBlockCount() const { return m_nestedBlockCount; }
-	unsigned int getCallCount() const { return m_callCount; }
-	unsigned int getCallerCount() const { return m_callerCount; }
+	std::size_t getNestedBlockCount() const { return m_nestedBlockCount; }
+	std::size_t getCallCount() const { return m_callCount; }
+	std::size_t getCallerCount() const { return m_callerCount; }
 private:
 	std::string m_name;
 	bool m_isConst = false;
@@ -61,17 +61,17 @@ private:
 	bool m_isVirtual = false;
 	bool m_isOverriden = false;
 	LineCount m_lineCount;
-	int m_line;
-	unsigned int m_mcCabeCyclomaticNumber; // MVG
+	std::size_t m_line;
+	std::size_t m_mcCabeCyclomaticNumber; // MVG
 	HalsteadMetric m_halsteadMetric;
 	MaintainabilityIndex m_maintainabilityIndex;
-	unsigned int m_nestedBlockCount;
+	std::size_t m_nestedBlockCount;
 	//  A Unified Symbol Resolution (USR) is a string
 	// that identifies a particular entity
 	std::string m_usr;
 	CXCursor m_cursor; // Identifier
-	unsigned int m_callCount = 0; // How many function this function call
-	unsigned int m_callerCount = 0; // How many time this function is called
+	std::size_t m_callCount = 0; // How many function this function call
+	std::size_t m_callerCount = 0; // How many time this function is called
 };
 
 } // namespace ccccc

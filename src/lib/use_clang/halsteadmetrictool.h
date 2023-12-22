@@ -51,10 +51,10 @@ private:
 	std::set<std::string> m_operatorSet;
 	std::set<std::string> m_operandSet;
 
-	unsigned int m_operatorCount = 0;
-	unsigned int m_operandCount = 0;
-	unsigned int m_uniqueOperatorCount = 0;
-	unsigned int m_uniqueOperandCount = 0;
+	std::size_t m_operatorCount = 0;
+	std::size_t m_operandCount = 0;
+	std::size_t m_uniqueOperatorCount = 0;
+	std::size_t m_uniqueOperandCount = 0;
 };
 
 } // namespace ccccc::use_clang

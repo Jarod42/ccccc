@@ -49,16 +49,16 @@ public:
 	~ClassStat();
 
 	const std::string& getName() const { return m_name; }
-	unsigned int getMethodCount() const { return m_methodStats.size(); }
-	const FuncStat& getMethodStat(unsigned int index) const { return *m_methodStats[index]; }
+	auto getMethodCount() const { return m_methodStats.size(); }
+	const FuncStat& getMethodStat(std::size_t index) const { return *m_methodStats[index]; }
 	const FuncStat* getMethodStatByName(const char* funcNameId) const;
 
-	unsigned int getClassCount() const { return m_classes.size(); }
+	auto getClassCount() const { return m_classes.size(); }
 	const ClassMap& getInnerClasses() const { return m_classes; }
 	const ClassStat* getClassByName(const char* funcNameId) const;
 
 private:
-	FuncStat* AddMethodStat(const std::string& funcname, unsigned int line);
+	FuncStat* AddMethodStat(const std::string& funcname, std::size_t line);
 	ClassStat& GetOrCreateClass(const std::string& funcname);
 
 private:

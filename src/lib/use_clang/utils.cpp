@@ -38,7 +38,7 @@ CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token)
 	return clang_getCursor(tu, clang_getTokenLocation(tu, token));
 }
 
-unsigned int getStartLine(CXSourceRange range)
+std::size_t getStartLine(CXSourceRange range)
 {
 	const CXSourceLocation start = clang_getRangeStart(range);
 	unsigned int startLine;

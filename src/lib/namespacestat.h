@@ -48,19 +48,19 @@ public:
 	~NamespaceStat();
 
 	const std::string& getName() const { return m_name; }
-	unsigned int getFunctionCount() const { return m_funcStats.size(); }
-	const FuncStat& getFuncStat(unsigned int index) const { return *m_funcStats[index]; }
+	auto getFunctionCount() const { return m_funcStats.size(); }
+	const FuncStat& getFuncStat(std::size_t index) const { return *m_funcStats[index]; }
 	const FuncStat* getFuncStatByName(const char* funcNameId) const;
 
-	unsigned int getNamespaceCount() const { return m_namespaces.size(); }
+	auto getNamespaceCount() const { return m_namespaces.size(); }
 	const NamespaceMap& getNamespaces() const { return m_namespaces; }
 	const NamespaceStat* getNamespaceByName(const char* name) const;
 
-	unsigned int getClassCount() const { return m_classes.size(); }
+	auto getClassCount() const { return m_classes.size(); }
 	const ClassMap& getClasses() const { return m_classes; }
 	const ClassStat* getClassByName(const char* name) const;
 private:
-	FuncStat* AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line);
+	FuncStat* AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, std::size_t line);
 	NamespaceStat& GetOrCreateNamespace(const std::string& name);
 	ClassStat& GetOrCreateClass(const std::string& className);
 private:

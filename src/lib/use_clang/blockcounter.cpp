@@ -49,7 +49,7 @@ public:
 	{}
 
 	const std::filesystem::path& getFilename() const { return m_filename; }
-	unsigned int getNestedCount() const { return m_nestedCount; }
+	std::size_t getNestedCount() const { return m_nestedCount; }
 	const std::optional<IfStatus>& getIfStatus() const { return m_ifStatus; }
 	void nextIfStatus()
 	{
@@ -61,7 +61,7 @@ public:
 		}
 	}
 
-	void updateNestedCount(unsigned int nestedCount)
+	void updateNestedCount(std::size_t nestedCount)
 	{
 		m_nestedCount = std::max(m_nestedCount, nestedCount);
 	}
@@ -74,7 +74,7 @@ public:
 
 private:
 	std::filesystem::path m_filename;
-	unsigned int m_nestedCount = 0;
+	std::size_t m_nestedCount = 0;
 	std::optional<IfStatus> m_ifStatus;
 	bool m_previousCursorWasCaseStmt = false;
 };
@@ -98,7 +98,7 @@ BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
 	}
 	// special treatment to not increase block count for `else if`
 	if (client_data->getIfStatus()) {
-		const unsigned int childNestedBlockCount =
+		const std::size_t childNestedBlockCount =
 			BlockCounter::ComputeNestedBlockCount(filename, cursor);
 
 		if (*client_data->getIfStatus() == IfStatus::InElseBranch) {
@@ -114,7 +114,7 @@ BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
 		return CXChildVisit_Continue;
 	}
 	if (cursorKind == CXCursor_IfStmt) {
-		unsigned int childNestedBlockCount =
+		std::size_t childNestedBlockCount =
 			BlockCounter::ComputeNestedBlockCount(filename, cursor);
 		client_data->updateNestedCount(childNestedBlockCount);
 		return CXChildVisit_Continue;
@@ -126,7 +126,7 @@ BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
 		     || parentCursorKind == CXCursor_WhileStmt || parentCursorKind == CXCursor_DoStmt
 		     || parentCursorKind == CXCursor_SwitchStmt);
 
-		const unsigned int childNestedBlockCount =
+		const std::size_t childNestedBlockCount =
 			BlockCounter::ComputeNestedBlockCount(filename, cursor);
 
 		client_data->updateNestedCount(
@@ -135,7 +135,7 @@ BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
 	}
 	if (cursorKind == CXCursor_ForStmt || cursorKind == CXCursor_WhileStmt
 	    || cursorKind == CXCursor_DoStmt || cursorKind == CXCursor_SwitchStmt) {
-		unsigned int childNestedBlockCount =
+		std::size_t childNestedBlockCount =
 			BlockCounter::ComputeNestedBlockCount(filename, cursor);
 		client_data->updateNestedCount(1 + childNestedBlockCount);
 		return CXChildVisit_Continue;
@@ -145,7 +145,7 @@ BlockCounterVisitor(CXCursor cursor, CXCursor parent, CXClientData user_data)
 
 } // namespace
 
-unsigned int BlockCounter::ComputeNestedBlockCount(const std::filesystem::path& filename,
+std::size_t BlockCounter::ComputeNestedBlockCount(const std::filesystem::path& filename,
                                                    const CXCursor& cursor)
 {
 	ClientData clientData(filename,

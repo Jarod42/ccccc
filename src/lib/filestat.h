@@ -50,21 +50,21 @@ public:
 
 	const std::filesystem::path& getFilename() const { return m_filename; }
 	const LineCount& getLineCount() const { return m_lineCount; }
-	unsigned int getFunctionCount() const { return m_root.getFunctionCount(); }
-	const FuncStat& getFuncStat(unsigned int index) const { return m_root.getFuncStat(index); }
+	auto getFunctionCount() const { return m_root.getFunctionCount(); }
+	const FuncStat& getFuncStat(std::size_t index) const { return m_root.getFuncStat(index); }
 	const FuncStat* getFuncStatByName(const char* funcNameId) const
 	{
 		return m_root.getFuncStatByName(funcNameId);
 	}
 
-	unsigned int getNamespaceCount() const { return m_root.getNamespaceCount(); }
+	auto getNamespaceCount() const { return m_root.getNamespaceCount(); }
 	const NamespaceMap& getNamespaces() const { return m_root.getNamespaces(); }
 	const NamespaceStat* getNamespaceByName(const char* name) const
 	{
 		return m_root.getNamespaceByName(name);
 	}
 
-	unsigned int getClassCount() const { return m_root.getClassCount(); }
+	auto getClassCount() const { return m_root.getClassCount(); }
 	const ClassMap& getClasses() const { return m_root.getClasses(); }
 	const ClassStat* getClassByName(const char* name) const { return m_root.getClassByName(name); }
 
@@ -72,7 +72,7 @@ private:
 	FuncStat* AddFuncStat(const std::vector<std::string>& namespaceNames,
 	                      const std::vector<std::string>& classeNames,
 	                      const std::string& funcname,
-	                      unsigned int line);
+	                      std::size_t line);
 	NamespaceStat* AddNamespace(const std::string& name);
 
 private:

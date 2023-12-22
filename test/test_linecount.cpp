@@ -36,19 +36,19 @@ TEST_CASE("LINECOUNT_FILE_TEST_C")
 
 	stat.Compute(param);
 
-	const unsigned int expectedFileCount = 1;
+	const std::size_t expectedFileCount = 1;
 	CHECK(expectedFileCount == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedFileStat(23, 12, 3, 8);
 	CHECK_EQUAL_LOC(expectedFileStat, fileStat.getLineCount());
 	CHECK(std::filesystem::absolute(filename) == fileStat.getFilename());
 
-	const unsigned int expectedFuncCount = 1;
+	const std::size_t expectedFuncCount = 1;
 	CHECK(expectedFuncCount == fileStat.getFunctionCount());
 
 	const ccccc::FuncStat& funcStat = fileStat.getFuncStat(0);
 	ccccc::LineCount expectedFuncStat(11, 9, 1, 2);
-	const unsigned int expectedMvg = 2;
+	const std::size_t expectedMvg = 2;
 	CHECK_EQUAL_LOC(expectedFuncStat, funcStat.getLineCount());
 	CHECK(expectedMvg == funcStat.getMcCabeCyclomaticNumber());
 
@@ -65,7 +65,7 @@ TEST_CASE("LINECOUNT_FILE_TEST_H")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(13, 8, 4, 0);
@@ -84,7 +84,7 @@ TEST_CASE("LINECOUNT_FILE_TEST_INCLUDE_CPP")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(24, 14, 4, 6);

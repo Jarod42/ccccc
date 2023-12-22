@@ -31,7 +31,7 @@ namespace ccccc::use_clang
 class BlockCounter
 {
 public:
-	static unsigned int ComputeNestedBlockCount(const std::filesystem::path& filename,
+	static std::size_t ComputeNestedBlockCount(const std::filesystem::path& filename,
 	                                            const CXCursor& cursor);
 };
 

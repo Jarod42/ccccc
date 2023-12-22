@@ -50,18 +50,24 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	if (funcStat.isConst()) {
 		sectionDict.ShowSection("const");
 	}
-	sectionDict.SetIntValue("lineDefinition", funcStat.getLineDefinition());
-	sectionDict.SetIntValue("LOCphy", funcStat.getLineCount().getLineOfCode_physic());
-	sectionDict.SetIntValue("LOCpro", funcStat.getLineCount().getLineOfCode_program());
-	sectionDict.SetIntValue("LOCcom", funcStat.getLineCount().getLineOfCode_comment());
-	sectionDict.SetIntValue("LOCbl", funcStat.getLineCount().getLineOfCode_blank());
-	sectionDict.SetIntValue("MVG", funcStat.getMcCabeCyclomaticNumber());
+	sectionDict.SetIntValue("lineDefinition", static_cast<int>(funcStat.getLineDefinition()));
+	sectionDict.SetIntValue("LOCphy",
+	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_physic()));
+	sectionDict.SetIntValue("LOCpro",
+	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_program()));
+	sectionDict.SetIntValue("LOCcom",
+	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_comment()));
+	sectionDict.SetIntValue("LOCbl",
+	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_blank()));
+	sectionDict.SetIntValue("MVG", static_cast<int>(funcStat.getMcCabeCyclomaticNumber()));
 
-	sectionDict.SetIntValue("CallCount", funcStat.getCallCount());
-	sectionDict.SetIntValue("CallerCount", funcStat.getCallerCount());
+	sectionDict.SetIntValue("CallCount", static_cast<int>(funcStat.getCallCount()));
+	sectionDict.SetIntValue("CallerCount", static_cast<int>(funcStat.getCallerCount()));
 
-	sectionDict.SetIntValue("Halstead_n", funcStat.getHalsteadMetric().getVocabularySize());
-	sectionDict.SetIntValue("Halstead_N", funcStat.getHalsteadMetric().getProgramLength());
+	sectionDict.SetIntValue("Halstead_n",
+	                        static_cast<int>(funcStat.getHalsteadMetric().getVocabularySize()));
+	sectionDict.SetIntValue("Halstead_N",
+	                        static_cast<int>(funcStat.getHalsteadMetric().getProgramLength()));
 	SetDoubleValue(sectionDict, "Halstead_V", funcStat.getHalsteadMetric().getVolume());
 	SetDoubleValue(sectionDict, "Halstead_D", funcStat.getHalsteadMetric().getDifficulty());
 	SetDoubleValue(sectionDict, "Halstead_E", funcStat.getHalsteadMetric().getEffort());
@@ -76,7 +82,7 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	               funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
 	SetDoubleValue(sectionDict, "MI", funcStat.getMaintainabilityIndex().getMaintainabilityIndex());
 
-	sectionDict.SetIntValue("NestedBlockCount", funcStat.getNestedBlockCount());
+	sectionDict.SetIntValue("NestedBlockCount", static_cast<int>(funcStat.getNestedBlockCount()));
 
 	sectionDict.SetValue("namespacesName", namespacesName);
 	sectionDict.SetValue("classesName", classesName);
@@ -112,7 +118,7 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 	} else {
 		namespacesName += namespaceStat.getName();
 	}
-	for (unsigned int i = 0; i != namespaceStat.getFunctionCount(); ++i) {
+	for (std::size_t i = 0; i != namespaceStat.getFunctionCount(); ++i) {
 		const ccccc::FuncStat& funcStat = namespaceStat.getFuncStat(i);
 		feedDict(funcStat, namespacesName, "", dict);
 	}
@@ -132,7 +138,7 @@ void feedDict(const ccccc::FileStat& fileStat,
 
 	sectionDict->SetValue("filename",
 	                      std::filesystem::relative(fileStat.getFilename(), root).string());
-	for (unsigned int i = 0; i != fileStat.getFunctionCount(); ++i) {
+	for (std::size_t i = 0; i != fileStat.getFunctionCount(); ++i) {
 		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
 	}
 	for (const auto& p : fileStat.getNamespaces()) {

@@ -169,7 +169,7 @@ FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientDa
 			std::vector<std::string> parentClasses; // empty
 			const std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
 			const CXSourceRange range = clang_getCursorExtent(cursor);
-			const unsigned int line = getStartLine(range);
+			const std::size_t line = getStartLine(range);
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(
 				client_data->GetNamespaceNames(), parentClasses, cursorStr, line);
 
@@ -187,7 +187,7 @@ FileStatTool::FileCursorVisitor(CXCursor cursor, CXCursor /*parent*/, CXClientDa
 
 			std::string cursorStr = getStringAndDispose(clang_getCursorDisplayName(cursor));
 			const CXSourceRange range = clang_getCursorExtent(cursor);
-			const int line = getStartLine(range);
+			const std::size_t line = getStartLine(range);
 			// TODO: get ClassStat.
 			FuncStat* funcStat = client_data->getFileStat().AddFuncStat(
 				client_data->GetNamespaceNames(), parentClasses, cursorStr, line);

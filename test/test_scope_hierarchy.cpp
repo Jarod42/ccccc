@@ -37,11 +37,11 @@ TEST_CASE("FILE_TEST_NAMESPACE_CPP")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 	ccccc::LineCount expectedStat(4, 4, 0, 0);
-	const unsigned int expectedMvg = 1;
+	const std::size_t expectedMvg = 1;
 	CHECK(fileStat.getFuncStatByName("sum(int, int)") == nullptr);
 	const ccccc::NamespaceStat* namespaceStat = fileStat.getNamespaceByName("Foo");
 	CHECK(namespaceStat != nullptr);
@@ -61,7 +61,7 @@ TEST_CASE("FILE_TEST_CLASS_CPP")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 

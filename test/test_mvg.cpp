@@ -46,7 +46,7 @@ TEST_CASE("FILE_TEST_MVG_CPP")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 

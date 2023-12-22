@@ -21,6 +21,8 @@
 #ifndef MAINTAINABILITY_INDEX_H
 #define MAINTAINABILITY_INDEX_H
 
+#include <cstddef>
+
 namespace ccccc
 {
 class HalsteadMetric;
@@ -41,10 +43,10 @@ public:
 
 	MaintainabilityIndex() = default;
 	MaintainabilityIndex(const LineCount& lineCount,
-	                     unsigned int mvg,
+	                     std::size_t mvg,
 	                     const HalsteadMetric& halsteadMetric);
 
-	void set(const LineCount& lineCount, unsigned int mvg, const HalsteadMetric& halsteadMetric);
+	void set(const LineCount& lineCount, std::size_t mvg, const HalsteadMetric& halsteadMetric);
 
 private:
 	double m_maintainabilityIndexWithoutComments = 0.; // MIwoc

@@ -22,6 +22,7 @@
 #define LINECOUNTER_H
 
 #include <clang-c/Index.h>
+#include <cstddef>
 
 namespace ccccc::use_clang
 {
@@ -33,16 +34,16 @@ public:
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
-	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
-	unsigned int getLineOfCode_comment() const { return lineOfCode[0]; }
-	unsigned int getLineOfCode_program() const { return lineOfCode[1]; }
-	unsigned int getLineOfCode_blank() const { return lineOfCode[2]; }
+	std::size_t getLineOfCode_physic() const { return lineOfCode_physic; }
+	std::size_t getLineOfCode_comment() const { return lineOfCode[0]; }
+	std::size_t getLineOfCode_program() const { return lineOfCode[1]; }
+	std::size_t getLineOfCode_blank() const { return lineOfCode[2]; }
 
 private:
-	unsigned int lineOfCode_physic;
+	std::size_t lineOfCode_physic;
 	// com, loc, blankLine
-	unsigned int lastLine[2];
-	unsigned int lineOfCode[3];
+	std::size_t lastLine[2];
+	std::size_t lineOfCode[3];
 };
 
 } // namespace ccccc::use_clang

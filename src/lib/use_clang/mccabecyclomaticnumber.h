@@ -22,6 +22,7 @@
 #define MCCABECYCLOMATICNUMBER_H
 
 #include <clang-c/Index.h>
+#include <cstddef>
 
 namespace ccccc::use_clang
 {
@@ -33,10 +34,10 @@ public:
 
 	void operator()(const CXTranslationUnit& tu, const CXCursor& cursor, const CXToken& token);
 
-	unsigned int getValue() const { return m_value; }
+	std::size_t getValue() const { return m_value; }
 
 private:
-	unsigned int m_value = 1;
+	std::size_t m_value = 1;
 };
 
 } // namespace ccccc::use_clang

@@ -58,7 +58,7 @@ void displayFuncNamesList(const ccccc::ClassStat& classStat)
 	}
 }
 
-unsigned int getCallerCount(const ccccc::FileStat& fileStat, const char* funcName)
+std::size_t getCallerCount(const ccccc::FileStat& fileStat, const char* funcName)
 {
 	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
 
@@ -69,7 +69,7 @@ unsigned int getCallerCount(const ccccc::FileStat& fileStat, const char* funcNam
 	return funcStat->getCallerCount();
 }
 
-unsigned int
+std::size_t
 getCallerCount(const ccccc::FileStat& fileStat, const char* className, const char* funcName)
 {
 	auto* classStat = fileStat.getClassByName(className);
@@ -97,7 +97,7 @@ TEST_CASE("CALLER_COUNT_FILE")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 

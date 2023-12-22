@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	dict.SetValue("cccccRoot", cccccRoot.string());
 	dict.SetValue("Date", getLocalTime());
 	const std::filesystem::path root = std::filesystem::current_path();
-	for (unsigned int i = 0; i != allStat.getFileCount(); ++i) {
+	for (std::size_t i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
 		std::cerr << "feed dict: " << filestat.getFilename() << std::endl;
 

@@ -29,18 +29,18 @@ namespace ccccc
 {
 
 MaintainabilityIndex::MaintainabilityIndex(const LineCount& lineCount,
-                                           unsigned int mvg,
+                                           std::size_t mvg,
                                            const HalsteadMetric& halsteadMetric)
 {
 	set(lineCount, mvg, halsteadMetric);
 }
 
 void MaintainabilityIndex::set(const LineCount& lineCount,
-                               unsigned int mvg,
+                               std::size_t mvg,
                                const HalsteadMetric& halsteadMetric)
 {
 	const double MIwoc = 171 - 5.2 * log(halsteadMetric.getVolume()) - 0.23 * mvg
-	                   - 16.2 * log(lineCount.getLineOfCode_physic());
+	                   - 16.2 * log(static_cast<double>(lineCount.getLineOfCode_physic()));
 	const double perCM =
 		double(lineCount.getLineOfCode_comment()) / lineCount.getLineOfCode_physic();
 	const double MIcw = 50 * sin(sqrt(2.4 * perCM));

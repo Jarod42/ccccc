@@ -34,7 +34,7 @@ FileStat::~FileStat()
 FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames,
                                 const std::vector<std::string>& classeNames,
                                 const std::string& funcname,
-                                unsigned int line)
+                                std::size_t line)
 {
 	NamespaceStat* namespaceStat = &m_root;
 	for (const auto& namespaceName : namespaceNames) {

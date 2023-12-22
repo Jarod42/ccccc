@@ -25,26 +25,26 @@
 namespace ccccc
 {
 
-HalsteadMetric::HalsteadMetric(unsigned int operatorCount,
-                               unsigned int uniqueOperatorCount,
-                               unsigned int operandCount,
-                               unsigned int uniqueOperandCount)
+HalsteadMetric::HalsteadMetric(std::size_t operatorCount,
+                               std::size_t uniqueOperatorCount,
+                               std::size_t operandCount,
+                               std::size_t uniqueOperandCount)
 {
 	set(operatorCount, uniqueOperatorCount, operandCount, uniqueOperandCount);
 }
 
-void HalsteadMetric::set(unsigned int operatorCount,
-                         unsigned int uniqueOperatorCount,
-                         unsigned int operandCount,
-                         unsigned int uniqueOperandCount)
+void HalsteadMetric::set(std::size_t operatorCount,
+                         std::size_t uniqueOperatorCount,
+                         std::size_t operandCount,
+                         std::size_t uniqueOperandCount)
 {
-	const unsigned int n1 = uniqueOperatorCount;
-	const unsigned int n2 = uniqueOperandCount;
-	const unsigned int N1 = operatorCount;
-	const unsigned int N2 = operandCount;
-	const unsigned int N = N1 + N2;
-	const unsigned int n = n1 + n2;
-	const double V = N * log2(n);
+	const std::size_t n1 = uniqueOperatorCount;
+	const std::size_t n2 = uniqueOperandCount;
+	const std::size_t N1 = operatorCount;
+	const std::size_t N2 = operandCount;
+	const std::size_t N = N1 + N2;
+	const std::size_t n = n1 + n2;
+	const double V = static_cast<double>(N) * log2(static_cast<double>(n));
 	const double D = (n1 * N2) / double(2 * n2); // n1 / 2. * double(N2) / n2
 	const double E = D * V;
 	const double T = E / 18;

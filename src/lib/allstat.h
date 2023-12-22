@@ -37,8 +37,8 @@ public:
 
 	void Compute(const Parameters& param);
 
-	unsigned int getFileCount() const { return m_filesStat.size(); }
-	const FileStat& getFileStat(unsigned int index) const { return *m_filesStat[index]; }
+	auto getFileCount() const { return m_filesStat.size(); }
+	const FileStat& getFileStat(std::size_t index) const { return *m_filesStat[index]; }
 
 private:
 	std::vector<std::unique_ptr<FileStat>> m_filesStat;

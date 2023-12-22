@@ -23,7 +23,7 @@
 namespace ccccc
 {
 
-FuncStat::FuncStat(const std::string& funcname, unsigned int line) :
+FuncStat::FuncStat(const std::string& funcname, std::size_t line) :
 	m_name(funcname),
 	m_line(line),
 	m_mcCabeCyclomaticNumber(0),

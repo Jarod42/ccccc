@@ -31,7 +31,7 @@ namespace ccccc::use_clang
 
 std::string getStringAndDispose(CXString cxStr);
 CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token);
-unsigned int getStartLine(CXSourceRange range);
+std::size_t getStartLine(CXSourceRange range);
 void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
 void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
 

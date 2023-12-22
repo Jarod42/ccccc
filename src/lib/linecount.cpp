@@ -23,10 +23,10 @@
 namespace ccccc
 {
 
-LineCount::LineCount(unsigned int lineOfCode_physic,
-                     unsigned int lineOfCode_program,
-                     unsigned int lineOfCode_blank,
-                     unsigned int lineOfCode_comment) :
+LineCount::LineCount(std::size_t lineOfCode_physic,
+                     std::size_t lineOfCode_program,
+                     std::size_t lineOfCode_blank,
+                     std::size_t lineOfCode_comment) :
 	lineOfCode_physic(lineOfCode_physic),
 	lineOfCode_program(lineOfCode_program),
 	lineOfCode_blank(lineOfCode_blank),

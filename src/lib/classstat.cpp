@@ -66,7 +66,7 @@ ClassStat& ClassStat::GetOrCreateClass(const std::string& className)
 	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
-FuncStat* ClassStat::AddMethodStat(const std::string& className, unsigned int line)
+FuncStat* ClassStat::AddMethodStat(const std::string& className, std::size_t line)
 {
 	auto stat = std::make_unique<FuncStat>(className, line);
 

@@ -22,11 +22,12 @@
 #define CALLCOUNTER_H
 
 #include <clang-c/Index.h>
+#include <cstddef>
 
 namespace ccccc::use_clang
 {
 
-unsigned int CountCall(const CXCursor& cursor);
+std::size_t CountCall(const CXCursor& cursor);
 
 } // namespace ccccc::use_clang
 

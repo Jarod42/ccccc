@@ -21,6 +21,8 @@
 #ifndef HALSTEAD_METRIC_H
 #define HALSTEAD_METRIC_H
 
+#include <cstddef>
+
 namespace ccccc
 {
 
@@ -28,18 +30,18 @@ class HalsteadMetric
 {
 public:
 	HalsteadMetric() = default;
-	HalsteadMetric(unsigned int operatorCount,
-	               unsigned int uniqueOperatorCount,
-	               unsigned int operandCount,
-	               unsigned int uniqueOperandCount);
+	HalsteadMetric(std::size_t operatorCount,
+	               std::size_t uniqueOperatorCount,
+	               std::size_t operandCount,
+	               std::size_t uniqueOperandCount);
 
-	void set(unsigned int operatorCount,
-	         unsigned int uniqueOperatorCount,
-	         unsigned int operandCount,
-	         unsigned int uniqueOperandCount);
+	void set(std::size_t operatorCount,
+	         std::size_t uniqueOperatorCount,
+	         std::size_t operandCount,
+	         std::size_t uniqueOperandCount);
 
-	unsigned int getVocabularySize() const { return m_vocabularySize; }
-	unsigned int getProgramLength() const { return m_programLength; }
+	std::size_t getVocabularySize() const { return m_vocabularySize; }
+	std::size_t getProgramLength() const { return m_programLength; }
 	double getVolume() const { return m_volume; }
 	double getDifficulty() const { return m_difficulty; }
 	double getEffort() const { return m_effort; }
@@ -47,8 +49,8 @@ public:
 	double getDeliveredBugCount() const { return m_deliveredBugCount; }
 
 private:
-	unsigned int m_vocabularySize = 0;
-	unsigned int m_programLength = 0;
+	std::size_t m_vocabularySize = 0;
+	std::size_t m_programLength = 0;
 	double m_volume = 0.;
 	double m_difficulty = 0.;
 	double m_effort = 0.;

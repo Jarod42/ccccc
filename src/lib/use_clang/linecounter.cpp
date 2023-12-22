@@ -42,11 +42,11 @@ void LineCounter::operator()(const CXTranslationUnit& tu, const CXCursor& /*curs
 {
 	unsigned startLine, endLine;
 	getStartEndLine(clang_getTokenExtent(tu, token), &startLine, &endLine);
-	unsigned int type = (clang_getTokenKind(token) == CXToken_Comment) ? 0 : 1;
+	std::size_t type = (clang_getTokenKind(token) == CXToken_Comment) ? 0 : 1;
 
 	if (startLine != lastLine[type]) {
 		lineOfCode[type] += endLine - startLine + 1;
-		unsigned int maxLast = std::max(lastLine[0], lastLine[1]);
+		std::size_t maxLast = std::max(lastLine[0], lastLine[1]);
 		if (startLine > maxLast) {
 			lineOfCode[2] += startLine - maxLast - 1;
 		}

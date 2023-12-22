@@ -25,12 +25,12 @@
 
 #include <doctest.h>
 
-static int CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName)
+static std::size_t CheckBlockCount(const ccccc::FileStat& fileStat, const char* funcName)
 {
 	const ccccc::FuncStat* funcStat = fileStat.getFuncStatByName(funcName);
 
 	if (funcStat == nullptr) {
-		return -1;
+		throw std::runtime_error(std::string("Unknown function") + funcName);
 	}
 	return funcStat->getNestedBlockCount();
 }
@@ -44,7 +44,7 @@ TEST_CASE("FILE_TEST_BLOCKCOUNT_CPP")
 	param.AddFile(filename);
 	stat.Compute(param);
 
-	const unsigned int expected = 1;
+	const std::size_t expected = 1;
 	CHECK(expected == stat.getFileCount());
 	const ccccc::FileStat& fileStat = stat.getFileStat(0);
 

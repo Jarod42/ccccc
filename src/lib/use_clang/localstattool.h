@@ -38,7 +38,7 @@ static void processTokens(const CXTranslationUnit& tu, const CXCursor& cursor, F
 	unsigned cursorStartOffset, cursorEndOffset;
 	getStartEndOffset(clang_getCursorExtent(cursor), &cursorStartOffset, &cursorEndOffset);
 
-	unsigned int startIndex = 0;
+	std::size_t startIndex = 0;
 	for (startIndex = 0; startIndex != numToken; ++startIndex) {
 		unsigned startOffset, endOffset;
 		getStartEndOffset(clang_getTokenExtent(tu, tokens[startIndex]), &startOffset, &endOffset);
@@ -47,7 +47,7 @@ static void processTokens(const CXTranslationUnit& tu, const CXCursor& cursor, F
 		}
 	}
 
-	for (unsigned int i = startIndex; i != numToken; ++i) {
+	for (std::size_t i = startIndex; i != numToken; ++i) {
 		const CXToken& token = tokens[i];
 		unsigned startOffset, endOffset;
 		getStartEndOffset(clang_getTokenExtent(tu, token), &startOffset, &endOffset);

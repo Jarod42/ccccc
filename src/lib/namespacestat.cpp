@@ -87,7 +87,7 @@ ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
-FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, unsigned int line)
+FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, std::size_t line)
 {
 	if (classeNames.empty()) {
 		auto stat = std::make_unique<FuncStat>(funcname, line);

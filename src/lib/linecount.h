@@ -21,6 +21,8 @@
 #ifndef LINECOUNT_H
 #define LINECOUNT_H
 
+#include <cstddef>
+
 namespace ccccc
 {
 namespace use_clang
@@ -35,23 +37,23 @@ class LineCount
 	friend class use_clang::FuncStatTool;
 
 public:
-	unsigned int getLineOfCode_physic() const { return lineOfCode_physic; }
-	unsigned int getLineOfCode_program() const { return lineOfCode_program; }
-	unsigned int getLineOfCode_blank() const { return lineOfCode_blank; }
-	unsigned int getLineOfCode_comment() const { return lineOfCode_comment; }
+	std::size_t getLineOfCode_physic() const { return lineOfCode_physic; }
+	std::size_t getLineOfCode_program() const { return lineOfCode_program; }
+	std::size_t getLineOfCode_blank() const { return lineOfCode_blank; }
+	std::size_t getLineOfCode_comment() const { return lineOfCode_comment; }
 
 	//private:
 	LineCount() = default;
-	LineCount(unsigned int lineOfCode_physic,
-	          unsigned int lineOfCode_program,
-	          unsigned int lineOfCode_blank,
-	          unsigned int lineOfCode_comment);
+	LineCount(std::size_t lineOfCode_physic,
+	          std::size_t lineOfCode_program,
+	          std::size_t lineOfCode_blank,
+	          std::size_t lineOfCode_comment);
 
 private:
-	unsigned int lineOfCode_physic = 0; // LOCphy
-	unsigned int lineOfCode_program = 0; // LOCpro
-	unsigned int lineOfCode_blank = 0; // LOCbl
-	unsigned int lineOfCode_comment = 0; // LOCcom
+	std::size_t lineOfCode_physic = 0; // LOCphy
+	std::size_t lineOfCode_program = 0; // LOCpro
+	std::size_t lineOfCode_blank = 0; // LOCbl
+	std::size_t lineOfCode_comment = 0; // LOCcom
 };
 
 } // namespace ccccc

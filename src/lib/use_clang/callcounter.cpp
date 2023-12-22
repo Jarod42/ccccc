@@ -29,7 +29,7 @@ namespace
 enum CXChildVisitResult
 CallCounterVisitor(CXCursor cursor, [[maybe_unused]] CXCursor parent, CXClientData user_data)
 {
-	unsigned int& callCount = *reinterpret_cast<unsigned int*>(user_data);
+	std::size_t& callCount = *reinterpret_cast<std::size_t*>(user_data);
 	const auto cursorKind = clang_getCursorKind(cursor);
 
 	if (cursorKind == CXCursorKind::CXCursor_CallExpr
@@ -41,9 +41,9 @@ CallCounterVisitor(CXCursor cursor, [[maybe_unused]] CXCursor parent, CXClientDa
 
 } // anonymous namespace
 
-unsigned int CountCall(const CXCursor& cursor)
+std::size_t CountCall(const CXCursor& cursor)
 {
-	unsigned int count = 0;
+	std::size_t count = 0;
 	clang_visitChildren(cursor, &CallCounterVisitor, &count);
 	return count;
 }
