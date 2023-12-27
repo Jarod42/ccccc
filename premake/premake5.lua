@@ -99,9 +99,9 @@ solution "ccccc"
 		defines {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
 
 	filter "configurations:Debug*"
-		optimize "On"
-		symbols "Off"
-		defines "NDEBUG"
+		optimize "Off"
+		symbols "On"
+		defines "DEBUG"
 	filter "configurations:Release*"
 		optimize "On"
 		symbols "Off"
@@ -175,7 +175,7 @@ solution "ccccc"
 
 		LinkToClang()
 
-		--debugdir(Root)
+		debugdir("%{cfg.targetdir}")
 
 -- --------------------------------------
 	project "sample"
