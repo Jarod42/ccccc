@@ -1,4 +1,5 @@
 ![Ubuntu badge](https://github.com/Jarod42/CCCCC/actions/workflows/ubuntu.yml/badge.svg)
+![Msys2 badge](https://github.com/Jarod42/CCCCC/actions/workflows/msys2.yml/badge.svg)
 
 ----------
 
@@ -59,5 +60,5 @@ Build Dependencies
 ----
 
 - LLVM/Clang
-- ctemplate (zip included)
+- mstch (included)
 - doctest (for unit tests) (included (header-only))

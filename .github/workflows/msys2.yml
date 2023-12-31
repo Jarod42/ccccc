@@ -1,0 +1,60 @@
+name: Windows-Msys2
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - '.github/workflows/msys2.yml'
+      - premake/**
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          make
+          python3
+          mingw-w64-x86_64-clang 
+          mingw-w64-x86_64-llvm
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: premake gmake2
+      run: |
+          cd premake
+          ./premake5.exe gmake2 --without-tinfo #--llvm-root=
+
+    - name: make config=releasewithdll
+      shell: msys2 {0}
+      run: |
+          cd project/gmake2
+          make config=releasewithdll verbose=1
+          cd ../../bin/gmake2/ReleaseWithDLL
+          ./ccccc_test
+          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    - name: make config=release
+      shell: msys2 {0}
+      run: |
+          cd project/gmake2
+          make config=release verbose=1
+          cd ../../bin/gmake2/Release
+          ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: ccccc
+        path: |
+            bin/gmake2/Release/*.*
+            bin/gmake2/ReleaseWithDll/*.*
