@@ -1,0 +1,68 @@
+name: Windows-Msys2
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - '.github/workflows/msys2.yml'
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - uses: msys2/setup-msys2@v2
+
+    - name: pacman ctemplate build dependencies
+      shell: msys2 {0}
+      run: pacman -S --noconfirm autoconf automake libtool make python3
+
+    - name: checkout ctemplate
+      uses: actions/checkout@v2
+      with:
+          repository: olafvdspek/ctemplate
+          ref: ctemplate-2.4
+#    - name: build ctemplate
+#      shell: msys2 {0}
+#      run: |
+#          ./autogen.sh
+#          ./configure
+#          make
+#          make install
+#          rm -Rf *
+
+    - name: pacman llvm/clang
+      id: LLVM
+      shell: msys2 {0}
+      run: |
+          pacman -S --noconfirm mingw-w64-x86_64-llvm mingw-w64-x86_64-clang 
+          echo "::set-output name=LLVM_ROOT::/c/mys64/mingw/"
+
+    - uses: actions/checkout@v2
+
+    - name: premake gmake2
+      run: |
+          cd premake
+          ./premake5.exe gmake2 #--llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}"
+
+    - name: make config=releasewithdll
+      shell: msys2 {0}
+      run: |
+          cd project/gmake2
+          make config=releasewithdll verbose=1
+          cd ../../bin/gmake2/ReleaseWithDLL
+          ./ccccc_test
+          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    - name: make config=release
+      shell: msys2 {0}
+      run: |
+          cd project/gmake2
+          make config=release verbose=1
+          cd ../../bin/gmake2/Release
+          ./ccccc_test
+          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
