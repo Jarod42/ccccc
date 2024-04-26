@@ -19,9 +19,6 @@ jobs:
       run: |
           g++ --version
 
-    - name: aptget libunittest++
-      run: sudo apt-get install libunittest++
-
     - name: aptget llvm
       id: LLVM
       run: |
