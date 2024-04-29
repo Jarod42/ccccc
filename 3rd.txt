@@ -6,8 +6,8 @@ http://industriousone.com/premake
 +clang:
 http://clang.llvm.org/
 
-+ctemplate:
-http://code.google.com/p/ctemplate/
++mstch:
+https://github.com/no1msd/mstch
 
 +doctest:
 https://github.com/doctest

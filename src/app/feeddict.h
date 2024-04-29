@@ -22,6 +22,7 @@
 #define FEEDDICT_H
 
 #include <filesystem>
+#include <mstch/mstch.hpp>
 #include <string>
 
 namespace ccccc
@@ -32,24 +33,15 @@ class FuncStat;
 class NamespaceStat;
 } // namespace ccccc
 
-namespace ctemplate
-{
-class TemplateDictionary;
-} // namespace ctemplate
-
 void feedDict(const ccccc::FuncStat&,
               const std::string& namespacesName,
               const std::string& classesName,
-              ctemplate::TemplateDictionary*);
+              mstch::map*);
 void feedDict(const ccccc::ClassStat&,
               const std::string& namespacesName,
               std::string classesName,
-              ctemplate::TemplateDictionary*);
-void feedDict(const ccccc::NamespaceStat&,
-              std::string namespacesName,
-              ctemplate::TemplateDictionary*);
-void feedDict(const ccccc::FileStat&,
-              const std::filesystem::path& root,
-              ctemplate::TemplateDictionary*);
+              mstch::map*);
+void feedDict(const ccccc::NamespaceStat&, std::string namespacesName, mstch::map*);
+void feedDict(const ccccc::FileStat&, const std::filesystem::path& root, mstch::map*);
 
 #endif // FEEDDICT_H

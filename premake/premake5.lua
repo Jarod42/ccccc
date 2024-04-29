@@ -2,9 +2,6 @@
 Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
 
--- Some path to customize with your config.
---CTemplateRoot = path.join(ThirdRoot, "ctemplate-2.4");
-
 -- You should not modify this script below this line.
 
 newoption {
@@ -35,10 +32,9 @@ else
 	LLVMConfig = path.join(LLVMBinDir, "llvm-config")
 end
 
-function UseCTemplate()
-	--includedirs { path.join(CTemplateRoot, "src")}
-	--libdirs { path.join(CTemplateRoot, ".libs") }
-	links { "ctemplate_nothreads" }
+function UseMstch()
+	externalincludedirs { path.join(ThirdRoot, "mstch/include") }
+	links {"mstch"}
 end
 
 function Llvm_config_cpp_flags()
@@ -115,7 +111,20 @@ solution "ccccc"
 
 	filter {}
 	startproject "ccccc_app"
+-- --------------------------------------
+	group "3rd"
+-- --------------------------------------
+	project "mstch"
+		kind "StaticLib"
+		language "C++"
+		files { path.join(ThirdRoot, "mstch/src/**.*"), path.join(ThirdRoot, "mstch/include/**.*") }
+		warnings "Extra"
+		flags { "FatalWarnings"}
 
+		includedirs { path.join(ThirdRoot, "mstch/src"), path.join(ThirdRoot, "mstch/include") }
+
+-- --------------------------------------
+	group "ccccc"
 -- --------------------------------------
 	project "ccccc_app"
 		kind "ConsoleApp"
@@ -129,7 +138,7 @@ solution "ccccc"
 
 		Llvm_config_cpp_flags()
 
-		UseCTemplate()
+		UseMstch()
 
 		links { "ccccc_lib" }
 		filter { "system:windows" }

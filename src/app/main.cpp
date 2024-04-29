@@ -22,13 +22,21 @@
 #include "feeddict.h"
 #include "getexepath.h"
 
-#include <ctemplate/template.h>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
+#include <mstch/mstch.hpp>
 #include <sstream>
 
 namespace
 {
+
+std::string getFileContent(const std::filesystem::path& path)
+{
+	std::ifstream file(path);
+	return {std::istream_iterator<char>(file), std::istream_iterator<char>()};
+}
 
 // Default bin location is Root/bin/$IDE/$Config
 std::filesystem::path getRootPath(const std::filesystem::path& exePath)
@@ -71,13 +79,12 @@ int main(int argc, char* argv[])
 
 	allStat.Compute(params);
 
-	ctemplate::TemplateDictionary dict("root");
+	mstch::map dict;
 	const std::filesystem::path templateFilename = params.GetTemplateFilename();
 
-	dict.SetFilename(templateFilename.string());
-	dict.SetValue("cccccPath", cccccPath.string());
-	dict.SetValue("cccccRoot", cccccRoot.string());
-	dict.SetValue("Date", getLocalTime());
+	dict["cccccPath"] = cccccPath.string();
+	dict["cccccRoot"] = cccccRoot.string();
+	dict["Date"] = getLocalTime();
 	const std::filesystem::path root = std::filesystem::current_path();
 	for (std::size_t i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
@@ -86,8 +93,6 @@ int main(int argc, char* argv[])
 		feedDict(filestat, root, &dict);
 	}
 
-	std::string output;
-	ctemplate::ExpandTemplate(templateFilename.string(), ctemplate::DO_NOT_STRIP, &dict, &output);
-	std::cout << output;
+	std::cout << mstch::render(getFileContent(templateFilename), dict);
 	return 0;
 }

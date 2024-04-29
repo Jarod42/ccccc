@@ -35,21 +35,16 @@ jobs:
       env:
           LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
 
-    - name: checkout ctemplate
-      uses: actions/checkout@v4
-      with:
-          repository: olafvdspek/ctemplate
-          ref: ctemplate-2.4
-    - name: build ctemplate
-      run: |
-          ./autogen.sh && ./configure
-          make
-          sudo make install
-          rm -Rf *
-
     - uses: actions/checkout@v4
       with:
         submodules: recursive
+
+#    - name: Build standalone mstch
+#      run: |
+#          mkdir 3rd/mstch/build
+#          cd 3rd/mstch/build
+#          cmake .. && make
+#          sudo make install
 
     - name: checkout premake5
       uses: actions/checkout@v4

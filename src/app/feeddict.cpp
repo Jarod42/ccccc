@@ -18,80 +18,66 @@
 **  along with CCCCC. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "feeddict.h"
+
 #include "cccc_clang_api.h"
 
-#include <ctemplate/template.h>
 #include <sstream>
-
-static void SetDoubleValue(ctemplate::TemplateDictionary& dict, const char* key, double value)
-{
-	std::stringstream ss;
-
-	ss << value;
-	dict.SetValue(key, ss.str());
-}
 
 void feedDict(const ccccc::FuncStat& funcStat,
               const std::string& namespacesName,
               const std::string& classesName,
-              ctemplate::TemplateDictionary* dict)
+              mstch::map* dict)
 {
-	ctemplate::TemplateDictionary& sectionDict = *dict->AddSectionDictionary("ForEachFunctions");
+	mstch::map sectionDict; // = *dict->AddSectionDictionary("ForEachFunctions");
 
-	sectionDict.SetValue("funcName", funcStat.getName());
+	sectionDict["funcName"] = funcStat.getName();
 	if (funcStat.isOverriden()) {
-		sectionDict.ShowSection("override");
+		sectionDict["override"] = true;
 	} else if (funcStat.isVirtual()) {
-		sectionDict.ShowSection("virtual");
+		sectionDict["virtual"] = true;
 	}
 	if (funcStat.isStatic()) {
-		sectionDict.ShowSection("static");
+		sectionDict["static"] = true;
 	}
 	if (funcStat.isConst()) {
-		sectionDict.ShowSection("const");
+		sectionDict["const"] = true;
 	}
-	sectionDict.SetIntValue("lineDefinition", static_cast<int>(funcStat.getLineDefinition()));
-	sectionDict.SetIntValue("LOCphy",
-	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_physic()));
-	sectionDict.SetIntValue("LOCpro",
-	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_program()));
-	sectionDict.SetIntValue("LOCcom",
-	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_comment()));
-	sectionDict.SetIntValue("LOCbl",
-	                        static_cast<int>(funcStat.getLineCount().getLineOfCode_blank()));
-	sectionDict.SetIntValue("MVG", static_cast<int>(funcStat.getMcCabeCyclomaticNumber()));
+	sectionDict["lineDefinition"] = static_cast<int>(funcStat.getLineDefinition());
+	sectionDict["LOCphy"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_physic());
+	sectionDict["LOCpro"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_program());
+	sectionDict["LOCcom"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_comment());
+	sectionDict["LOCbl"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_blank());
+	sectionDict["MVG"] = static_cast<int>(funcStat.getMcCabeCyclomaticNumber());
 
-	sectionDict.SetIntValue("CallCount", static_cast<int>(funcStat.getCallCount()));
-	sectionDict.SetIntValue("CallerCount", static_cast<int>(funcStat.getCallerCount()));
+	sectionDict["CallCount"] = static_cast<int>(funcStat.getCallCount());
+	sectionDict["CallerCount"] = static_cast<int>(funcStat.getCallerCount());
 
-	sectionDict.SetIntValue("Halstead_n",
-	                        static_cast<int>(funcStat.getHalsteadMetric().getVocabularySize()));
-	sectionDict.SetIntValue("Halstead_N",
-	                        static_cast<int>(funcStat.getHalsteadMetric().getProgramLength()));
-	SetDoubleValue(sectionDict, "Halstead_V", funcStat.getHalsteadMetric().getVolume());
-	SetDoubleValue(sectionDict, "Halstead_D", funcStat.getHalsteadMetric().getDifficulty());
-	SetDoubleValue(sectionDict, "Halstead_E", funcStat.getHalsteadMetric().getEffort());
-	SetDoubleValue(sectionDict, "Halstead_B", funcStat.getHalsteadMetric().getDeliveredBugCount());
-	SetDoubleValue(sectionDict, "Halstead_T", funcStat.getHalsteadMetric().getTimeToImplement());
+	sectionDict["Halstead_n"] = static_cast<int>(funcStat.getHalsteadMetric().getVocabularySize());
+	sectionDict["Halstead_N"] = static_cast<int>(funcStat.getHalsteadMetric().getProgramLength());
+	sectionDict["Halstead_V"] = funcStat.getHalsteadMetric().getVolume();
+	sectionDict["Halstead_D"] = funcStat.getHalsteadMetric().getDifficulty();
+	sectionDict["Halstead_E"] = funcStat.getHalsteadMetric().getEffort();
+	sectionDict["Halstead_B"] = funcStat.getHalsteadMetric().getDeliveredBugCount();
+	sectionDict["Halstead_T"] = funcStat.getHalsteadMetric().getTimeToImplement();
 
-	SetDoubleValue(sectionDict,
-	               "MIwoc",
-	               funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments());
-	SetDoubleValue(sectionDict,
-	               "MIcw",
-	               funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight());
-	SetDoubleValue(sectionDict, "MI", funcStat.getMaintainabilityIndex().getMaintainabilityIndex());
+	sectionDict["MIwoc"] =
+		funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments();
+	sectionDict["MIcw"] = funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight();
+	sectionDict["MI"] = funcStat.getMaintainabilityIndex().getMaintainabilityIndex();
 
-	sectionDict.SetIntValue("NestedBlockCount", static_cast<int>(funcStat.getNestedBlockCount()));
+	sectionDict["NestedBlockCount"] = static_cast<int>(funcStat.getNestedBlockCount());
 
-	sectionDict.SetValue("namespacesName", namespacesName);
-	sectionDict.SetValue("classesName", classesName);
+	sectionDict["namespacesName"] = namespacesName;
+	sectionDict["classesName"] = classesName;
+
+	(*dict)["ForEachFunctions"] = std::move(sectionDict);
 }
 
 void feedDict(const ccccc::ClassStat& classStat,
               const std::string& namespacesName,
               std::string classesName,
-              ctemplate::TemplateDictionary* dict)
+              mstch::map* dict)
 {
 	if (classesName.empty() == false) {
 		classesName += "::";
@@ -108,7 +94,7 @@ void feedDict(const ccccc::ClassStat& classStat,
 
 void feedDict(const ccccc::NamespaceStat& namespaceStat,
               std::string namespacesName,
-              ctemplate::TemplateDictionary* dict)
+              mstch::map* dict)
 {
 	if (namespacesName.empty() == false) {
 		namespacesName += "::";
@@ -130,21 +116,19 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 	}
 }
 
-void feedDict(const ccccc::FileStat& fileStat,
-              const std::filesystem::path& root,
-              ctemplate::TemplateDictionary* dict)
+void feedDict(const ccccc::FileStat& fileStat, const std::filesystem::path& root, mstch::map* dict)
 {
-	ctemplate::TemplateDictionary* sectionDict = dict->AddSectionDictionary("ForEachFiles");
+	mstch::map sectionDict; // = dict->AddSectionDictionary("ForEachFiles");
 
-	sectionDict->SetValue("filename",
-	                      std::filesystem::relative(fileStat.getFilename(), root).string());
+	sectionDict["filename"] = std::filesystem::relative(fileStat.getFilename(), root).string();
 	for (std::size_t i = 0; i != fileStat.getFunctionCount(); ++i) {
-		feedDict(fileStat.getFuncStat(i), "", "", sectionDict);
+		feedDict(fileStat.getFuncStat(i), "", "", &sectionDict);
 	}
 	for (const auto& p : fileStat.getNamespaces()) {
-		feedDict(*p.second, "", sectionDict);
+		feedDict(*p.second, "", &sectionDict);
 	}
 	for (const auto& p : fileStat.getClasses()) {
-		feedDict(*p.second, "", "", sectionDict);
+		feedDict(*p.second, "", "", &sectionDict);
 	}
+	(*dict)["ForEachFiles"] = std::move(sectionDict);
 }
