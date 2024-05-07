@@ -162,7 +162,7 @@ solution "ccccc"
 		flags { "FatalWarnings"}
 
 		includedirs { path.join(Root, "src/lib/") }
-		externalincludedirs { path.join(ThirdRoot, "doctest/") }
+		externalincludedirs { path.join(ThirdRoot, "doctest/doctest/") }
 
 		Llvm_config_cpp_flags()
 
