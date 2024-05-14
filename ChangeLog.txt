@@ -1,0 +1,25 @@
+CCCCC v1.2 (In progress):
+=======================================================================
+- [Feature] Add CallerCount/CallCount statistic
+- [Feature] Add knowledge about `virtual`/`override`/`static`/`const` about method
+- [Feature] Allow to select template
+- [Fix] Fix blockCounter with took only last blockCounter value instead of the maximum
+- [Fix] Fix blockcounter with if-if
+- [Build] Update code to C++20
+- [Build] Remove gengetopt dependency, and use CommandLine from llvm.
+- [Build] Change ctemplate to (custom) mstch
+- [Build] Change UT framework from unittest++ to doctest.
+- [Build] Update premake4 to premake5
+- [Build] Change from astyle to clang-format
+
+CCCCC v1.1 (Jan, 2013):
+=======================================================================
+- [Feature] Add current Date
+- [Feature] Add NestedBlockCount
+
+CCCCC v1.0 (Dec, 2012):
+=======================================================================
+- [Feature] Add maintainability Index. (see http://www.verifysoft.com/en_maintainability.html)
+- [Feature] Add Halstead metrics (http://en.wikipedia.org/wiki/Halstead_complexity_measures).
+- [Feature] Add Cyclomatic_complexity (http://en.wikipedia.org/wiki/Cyclomatic_complexity)
+- [Feature] Add line count.
