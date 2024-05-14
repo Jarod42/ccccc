@@ -60,17 +60,11 @@ jobs:
         cd ..
         rm -Rf premake-build
 
-    - name: premake gmake
-      run: ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
-
-    - name: make config=releasewithdll
-      run: |
-          cd project/gmake && make config=releasewithdll verbose=1
-          cd ../../bin/gmake/ReleaseWithDLL && ./ccccc_test
-          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+    - name: premake gmake2
+      run: ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
 
     - name: make config=release
       run: |
-          cd project/gmake && make config=release verbose=1
-          cd ../../bin/gmake/Release && ./ccccc_test
-          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+          cd project/gmake2 && make config=release verbose=1
+          cd ../../bin/gmake2/Release && ./ccccc_test
+          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help

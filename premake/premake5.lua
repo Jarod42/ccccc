@@ -1,8 +1,5 @@
---PremakeRoot = path.getabsolute("./")
 Root = path.getabsolute("..")
 ThirdRoot = path.getabsolute("../3rd")
-
--- You should not modify this script below this line.
 
 newoption {
 	trigger = "llvm-root",
@@ -33,63 +30,44 @@ else
 end
 
 function UseMstch()
-	externalincludedirs { path.join(ThirdRoot, "mstch/include") }
+	externalincludedirs { "%{ThirdRoot}/mstch/include" }
 	links {"mstch"}
 end
 
 function Llvm_config_cpp_flags()
-	buildoptions { "$(shell " .. LLVMConfig .. " --cppflags" .. ")" }
-end
-
-function LinkToClang()
-	filter "configurations:*WithDLL"
-		--links { "clang"} -- order issue between link and linkoptions
-		linkoptions {"-lclang"}
-
-		if not (_OPTIONS["without-tinfo"]) then
-			links { "tinfo" }
-		end
-
-	filter {"configurations:*WithDLL", "toolset:not msc"}
-			linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs support" .. ")" }
-
-	filter {"configurations:*WithDLL"}
-		linkoptions { "-pthread" }
-
-	filter "configurations:not *WithDLL"
-		links { "clang", "clangIndex", "clangFormat", "clangTooling",
-				"clangToolingCore", "clangFrontend", "clangDriver",
-				"clangSerialization", "clangParse", "clangSema",
-				"clangAnalysis", "clangRewrite", "clangEdit",
-				"clangAST", "clangLex", "clangBasic"}
-		if not (_OPTIONS["without-tinfo"]) then
-			links { "tinfo" }
-		end
-
-	filter {"configurations:not *WithDLL", "toolset:not msc"}
-		linkoptions { "$(shell " .. LLVMConfig .. " --system-libs --ldflags --libs all support" .. ")" }
-
-	filter {"configurations:not *WithDLL"}
-		linkoptions { "-pthread" }
-
+	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
+	filter { "toolset:not msc*" }
+		buildoptions { "$(shell %{LLVMConfig} --cppflags)" }
 	filter {}
 end
 
+function LinkToClang()
+	if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
+
+	links { "clang"}
+
+	if not (_OPTIONS["without-tinfo"]) then
+		links { "tinfo" }
+	end
+
+	filter { "toolset:msc*" }
+		links { "LLVM-18" } -- Hard-coded version
+
+	filter { "toolset:not msc*" }
+		linkoptions { "$(shell %{LLVMConfig} --system-libs --ldflags --libs support)" } -- -L$(LLVMLibDir) -lLLVM-18
+	filter {}
+
+	linkoptions { "-pthread" }
+end
+
 solution "ccccc"
-	location ( path.join(Root, "project/" .. _ACTION))
-	configurations { "DebugWithDLL", "ReleaseWithDLL", "Debug", "Release" }
+	location "%{Root}/project/%{_ACTION}"
+	configurations { "Debug", "Release" }
 
-	objdir(path.join(Root, "obj", _ACTION)) -- premake add $(configName)/$(AppName)
-	targetdir(path.join(Root, "bin", _ACTION, "%{cfg.buildcfg}"))
+	objdir "%{Root}/obj/%{_ACTION}" -- premake add $(configName)/$(AppName)
 
+	language "C++"
 	cppdialect "C++17"
-
-	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
-
-	filter "action:codelite"
-		toolset "gcc"
-	filter "action:codeblocks"
-		toolset "gcc"
 
 	filter "toolset:clang"
 		defines {"__STDC_LIMIT_MACROS", "__STDC_CONSTANT_MACROS"}
@@ -103,12 +81,6 @@ solution "ccccc"
 		symbols "Off"
 		defines "NDEBUG"
 
-	filter "configurations:*WithDLL"
-		if (LLVMBinDir ~= nil and LLVMBinDir ~= "") then libdirs(LLVMBinDir) end
-		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
-	filter "configurations:not *WithDLL"
-		if (LLVMLibDir ~= nil and LLVMLibDir ~= "") then libdirs(LLVMLibDir) end
-
 	filter {}
 	startproject "ccccc_app"
 -- --------------------------------------
@@ -116,25 +88,25 @@ solution "ccccc"
 -- --------------------------------------
 	project "mstch"
 		kind "StaticLib"
-		language "C++"
-		files { path.join(ThirdRoot, "mstch/src/**.*"), path.join(ThirdRoot, "mstch/include/**.*") }
+		targetdir "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}"
 		warnings "Extra"
 		flags { "FatalWarnings"}
 
-		includedirs { path.join(ThirdRoot, "mstch/src"), path.join(ThirdRoot, "mstch/include") }
+		files { "%{ThirdRoot}/mstch/src/**.*", "%{ThirdRoot}/mstch/include/**.*" }
+		includedirs { "%{ThirdRoot}/mstch/src", "%{ThirdRoot}/mstch/include" }
 
 -- --------------------------------------
 	group "ccccc"
 -- --------------------------------------
 	project "ccccc_app"
 		kind "ConsoleApp"
-		language "C++"
+		targetdir "%{Root}/bin/%{_ACTION}/%{cfg.buildcfg}"
 		targetname("ccccc")
-		files { path.join(Root, "src/app/**.*") }
 		warnings "Extra"
 		flags { "FatalWarnings"}
 
-		includedirs { path.join(Root, "src/lib/") }
+		files { "%{Root}/src/app/**.*" }
+		includedirs { "%{Root}/src/lib/" }
 
 		Llvm_config_cpp_flags()
 
@@ -142,9 +114,9 @@ solution "ccccc"
 
 		links { "ccccc_lib" }
 		filter { "system:windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "ccccc_lib.lib")} -- order issue between link and linkoptions
+			linkoptions { "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}/ccccc_lib.lib" } -- order issue between link and linkoptions
 		filter { "system:not windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "libccccc_lib.a")} -- order issue between link and linkoptions
+			linkoptions { "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}/libccccc_lib.a" } -- order issue between link and linkoptions
 		filter {}
 		LinkToClang()
 
@@ -154,32 +126,32 @@ solution "ccccc"
 -- --------------------------------------
 	project "ccccc_lib"
 		kind "StaticLib"
-		language "C++"
+		targetdir "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}"
 		targetname("ccccc_lib")
-		files { path.join(Root, "src/lib/**.*") }
 		warnings "Extra"
 		flags { "FatalWarnings"}
+		files { "%{Root}/src/lib/**.*" }
 
 		Llvm_config_cpp_flags()
 
 -- --------------------------------------
 	project "ccccc_test"
 		kind "ConsoleApp"
-		language "C++"
-		files { path.join(Root, "test/**.*") }
+		targetdir "%{Root}/bin/%{_ACTION}/%{cfg.buildcfg}"
 		warnings "Extra"
 		flags { "FatalWarnings"}
 
-		includedirs { path.join(Root, "src/lib/") }
-		externalincludedirs { path.join(ThirdRoot, "doctest/doctest/") }
+		files { "%{Root}/test/**.*" }
+		includedirs { "%{Root}/src/lib/" }
+		externalincludedirs { "%{ThirdRoot}/doctest/doctest/" }
 
 		Llvm_config_cpp_flags()
 
 		links { "ccccc_lib" }
 		filter { "system:windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "ccccc_lib.lib")} -- order issue between link and linkoptions
+			linkoptions { "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}/ccccc_lib.lib" } -- order issue between link and linkoptions
 		filter { "system:not windows" }
-			linkoptions{path.join("%{cfg.targetdir}", "libccccc_lib.a")} -- order issue between link and linkoptions
+			linkoptions { "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}/libccccc_lib.a" } -- order issue between link and linkoptions
 		filter {}
 
 		LinkToClang()
@@ -189,7 +161,7 @@ solution "ccccc"
 -- --------------------------------------
 	project "sample"
 		kind "None"
-		language "C++"
-		files { path.join(Root, "samples/**.*") }
 		warnings "Extra"
-		flags { "FatalWarnings"}
+		flags { "FatalWarnings" }
+
+		files { "%{Root}/samples/**.*" }

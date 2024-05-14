@@ -33,15 +33,6 @@ jobs:
           cd premake
           ./premake5.exe gmake2 --without-tinfo #--llvm-root=
 
-    - name: make config=releasewithdll
-      shell: msys2 {0}
-      run: |
-          cd project/gmake2
-          make config=releasewithdll verbose=1
-          cd ../../bin/gmake2/ReleaseWithDLL
-          ./ccccc_test
-          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
-
     - name: make config=release
       shell: msys2 {0}
       run: |
@@ -49,12 +40,27 @@ jobs:
           make config=release verbose=1
           cd ../../bin/gmake2/Release
           ./ccccc_test
-          #LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
 
-    - name: Upload
+    - name: Upload ccccc
       uses: actions/upload-artifact@v4
       with:
         name: ccccc
         path: |
             bin/gmake2/Release/*.*
-            bin/gmake2/ReleaseWithDll/*.*
+
+    - name: Upload dll
+      uses: actions/upload-artifact@v4
+      with:
+        name: ccccc_dll
+        path: |
+            D:/a/_temp/msys64/mingw64/bin/libffi-*.dll        # libffi-8.dll
+            D:/a/_temp/msys64/mingw64/bin/libgcc_s_seh-*.dll  # libgcc_s_seh-1.dll
+            D:/a/_temp/msys64/mingw64/bin/libiconv-*.dll      # libiconv-2.dll
+            D:/a/_temp/msys64/mingw64/bin/libLLVM-*.dll       # libLLVM-18.dll
+            D:/a/_temp/msys64/mingw64/bin/liblzma-*.dll       # liblzma-5.dll
+            D:/a/_temp/msys64/mingw64/bin/libstdc++-*.dll     # libstdc++-6.dll
+            D:/a/_temp/msys64/mingw64/bin/libwinthread-*.dll  # libwinthread-1.dll
+            D:/a/_temp/msys64/mingw64/bin/libxml2-*.dll       # libxml2-2.dll
+            D:/a/_temp/msys64/mingw64/bin/libzstd.dll
+            D:/a/_temp/msys64/mingw64/bin/zlib1.dll
