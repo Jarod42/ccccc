@@ -2,13 +2,13 @@
 <html>
 <head>
 <title>CCCCCC report</title>
-<link rel="stylesheet" href="file:///{{cccccRoot:h}}/3rd/__jquery.tablesorter/themes/blue/style.css" type="text/css" media="print, projection, screen" />
-<link rel="stylesheet" type="text/css" href="file:///{{cccccRoot:h}}/template/html/ccccc.css" media="all" />
-<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/jquery.js"></script>
-<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/__jquery.tablesorter/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/jquery.tablesorter.widgets.js"></script>
-<script type="text/javascript" src="file:///{{cccccRoot:h}}/3rd/dragtable.js"></script>
-<script type="text/javascript" src="file:///{{cccccRoot:h}}/template/html/ccccc.js"></script>
+<link rel="stylesheet" href="file:///{{cccccRoot}}/3rd/__jquery.tablesorter/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" type="text/css" href="file:///{{cccccRoot}}/template/html/ccccc.css" media="all" />
+<script type="text/javascript" src="file:///{{cccccRoot}}/3rd/jquery.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot}}/3rd/__jquery.tablesorter/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot}}/3rd/jquery.tablesorter.widgets.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot}}/3rd/dragtable.js"></script>
+<script type="text/javascript" src="file:///{{cccccRoot}}/template/html/ccccc.js"></script>
 </head>
 <body onload="onDocLoaded();">
 <h1>CCCCC Software Metrics Report</h1>
@@ -19,7 +19,7 @@
 <tr><th>Filename</th><th>line</th><th>Namespaces Name</th><th>Classes Name</th><th>Prototype</th><th class="LOCphy">LOCphy</th><th class="LOCpro">LOCpro</th><th class="LOCcom">LOCcom</th><th class="LOCbl">LOCbl</th><th class="MVG">MVG</th><th class="NestedBlockCount">Block</th><th class="Halstead_n">Vocabulary size</th><th class="Halstead_N">Program length</th><th class="Halstead_V">Volume</th><th class="Halstead_D">Difficulty</th><th class="Halstead_E">Effort</th><th class="Halstead_T">Time to implement (s)</th><th class="Halstead_B">Delivered bugs</th><th class="MIwoc">MIwoc</th><th class="MIcw">MIcw</th><th class="MI">MI</th><th class="CallCount">CallCount</th><th class="CallerCount">CallerCount</th></tr>
 </thead>
 <tbody>
-{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename:h}}</td><td>{{lineDefinition}}</td><td>{{namespacesName:h}}</td><td>{{classesName:h}}</td><td>{{#static}}[static] {{/static}}{{#virtual}}[virtual] {{/virtual}}{{funcName:h}}{{#const}} const{{/const}}{{#override}} [override]{{/override}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{NestedBlockCount}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td><td>{{CallCount}}</td><td>{{CallerCount}}</td></tr>
+{{#ForEachFiles}}{{#ForEachFunctions}}<tr><td>{{filename}}</td><td>{{lineDefinition}}</td><td>{{namespacesName}}</td><td>{{classesName}}</td><td>{{#static}}[static] {{/static}}{{#virtual}}[virtual] {{/virtual}}{{funcName}}{{#const}} const{{/const}}{{#override}} [override]{{/override}}</td><td>{{LOCphy}}</td><td>{{LOCpro}}</td><td>{{LOCcom}}</td><td>{{LOCbl}}</td><td>{{MVG}}</td><td>{{NestedBlockCount}}</td><td>{{Halstead_n}}</td><td>{{Halstead_N}}</td><td>{{Halstead_V}}</td><td>{{Halstead_D}}</td><td>{{Halstead_E}}</td><td>{{Halstead_T}}</td><td>{{Halstead_B}}</td><td>{{MIwoc}}</td><td>{{MIcw}}</td><td>{{MI}}</td><td>{{CallCount}}</td><td>{{CallerCount}}</td></tr>
 {{/ForEachFunctions}}{{/ForEachFiles}}</tbody>
 </table>
 <h2>Definitions.</h2>

@@ -35,6 +35,7 @@ namespace
 std::string getFileContent(const std::filesystem::path& path)
 {
 	std::ifstream file(path);
+	file >> std::noskipws;
 	return {std::istream_iterator<char>(file), std::istream_iterator<char>()};
 }
 
@@ -86,12 +87,14 @@ int main(int argc, char* argv[])
 	dict["cccccRoot"] = cccccRoot.string();
 	dict["Date"] = getLocalTime();
 	const std::filesystem::path root = std::filesystem::current_path();
+	mstch::array forEachFiles;
 	for (std::size_t i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);
 		std::cerr << "feed dict: " << filestat.getFilename() << std::endl;
 
-		feedDict(filestat, root, &dict);
+		forEachFiles.emplace_back(makeDict(filestat, root));
 	}
+	dict["ForEachFiles"] = forEachFiles;
 
 	std::cout << mstch::render(getFileContent(templateFilename), dict);
 	return 0;

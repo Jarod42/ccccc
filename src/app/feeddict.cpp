@@ -24,10 +24,9 @@
 
 #include <sstream>
 
-void feedDict(const ccccc::FuncStat& funcStat,
-              const std::string& namespacesName,
-              const std::string& classesName,
-              mstch::map* dict)
+mstch::map makeDict(const ccccc::FuncStat& funcStat,
+                    const std::string& namespacesName,
+                    const std::string& classesName)
 {
 	mstch::map sectionDict; // = *dict->AddSectionDictionary("ForEachFunctions");
 
@@ -71,13 +70,13 @@ void feedDict(const ccccc::FuncStat& funcStat,
 	sectionDict["namespacesName"] = namespacesName;
 	sectionDict["classesName"] = classesName;
 
-	(*dict)["ForEachFunctions"] = std::move(sectionDict);
+	return sectionDict;
 }
 
 void feedDict(const ccccc::ClassStat& classStat,
               const std::string& namespacesName,
               std::string classesName,
-              mstch::map* dict)
+              mstch::array* forEachFunctions)
 {
 	if (classesName.empty() == false) {
 		classesName += "::";
@@ -85,16 +84,17 @@ void feedDict(const ccccc::ClassStat& classStat,
 	classesName += classStat.getName();
 
 	for (size_t i = 0; i != classStat.getMethodCount(); ++i) {
-		feedDict(classStat.getMethodStat(i), namespacesName, classesName, dict);
+		forEachFunctions->emplace_back(
+			makeDict(classStat.getMethodStat(i), namespacesName, classesName));
 	}
 	for (const auto& p : classStat.getInnerClasses()) {
-		feedDict(*p.second, namespacesName, classesName, dict);
+		feedDict(*p.second, namespacesName, classesName, forEachFunctions);
 	}
 }
 
 void feedDict(const ccccc::NamespaceStat& namespaceStat,
               std::string namespacesName,
-              mstch::map* dict)
+              mstch::array* forEachFunctions)
 {
 	if (namespacesName.empty() == false) {
 		namespacesName += "::";
@@ -104,31 +104,35 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 	} else {
 		namespacesName += namespaceStat.getName();
 	}
+
 	for (std::size_t i = 0; i != namespaceStat.getFunctionCount(); ++i) {
 		const ccccc::FuncStat& funcStat = namespaceStat.getFuncStat(i);
-		feedDict(funcStat, namespacesName, "", dict);
+		forEachFunctions->emplace_back(makeDict(funcStat, namespacesName, ""));
 	}
+
 	for (const auto& p : namespaceStat.getClasses()) {
-		feedDict(*p.second, namespacesName, "", dict);
+		feedDict(*p.second, namespacesName, "", forEachFunctions);
 	}
 	for (const auto& p : namespaceStat.getNamespaces()) {
-		feedDict(*p.second, namespacesName, dict);
+		feedDict(*p.second, namespacesName, forEachFunctions);
 	}
 }
 
-void feedDict(const ccccc::FileStat& fileStat, const std::filesystem::path& root, mstch::map* dict)
+mstch::map makeDict(const ccccc::FileStat& fileStat, const std::filesystem::path& root)
 {
-	mstch::map sectionDict; // = dict->AddSectionDictionary("ForEachFiles");
+	mstch::map sectionDict;
 
 	sectionDict["filename"] = std::filesystem::relative(fileStat.getFilename(), root).string();
+	mstch::array forEachFunctions;
 	for (std::size_t i = 0; i != fileStat.getFunctionCount(); ++i) {
-		feedDict(fileStat.getFuncStat(i), "", "", &sectionDict);
+		forEachFunctions.emplace_back(makeDict(fileStat.getFuncStat(i), "", ""));
 	}
 	for (const auto& p : fileStat.getNamespaces()) {
-		feedDict(*p.second, "", &sectionDict);
+		feedDict(*p.second, "", &forEachFunctions);
 	}
 	for (const auto& p : fileStat.getClasses()) {
-		feedDict(*p.second, "", "", &sectionDict);
+		feedDict(*p.second, "", "", &forEachFunctions);
 	}
-	(*dict)["ForEachFiles"] = std::move(sectionDict);
+	sectionDict["ForEachFunctions"] = std::move(forEachFunctions);
+	return sectionDict;
 }

@@ -33,15 +33,14 @@ class FuncStat;
 class NamespaceStat;
 } // namespace ccccc
 
-void feedDict(const ccccc::FuncStat&,
-              const std::string& namespacesName,
-              const std::string& classesName,
-              mstch::map*);
+mstch::map
+makeDict(const ccccc::FuncStat&, const std::string& namespacesName, const std::string& classesName);
+
 void feedDict(const ccccc::ClassStat&,
               const std::string& namespacesName,
               std::string classesName,
-              mstch::map*);
-void feedDict(const ccccc::NamespaceStat&, std::string namespacesName, mstch::map*);
-void feedDict(const ccccc::FileStat&, const std::filesystem::path& root, mstch::map*);
+              mstch::array*);
+void feedDict(const ccccc::NamespaceStat&, std::string namespacesName, mstch::array*);
+mstch::map makeDict(const ccccc::FileStat&, const std::filesystem::path& root);
 
 #endif // FEEDDICT_H
