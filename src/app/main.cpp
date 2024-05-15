@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	dict["cccccPath"] = cccccPath.string();
 	dict["cccccRoot"] = cccccRoot.string();
 	dict["Date"] = getLocalTime();
-	const std::filesystem::path root = std::filesystem::current_path();
+	const std::filesystem::path root = params.GetSourceRoot();
 	mstch::array forEachFiles;
 	for (std::size_t i = 0; i != allStat.getFileCount(); ++i) {
 		const ccccc::FileStat& filestat = allStat.getFileStat(i);

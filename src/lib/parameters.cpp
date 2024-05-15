@@ -22,6 +22,7 @@
 
 #include <llvm/Support/CommandLine.h>
 
+#include <filesystem>
 #include <iostream>
 
 namespace ccccc
@@ -62,6 +63,15 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 		"t", llvm::cl::desc("Alias for -template-file"), llvm::cl::aliasopt(templateFile)};
 	llvm::cl::opt<std::string> pch{
 		"pch", llvm::cl::desc("Compiled header path"), llvm::cl::value_desc("pch-file")};
+	llvm::cl::opt<std::string> sourceRoot{
+		"source-root",
+		llvm::cl::desc("source root directory (filename display would be relative to that path) "
+	                   "(default is current working directory)"),
+		llvm::cl::value_desc("source-root"),
+		llvm::cl::init(std::filesystem::current_path().string())};
+	llvm::cl::alias sourceRootAlias{
+		"R", llvm::cl::desc("Alias for -source-root"), llvm::cl::aliasopt(sourceRoot)};
+
 	llvm::cl::list<std::string> inputFilenames{
 		llvm::cl::Positional, llvm::cl::desc("<input files>"), llvm::cl::OneOrMore};
 	llvm::cl::SetVersionPrinter(ShowVersion);
@@ -83,6 +93,7 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	if (!pch.empty()) {
 		SetPch(pch);
 	}
+	SetSourceRoot(std::string(sourceRoot));
 	SetTemplateFilename(std::string(templateFile));
 }
 

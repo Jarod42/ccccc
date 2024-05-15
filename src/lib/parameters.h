@@ -32,16 +32,15 @@ public:
 
 	void Parse(const std::filesystem::path& cccccRoot, int argc, char** argv);
 
+	void SetSourceRoot(const std::filesystem::path& dir) { m_sourceRoot = dir; }
 	void AddFile(const std::filesystem::path& filename) { m_files.push_back(filename); }
 	void AddInclude(const std::string& includePath) { m_includePaths.push_back(includePath); }
 	void AddDefine(const std::string& define) { m_defines.push_back(define); }
 	void SetPch(const std::string& pchFile) { m_pch = pchFile; }
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
-	void SetTemplateFilename(const std::filesystem::path& templateFilename)
-	{
-		m_template = templateFilename;
-	}
+	void SetTemplateFilename(const std::filesystem::path& filename) { m_template = filename; }
 
+	const std::filesystem::path& GetSourceRoot() const { return m_sourceRoot; }
 	const std::vector<std::filesystem::path>& Filenames() const { return m_files; }
 	const std::vector<std::string>& IncludePaths() const { return m_includePaths; }
 	const std::vector<std::string>& Defines() const { return m_defines; }
@@ -50,6 +49,7 @@ public:
 	const std::filesystem::path& GetTemplateFilename() const { return m_template; }
 
 private:
+	std::filesystem::path m_sourceRoot;
 	std::vector<std::filesystem::path> m_files;
 	std::vector<std::string> m_includePaths;
 	std::vector<std::string> m_defines;
