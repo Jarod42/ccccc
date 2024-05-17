@@ -68,3 +68,28 @@ jobs:
           cd project/gmake2 && make config=release verbose=1
           cd ../../bin/gmake2/Release && ./ccccc_test
           LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+
+    # Create compile_commands.json
+    - name: checkout premake-export-compile-commands
+      uses: actions/checkout@v4
+      with:
+          repository: Jarod42/premake-export-compile-commands
+          path: premake/premake-export-compile-commands
+          ref: Improvements
+
+    - name: run ccccc on itself
+      run: |
+        echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
+        ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config export-compile-commands
+        cp project/export-compile-commands/release/compile_commands.json ./
+        cat compile_commands.json
+        find src -type f | LD_LIBRARY_PATH=/usr/local/lib xargs ./bin/gmake2/Release/ccccc > index.html
+
+    - name: Upload index.html
+      uses: actions/upload-artifact@v4
+      with:
+        name: ccccc.html
+        path: |
+          index.html
+          template/html/ccccc.js
+          template/html/ccccc.css

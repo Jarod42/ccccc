@@ -7,6 +7,11 @@ newoption {
 	description = "path of llvm root (contains lib include bin/llvm-config)"
 }
 
+newoption {
+	trigger = "expand-llvm-config",
+	description = "run llvm-config from premake directly"
+}
+
 -- tinfo is not part of msys
 newoption {
 	trigger = "without-tinfo",
@@ -17,7 +22,8 @@ if (_ACTION == nil) then
 	return
 end
 
-LLVMRoot = _OPTIONS["llvm-root"]
+local LLVMRoot = _OPTIONS["llvm-root"]
+local ExpandLLVMConfig = _OPTIONS["expand-llvm-config"]
 
 if (LLVMRoot == nil or LLVMRoot == "") then
 	-- assume llvm is installed in system
@@ -36,9 +42,12 @@ end
 
 function Llvm_config_cpp_flags()
 	if (LLVMIncludeDir ~= nil and LLVMIncludeDir ~= "") then externalincludedirs(LLVMIncludeDir) end
-	filter { "toolset:not msc*" }
+	if ExpandLLVMConfig then
+		local output, e = os.outputof(LLVMConfig .. " --cppflags") -- -I$(LLVMIncludeDir) -D_FILE_OFFSET_BITS=64 -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
+		buildoptions { output }
+	else
 		buildoptions { "$(shell %{LLVMConfig} --cppflags)" }
-	filter {}
+	end
 end
 
 function LinkToClang()
@@ -50,12 +59,12 @@ function LinkToClang()
 		links { "tinfo" }
 	end
 
-	filter { "toolset:msc*" }
-		links { "LLVM-18" } -- Hard-coded version
-
-	filter { "toolset:not msc*" }
-		linkoptions { "$(shell %{LLVMConfig} --system-libs --ldflags --libs support)" } -- -L$(LLVMLibDir) -lLLVM-18
-	filter {}
+	if ExpandLLVMConfig then
+		local output, e = os.outputof(LLVMConfig .. " --system-libs --ldflags --libs support") -- -L$(LLVMLibDir) -lLLVM-18
+		linkoptions { output }
+	else
+		linkoptions { "$(shell %{LLVMConfig} --system-libs --ldflags --libs support)" }
+	end
 
 	linkoptions { "-pthread" }
 end

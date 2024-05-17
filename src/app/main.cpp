@@ -76,13 +76,17 @@ int main(int argc, char* argv[])
 	ccccc::Parameters params;
 
 	params.Parse(cccccRoot, argc, argv);
-	ccccc::AllStat allStat;
 
+	const std::filesystem::path templateFilename = params.GetTemplateFilename();
+	if (!std::filesystem::exists(templateFilename)) {
+		std::cerr << "template file " << templateFilename << " not found.\n";
+		return -1;
+	}
+
+	ccccc::AllStat allStat;
 	allStat.Compute(params);
 
 	mstch::map dict;
-	const std::filesystem::path templateFilename = params.GetTemplateFilename();
-
 	dict["cccccPath"] = cccccPath.string();
 	dict["cccccRoot"] = cccccRoot.string();
 	dict["Date"] = getLocalTime();

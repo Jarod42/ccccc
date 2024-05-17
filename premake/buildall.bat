@@ -3,6 +3,7 @@
 
 "%premake_exe%" --file="%premake_entry%" codelite --without-tinfo --cc=gcc
 "%premake_exe%" --file="%premake_entry%" gmake2 --without-tinfo
+"%premake_exe%" --file="%premake_entry%" export-compile-commands --without-tinfo --expand-llvm-config
 @rem "%premake_exe%" --file="%premake_entry%" vs2022
 
 @pause

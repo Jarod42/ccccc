@@ -49,7 +49,7 @@ std::filesystem::path getExePath()
 	const auto len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
 	if (len != -1) {
 		buff[len] = '\0';
-		return buff;
+		return std::filesystem::path(buff).parent_path();
 	}
 	return {};
 }
