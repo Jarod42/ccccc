@@ -98,7 +98,9 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
 	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
 	stat->m_isOverriden = IsOverridenMethod(cursor);
-
+#if CINDEX_VERSION >= 64
+	stat->m_isExplicit = clang_CXXMethod_isExplicit(cursor);
+#endif
 	stat->m_callCount = CountCall(cursor);
 }
 

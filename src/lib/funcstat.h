@@ -24,20 +24,22 @@
 #include "halsteadmetric.h"
 #include "linecount.h"
 #include "maintainabilityindex.h"
-#include <string>
 
 #include <clang-c/Index.h>
+
+#include <string>
 
 namespace ccccc
 {
 namespace use_clang
 {
 class FuncStatTool;
-}
+} // namespace use_clang
 
 class FuncStat
 {
 	friend class use_clang::FuncStatTool;
+
 public:
 	FuncStat(const std::string& funcname, std::size_t line);
 
@@ -46,6 +48,7 @@ public:
 	bool isStatic() const { return m_isStatic; }
 	bool isVirtual() const { return m_isVirtual; }
 	bool isOverriden() const { return m_isOverriden; }
+	bool isExplicit() const { return m_isExplicit; }
 	const LineCount& getLineCount() const { return m_lineCount; }
 	std::size_t getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	std::size_t getLineDefinition() const { return m_line; }
@@ -54,12 +57,14 @@ public:
 	std::size_t getNestedBlockCount() const { return m_nestedBlockCount; }
 	std::size_t getCallCount() const { return m_callCount; }
 	std::size_t getCallerCount() const { return m_callerCount; }
+
 private:
 	std::string m_name;
 	bool m_isConst = false;
 	bool m_isStatic = false;
 	bool m_isVirtual = false;
 	bool m_isOverriden = false;
+	bool m_isExplicit = false;
 	LineCount m_lineCount;
 	std::size_t m_line;
 	std::size_t m_mcCabeCyclomaticNumber; // MVG

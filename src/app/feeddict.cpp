@@ -31,6 +31,9 @@ mstch::map makeDict(const ccccc::FuncStat& funcStat,
 	mstch::map sectionDict; // = *dict->AddSectionDictionary("ForEachFunctions");
 
 	sectionDict["funcName"] = funcStat.getName();
+	if (funcStat.isExplicit()) {
+		sectionDict["explicit"] = true;
+	}
 	if (funcStat.isOverriden()) {
 		sectionDict["override"] = true;
 	} else if (funcStat.isVirtual()) {

@@ -20,6 +20,7 @@
 
 #include "parameters.h"
 
+#include <clang-c/Index.h>
 #include <llvm/Support/CommandLine.h>
 
 #include <filesystem>
@@ -33,6 +34,7 @@ namespace
 void ShowVersion(llvm::raw_ostream& os)
 {
 	os << "CCCCC version 1.3\n";
+	os << "CINDEX version " << CINDEX_VERSION << "\n";
 }
 } // namespace
 

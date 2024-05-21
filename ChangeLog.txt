@@ -1,7 +1,7 @@
 CCCCC v1.2 (In progress):
 =======================================================================
 - [Feature] Add CallerCount/CallCount statistic
-- [Feature] Add knowledge about `virtual`/`override`/`static`/`const` about method
+- [Feature] Add knowledge about `explicit`/`virtual`/`override`/`static`/`const` about method
 - [Feature] Allow to select template
 - [Feature] Allow to select source root
 - [Fix] Fix blockCounter with took only last blockCounter value instead of the maximum
