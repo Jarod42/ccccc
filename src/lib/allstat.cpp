@@ -65,8 +65,7 @@ static std::vector<const char*> CStringView(const std::vector<std::string>& v)
 	return res;
 }
 
-AllStat::~AllStat()
-{}
+AllStat::~AllStat() = default;
 
 std::pair<std::filesystem::path, std::vector<std::string>>
 GetCompileArgumentsFromDatabase(CXCompilationDatabase compilationDatabase,
@@ -125,7 +124,8 @@ void AllStat::Compute(const Parameters& param)
 		} else {
 			std::filesystem::current_path(workingDirectory);
 			auto args = CStringView(argsFromDatabase);
-			tu = clang_parseTranslationUnit(index, nullptr, args.data(), static_cast<int>(args.size()), 0, 0, 0);
+			tu = clang_parseTranslationUnit(
+				index, nullptr, args.data(), static_cast<int>(args.size()), 0, 0, 0);
 			std::filesystem::current_path(currentWorkingDirectory);
 		}
 

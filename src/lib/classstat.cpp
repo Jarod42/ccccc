@@ -19,21 +19,21 @@
 */
 
 #include "classstat.h"
+
 #include "funcstat.h"
 
 namespace ccccc
 {
 
-ClassStat::ClassStat(const std::string& name, ClassStat* classParent, NamespaceStat* namespaceParent) :
+ClassStat::ClassStat(const std::string& name,
+                     ClassStat* classParent,
+                     NamespaceStat* namespaceParent) :
 	m_name(name),
 	m_namespaceParent(namespaceParent),
 	m_classParent(classParent)
-{
-}
+{}
 
-ClassStat::~ClassStat()
-{
-}
+ClassStat::~ClassStat() = default;
 
 const FuncStat* ClassStat::getMethodStatByName(const char* funcNameId) const
 {

@@ -28,8 +28,7 @@ FileStat::FileStat(const std::filesystem::path& filename) :
 	m_root("", nullptr)
 {}
 
-FileStat::~FileStat()
-{}
+FileStat::~FileStat() = default;
 
 FuncStat* FileStat::AddFuncStat(const std::vector<std::string>& namespaceNames,
                                 const std::vector<std::string>& classeNames,

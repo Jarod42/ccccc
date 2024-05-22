@@ -19,6 +19,7 @@
 */
 
 #include "namespacestat.h"
+
 #include "classstat.h"
 #include "funcstat.h"
 
@@ -28,12 +29,9 @@ namespace ccccc
 NamespaceStat::NamespaceStat(const std::string& name, NamespaceStat* parent) :
 	m_name(name),
 	m_parent(parent)
-{
-}
+{}
 
-NamespaceStat::~NamespaceStat()
-{
-}
+NamespaceStat::~NamespaceStat() = default;
 
 const FuncStat* NamespaceStat::getFuncStatByName(const char* funcNameId) const
 {
@@ -87,7 +85,9 @@ ClassStat& NamespaceStat::GetOrCreateClass(const std::string& className)
 	return *m_classes.insert(make_pair(className, std::move(classStat))).first->second;
 }
 
-FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames, const std::string& funcname, std::size_t line)
+FuncStat* NamespaceStat::AddFuncStat(const std::vector<std::string>& classeNames,
+                                     const std::string& funcname,
+                                     std::size_t line)
 {
 	if (classeNames.empty()) {
 		auto stat = std::make_unique<FuncStat>(funcname, line);
