@@ -52,7 +52,7 @@ public:
 class ClientData
 {
 public:
-	explicit ClientData(CXTranslationUnit tu, GlobalData& globalData, FileStat* stat) :
+	ClientData(CXTranslationUnit tu, GlobalData& globalData, FileStat* stat) :
 		m_stat(stat),
 		m_tu(tu),
 		m_globalData(globalData)
