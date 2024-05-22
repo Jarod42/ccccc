@@ -31,17 +31,17 @@ namespace ccccc::use_clang
 
 LineCounter::LineCounter(const CXCursor& cursor)
 {
-	unsigned cursorStartLine, cursorEndLine;
-	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
+	const auto [cursorStartLine, cursorEndLine] = getStartEndLine(clang_getCursorExtent(cursor));
 	lineOfCode_physic = cursorEndLine - cursorStartLine + 1;
 	lastLine[0] = lastLine[1] = cursorStartLine - 1;
 	lineOfCode[0] = lineOfCode[1] = lineOfCode[2] = 0;
 }
 
-void LineCounter::operator()(const CXTranslationUnit& tu, const CXCursor& /*cursor*/, const CXToken& token)
+void LineCounter::operator()(const CXTranslationUnit& tu,
+                             const CXCursor& /*cursor*/,
+                             const CXToken& token)
 {
-	unsigned startLine, endLine;
-	getStartEndLine(clang_getTokenExtent(tu, token), &startLine, &endLine);
+	const auto [startLine, endLine] = getStartEndLine(clang_getTokenExtent(tu, token));
 	std::size_t type = (clang_getTokenKind(token) == CXToken_Comment) ? 0 : 1;
 
 	if (startLine != lastLine[type]) {

@@ -46,22 +46,28 @@ std::size_t getStartLine(CXSourceRange range)
 	return startLine;
 }
 
-void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine)
+std::pair<unsigned, unsigned> getStartEndLine(CXSourceRange range)
 {
 	const CXSourceLocation start = clang_getRangeStart(range);
 	const CXSourceLocation end = clang_getRangeEnd(range);
 
-	clang_getExpansionLocation(start, nullptr, startLine, nullptr, nullptr);
-	clang_getExpansionLocation(end, nullptr, endLine, nullptr, nullptr);
+	unsigned startLine = 0;
+	clang_getExpansionLocation(start, nullptr, &startLine, nullptr, nullptr);
+	unsigned endLine = 0;
+	clang_getExpansionLocation(end, nullptr, &endLine, nullptr, nullptr);
+	return {startLine, endLine};
 }
 
-void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset)
+std::pair<unsigned, unsigned> getStartEndOffset(CXSourceRange range)
 {
 	const CXSourceLocation start = clang_getRangeStart(range);
 	const CXSourceLocation end = clang_getRangeEnd(range);
 
-	clang_getExpansionLocation(start, nullptr, nullptr, nullptr, startoffset);
-	clang_getExpansionLocation(end, nullptr, nullptr, nullptr, endOffset);
+	unsigned startoffset = 0;
+	clang_getExpansionLocation(start, nullptr, nullptr, nullptr, &startoffset);
+	unsigned endOffset = 0;
+	clang_getExpansionLocation(end, nullptr, nullptr, nullptr, &endOffset);
+	return {startoffset, endOffset};
 }
 
 bool isInFile(const std::filesystem::path& filename, CXCursor cursor)
@@ -87,8 +93,7 @@ bool isInFile(const std::filesystem::path& filename, CXCursor cursor)
 bool isValid(CXTranslationUnit tu)
 {
 	const CXCursor cursor = clang_getTranslationUnitCursor(tu);
-	unsigned cursorStartLine, cursorEndLine;
-	getStartEndLine(clang_getCursorExtent(cursor), &cursorStartLine, &cursorEndLine);
+	const auto [cursorStartLine, cursorEndLine] = getStartEndLine(clang_getCursorExtent(cursor));
 
 	return cursorStartLine != 0 && cursorStartLine <= cursorEndLine;
 }

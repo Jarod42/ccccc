@@ -25,6 +25,7 @@
 
 #include <filesystem>
 #include <string>
+#include <utility>
 
 namespace ccccc::use_clang
 {
@@ -32,8 +33,8 @@ namespace ccccc::use_clang
 std::string getStringAndDispose(CXString cxStr);
 CXCursor getCursor(const CXTranslationUnit& tu, const CXToken& token);
 std::size_t getStartLine(CXSourceRange range);
-void getStartEndLine(CXSourceRange range, unsigned* startLine, unsigned* endLine);
-void getStartEndOffset(CXSourceRange range, unsigned* startoffset, unsigned* endOffset);
+std::pair<unsigned, unsigned> getStartEndLine(CXSourceRange range);
+std::pair<unsigned, unsigned> getStartEndOffset(CXSourceRange range);
 
 bool isInFile(const std::filesystem::path& filename, CXCursor cursor);
 
