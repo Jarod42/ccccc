@@ -28,9 +28,32 @@ mstch::map makeDict(const ccccc::FuncStat& funcStat,
                     const std::string& namespacesName,
                     const std::string& classesName)
 {
-	mstch::map sectionDict; // = *dict->AddSectionDictionary("ForEachFunctions");
+	const auto& lineCount = funcStat.getLineCount();
+	const auto& halsteadMetric = funcStat.getHalsteadMetric();
+	const auto& maintainabilityIndex = funcStat.getMaintainabilityIndex();
+	mstch::map sectionDict{{"funcName", funcStat.getName()},
+	                       {"namespacesName", namespacesName},
+	                       {"classesName", classesName},
+	                       {"lineDefinition", static_cast<int>(funcStat.getLineDefinition())},
+	                       {"LOCphy", static_cast<int>(lineCount.getLineOfCode_physic())},
+	                       {"LOCpro", static_cast<int>(lineCount.getLineOfCode_program())},
+	                       {"LOCcom", static_cast<int>(lineCount.getLineOfCode_comment())},
+	                       {"LOCbl", static_cast<int>(lineCount.getLineOfCode_blank())},
+	                       {"MVG", static_cast<int>(funcStat.getMcCabeCyclomaticNumber())},
+	                       {"CallCount", static_cast<int>(funcStat.getCallCount())},
+	                       {"CallerCount", static_cast<int>(funcStat.getCallerCount())},
+	                       {"Halstead_n", static_cast<int>(halsteadMetric.getVocabularySize())},
+	                       {"Halstead_N", static_cast<int>(halsteadMetric.getProgramLength())},
+	                       {"Halstead_V", halsteadMetric.getVolume()},
+	                       {"Halstead_D", halsteadMetric.getDifficulty()},
+	                       {"Halstead_E", halsteadMetric.getEffort()},
+	                       {"Halstead_B", halsteadMetric.getDeliveredBugCount()},
+	                       {"Halstead_T", halsteadMetric.getTimeToImplement()},
+	                       {"MIwoc", maintainabilityIndex.getMaintainabilityIndexWithoutComments()},
+	                       {"MIcw", maintainabilityIndex.getMaintainabilityIndexCommentWeight()},
+	                       {"MI", maintainabilityIndex.getMaintainabilityIndex()},
+	                       {"NestedBlockCount", static_cast<int>(funcStat.getNestedBlockCount())}};
 
-	sectionDict["funcName"] = funcStat.getName();
 	if (funcStat.isExplicit()) {
 		sectionDict["explicit"] = true;
 	}
@@ -45,34 +68,6 @@ mstch::map makeDict(const ccccc::FuncStat& funcStat,
 	if (funcStat.isConst()) {
 		sectionDict["const"] = true;
 	}
-	sectionDict["lineDefinition"] = static_cast<int>(funcStat.getLineDefinition());
-	sectionDict["LOCphy"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_physic());
-	sectionDict["LOCpro"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_program());
-	sectionDict["LOCcom"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_comment());
-	sectionDict["LOCbl"] = static_cast<int>(funcStat.getLineCount().getLineOfCode_blank());
-	sectionDict["MVG"] = static_cast<int>(funcStat.getMcCabeCyclomaticNumber());
-
-	sectionDict["CallCount"] = static_cast<int>(funcStat.getCallCount());
-	sectionDict["CallerCount"] = static_cast<int>(funcStat.getCallerCount());
-
-	sectionDict["Halstead_n"] = static_cast<int>(funcStat.getHalsteadMetric().getVocabularySize());
-	sectionDict["Halstead_N"] = static_cast<int>(funcStat.getHalsteadMetric().getProgramLength());
-	sectionDict["Halstead_V"] = funcStat.getHalsteadMetric().getVolume();
-	sectionDict["Halstead_D"] = funcStat.getHalsteadMetric().getDifficulty();
-	sectionDict["Halstead_E"] = funcStat.getHalsteadMetric().getEffort();
-	sectionDict["Halstead_B"] = funcStat.getHalsteadMetric().getDeliveredBugCount();
-	sectionDict["Halstead_T"] = funcStat.getHalsteadMetric().getTimeToImplement();
-
-	sectionDict["MIwoc"] =
-		funcStat.getMaintainabilityIndex().getMaintainabilityIndexWithoutComments();
-	sectionDict["MIcw"] = funcStat.getMaintainabilityIndex().getMaintainabilityIndexCommentWeight();
-	sectionDict["MI"] = funcStat.getMaintainabilityIndex().getMaintainabilityIndex();
-
-	sectionDict["NestedBlockCount"] = static_cast<int>(funcStat.getNestedBlockCount());
-
-	sectionDict["namespacesName"] = namespacesName;
-	sectionDict["classesName"] = classesName;
-
 	return sectionDict;
 }
 
@@ -123,9 +118,6 @@ void feedDict(const ccccc::NamespaceStat& namespaceStat,
 
 mstch::map makeDict(const ccccc::FileStat& fileStat, const std::filesystem::path& root)
 {
-	mstch::map sectionDict;
-
-	sectionDict["filename"] = std::filesystem::relative(fileStat.getFilename(), root).string();
 	mstch::array forEachFunctions;
 	for (std::size_t i = 0; i != fileStat.getFunctionCount(); ++i) {
 		forEachFunctions.emplace_back(makeDict(fileStat.getFuncStat(i), "", ""));
@@ -136,6 +128,9 @@ mstch::map makeDict(const ccccc::FileStat& fileStat, const std::filesystem::path
 	for (const auto& p : fileStat.getClasses()) {
 		feedDict(*p.second, "", "", &forEachFunctions);
 	}
+	mstch::map sectionDict{
+		{"filename", std::filesystem::relative(fileStat.getFilename(), root).string()},
+	};
 	sectionDict["ForEachFunctions"] = std::move(forEachFunctions);
 	return sectionDict;
 }
