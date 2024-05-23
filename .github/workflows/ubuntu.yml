@@ -66,8 +66,10 @@ jobs:
     - name: make config=release
       run: |
           cd project/gmake2 && make config=release verbose=1
-          cd ../../bin/gmake2/Release && ./ccccc_test
-          LD_LIBRARY_PATH=/usr/local/lib ./ccccc --help
+          cd ../../bin/gmake2/Release
+          ./ccccc_test
+          ./ccccc --version
+          ./ccccc --help
 
     # Create compile_commands.json
     - name: checkout premake-export-compile-commands
@@ -82,8 +84,7 @@ jobs:
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
         ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config export-compile-commands
         cp project/export-compile-commands/release/compile_commands.json ./
-        cat compile_commands.json
-        find src -type f | LD_LIBRARY_PATH=/usr/local/lib xargs ./bin/gmake2/Release/ccccc > index.html
+        find src -type f | xargs ./bin/gmake2/Release/ccccc > index.html
 
     - name: Upload index.html
       uses: actions/upload-artifact@v4
