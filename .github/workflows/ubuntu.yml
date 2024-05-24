@@ -83,7 +83,7 @@ jobs:
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
         ./premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config --no-3rd export-compile-commands
-        ./bin/gmake2/Release/ccccc project/export-compile-commands/release/compile_commands.json > index.html
+        ./bin/gmake2/Release/ccccc --template-file=template/ccccc_html/template.tpl project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html
       uses: actions/upload-artifact@v4
