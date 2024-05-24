@@ -31,10 +31,12 @@ function setClassToSpecificColumnBadForHighValue(classid, low, high) {
 function setClassToColumn() {
 	setClassToSpecificColumnBadForHighValue('MVG', 10, 30);
 	setClassToSpecificColumnBadForHighValue('LOCpro', 25, 50);
+	setClassToSpecificColumnBadForHighValue('NestedBlockCount', 4, 5);
 	setClassToSpecificColumnBadForHighValue('Halstead_V', 1000, 1200);
 	setClassToSpecificColumnBadForLowValue('Halstead_V', 10, 15);
 	setClassToSpecificColumnBadForHighValue('Halstead_B', 1, 2);
 	setClassToSpecificColumnBadForLowValue('MI', 65, 85);
+	setClassToSpecificColumnBadForLowValue('CallerCount', -1, 0);
 }
 
 function onDocLoaded() {
