@@ -16,13 +16,12 @@ Those metrics can help to identify complex code which might need refactoring.
 Basic Usage
 ----
 
-ccccc srcFiles > output.html
+`ccccc myProject/compile_commands.json > output.html`
+`ccccc -I IncludeDir srcFiles > output.html`
 
-It will create a report in output.html with each function and associated counters.
+It will create a report in output.html with each function and associated statistics.
 
-It currently may output in stderr some errors about header file not found.
-You may ignore them (some prototype may be wrong in the report for unknown type)
-or fix include path with -I option (like with clang/gcc).
+It outputs in stderr some extra information about progress or parsing issues (most of them might be ignored, unknown types (due to missing include path) would be replaced by `int`)
 
 Command arguments
 ----
@@ -30,18 +29,12 @@ Command arguments
 `ccccc [-D define] [-I include-path] [-pch pch-file] [-e extra_options] [-t template-file] files...`
 
 
-`-D`, `--define=name`          Predefine name as a macro, with definition.
-
-`-I`, `--include-dir=dir`      Add the directory dir to the list of directories to be searched for header files.
-
-`-pch`                         Compiled header path
-
-`-e`, `--extra-option=option`  Extra option directly given to the clang parser (as `-e "-std=c++17"`).
-
-`-t`, `--template-file=file`   Template file to use for report. (default is template/html/template.tpl)
-
-`files...`                     List of files to examine
-
+- `-D`, `--define=name`          Predefine name as a macro, with definition.
+- `-I`, `--include-dir=dir`      Add the directory dir to the list of directories to be searched for header files.
+- `-pch`                         Compiled header path
+- `-e`, `--extra-option=option`  Extra option directly given to the clang parser (as `-e "-std=c++17"`).
+- `-t`, `--template-file=file`   Template file to use for report. (default is template/html/template.tpl)
+- `files...`                     List of source files to examine or directly compile_commands.json (all files in that file would be examined)
 
 CCCCC supports response file, i.e. `@my_response_file` in command line. Content of the response file is the command line arguments optionally split by line.
 
