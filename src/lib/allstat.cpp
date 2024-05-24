@@ -71,6 +71,9 @@ std::pair<std::filesystem::path, std::vector<std::string>>
 GetCompileArgumentsFromDatabase(CXCompilationDatabase compilationDatabase,
                                 const std::filesystem::path& filename)
 {
+	if (compilationDatabase == nullptr) {
+		return {};
+	}
 	CXCompileCommands compileCommands = clang_CompilationDatabase_getCompileCommands(
 		compilationDatabase, filename.string().c_str());
 	const std::size_t compileCommandsCount = clang_CompileCommands_getSize(compileCommands);
@@ -101,8 +104,10 @@ void AllStat::Compute(const Parameters& param)
 	CXIndex index = clang_createIndex(excludeDeclsFromPCH, displayDiagnostics);
 
 	CXCompilationDatabase_Error compilationDatabaseError;
-	CXCompilationDatabase compilationDatabase =
-		clang_CompilationDatabase_fromDirectory(".", &compilationDatabaseError);
+	auto databaseRoot = param.GetDatabaseRoot().empty() ? "." : param.GetDatabaseRoot();
+	std::cerr << "Using database from " << databaseRoot << std::endl;
+	CXCompilationDatabase compilationDatabase = clang_CompilationDatabase_fromDirectory(
+		databaseRoot.string().c_str(), &compilationDatabaseError);
 	const std::vector<const char*> argsFromCommandLine = GetClangParamFromParam(param);
 	GlobalData globalData;
 	const std::filesystem::path currentWorkingDirectory = std::filesystem::current_path();

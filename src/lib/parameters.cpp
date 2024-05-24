@@ -20,6 +20,9 @@
 
 #include "parameters.h"
 
+#include "use_clang/utils.h"
+
+#include <clang-c/CXCompilationDatabase.h>
 #include <clang-c/Index.h>
 #include <llvm/Support/CommandLine.h>
 
@@ -36,6 +39,31 @@ void ShowVersion(llvm::raw_ostream& os)
 	os << "CCCCC version 1.3\n";
 	os << "CINDEX version " << CINDEX_VERSION << "\n";
 }
+
+void AddFilesFromDatabase(Parameters& parameters, std::filesystem::path compile_commands_json)
+{
+	CXCompilationDatabase_Error errorCode;
+	CXCompilationDatabase db = clang_CompilationDatabase_fromDirectory(
+		compile_commands_json.parent_path().string().c_str(), &errorCode);
+
+	if (errorCode != CXCompilationDatabase_NoError) {
+		std::cerr << "Cannot open " << compile_commands_json << std::endl;
+		clang_CompilationDatabase_dispose(db);
+		return;
+	}
+
+	CXCompileCommands commands = clang_CompilationDatabase_getAllCompileCommands(db);
+	const unsigned size = clang_CompileCommands_getSize(commands);
+	for (unsigned int i = 0; i != size; ++i) {
+		const CXCompileCommand command = clang_CompileCommands_getCommand(commands, i);
+		parameters.AddFile(
+			use_clang::getStringAndDispose(clang_CompileCommand_getFilename(command)));
+	}
+
+	clang_CompileCommands_dispose(commands);
+	clang_CompilationDatabase_dispose(db);
+}
+
 } // namespace
 
 void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** argv)
@@ -80,8 +108,15 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	llvm::cl::ParseCommandLineOptions(
 		argc, argv, "Compute metrics from input files and output the report");
 
-	for (const auto& f : inputFilenames) {
-		AddFile(f);
+	for (const std::filesystem::path f : inputFilenames) {
+		if (f.filename() == "compile_commands.json") {
+			if (GetDatabaseRoot().empty()) {
+				SetDatabaseRoot(f.parent_path());
+			}
+			AddFilesFromDatabase(*this, f);
+		} else {
+			AddFile(f);
+		}
 	}
 	for (const auto& d : defines) {
 		AddDefine(d);

@@ -39,6 +39,7 @@ public:
 	void SetPch(const std::string& pchFile) { m_pch = pchFile; }
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
 	void SetTemplateFilename(const std::filesystem::path& filename) { m_template = filename; }
+	void SetDatabaseRoot(const std::filesystem::path& directory) { m_databaseRoot = directory; }
 
 	const std::filesystem::path& GetSourceRoot() const { return m_sourceRoot; }
 	const std::vector<std::filesystem::path>& Filenames() const { return m_files; }
@@ -47,6 +48,7 @@ public:
 	const std::vector<std::string>& Extras() const { return m_extras; }
 	const std::string& GetPch() const { return m_pch; }
 	const std::filesystem::path& GetTemplateFilename() const { return m_template; }
+	const std::filesystem::path& GetDatabaseRoot() const { return m_databaseRoot; }
 
 private:
 	std::filesystem::path m_sourceRoot;
@@ -56,6 +58,7 @@ private:
 	std::string m_pch;
 	std::vector<std::string> m_extras;
 	std::filesystem::path m_template;
+	std::filesystem::path m_databaseRoot;
 };
 
 } // namespace ccccc

@@ -4,12 +4,13 @@ CCCCC v1.2 (In progress):
 - [Feature] Add knowledge about `explicit`/`virtual`/`override`/`static`/`const` about method
 - [Feature] Allow to select template
 - [Feature] Allow to select source root
+- [Feature] Allow to pass directly compile_commands.json instead of list of files
 - [Fix] Fix blockCounter with took only last blockCounter value instead of the maximum
 - [Fix] Fix blockcounter with if-if
 - [Build] Update code to C++20
-- [Build] Remove gengetopt dependency, and use CommandLine from llvm.
+- [Build] Remove gengetopt dependency, and use CommandLine from llvm
 - [Build] Change ctemplate to (custom) mstch
-- [Build] Change UT framework from unittest++ to doctest.
+- [Build] Change UT framework from unittest++ to doctest
 - [Build] Update premake4 to premake5
 - [Build] Change from astyle to clang-format
 
