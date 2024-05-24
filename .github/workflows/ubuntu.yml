@@ -7,7 +7,7 @@ on:
       - 'src/**'
       - 'test/**'
       - '.github/workflows/ubuntu.yml'
-      - premake/**
+      - premake5.lua
 jobs:
   build:
 
@@ -61,7 +61,7 @@ jobs:
         rm -Rf premake-build
 
     - name: premake gmake2
-      run: ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
+      run: ./premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
 
     - name: make config=release
       run: |
@@ -76,13 +76,13 @@ jobs:
       uses: actions/checkout@v4
       with:
           repository: Jarod42/premake-export-compile-commands
-          path: premake/premake-export-compile-commands
+          path: premake-export-compile-commands
           ref: Improvements
 
     - name: run ccccc on itself
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
-        ./premake5 --file="premake/premake5.lua" --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config --no-3rd export-compile-commands
+        ./premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config --no-3rd export-compile-commands
         ./bin/gmake2/Release/ccccc project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html

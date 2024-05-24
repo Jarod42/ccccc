@@ -1,5 +1,5 @@
-Root = path.getabsolute("..")
-ThirdRoot = path.getabsolute("../3rd")
+Root = path.getabsolute(".")
+ThirdRoot = path.getabsolute("3rd")
 
 newoption {
 	trigger = "llvm-root",
