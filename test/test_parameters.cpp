@@ -22,12 +22,6 @@
 
 #include <doctest.h>
 
-template <typename T, std::size_t N>
-static constexpr std::size_t ArraySize(const T (&)[N])
-{
-	return N;
-}
-
 TEST_CASE("PARAMETERS_ADD_FILE")
 {
 	const std::vector<std::filesystem::path> files{"a.c", "a.h", "b.c", "b.h"};
@@ -81,9 +75,6 @@ TEST_CASE("PARAMETERS_ADD_PCH")
 	CHECK(pchFile == param.GetPch());
 }
 
-#if 0 // param.Parse is not reentrant :/
-// because of llvm::cl::ParseCommandLineOptions
-
 TEST_CASE("PARAMETERS_PARSING_SHORT_OPTIONS")
 {
 	const std::string cccccRoot = ".";
@@ -119,7 +110,7 @@ TEST_CASE("PARAMETERS_PARSING_SHORT_OPTIONS")
 	                      stringFiles[1].c_str()};
 	ccccc::Parameters param;
 
-	param.Parse(cccccRoot, ArraySize(argv), const_cast<char**>(argv));
+	param.Parse(cccccRoot, std::size(argv), const_cast<char**>(argv));
 
 	CHECK(files == param.Filenames());
 	CHECK(includes == param.IncludePaths());
@@ -128,11 +119,6 @@ TEST_CASE("PARAMETERS_PARSING_SHORT_OPTIONS")
 	CHECK(pchFile == param.GetPch());
 	CHECK(templateFile == param.GetTemplateFilename());
 }
-
-#endif
-
-#if 0 // param.Parse is not reentrant :/
-// because of llvm::cl::ParseCommandLineOptions
 
 TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 {
@@ -169,7 +155,7 @@ TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 	                      stringFiles[1].c_str()};
 	ccccc::Parameters param;
 
-	param.Parse(cccccRoot, ArraySize(argv), const_cast<char**>(argv));
+	param.Parse(cccccRoot, std::size(argv), const_cast<char**>(argv));
 
 	CHECK(files == param.Filenames());
 	CHECK(includes == param.IncludePaths());
@@ -178,4 +164,3 @@ TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 	CHECK(pchFile == param.GetPch());
 	CHECK(templateFile == param.GetTemplateFilename());
 }
-#endif

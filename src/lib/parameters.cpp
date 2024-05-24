@@ -68,19 +68,26 @@ void AddFilesFromDatabase(Parameters& parameters, std::filesystem::path compile_
 
 void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** argv)
 {
-	llvm::cl::list<std::string> defines{
-		"define", llvm::cl::desc("Specify define"), llvm::cl::value_desc("define")};
+	llvm::cl::OptionCategory cccccCategory{"ccccc Options"};
+
+	llvm::cl::list<std::string> defines{"define",
+	                                    llvm::cl::desc("Specify define"),
+	                                    llvm::cl::value_desc("define"),
+	                                    llvm::cl::cat(cccccCategory)};
 	llvm::cl::alias defineAlias{
 		"D", llvm::cl::desc("Alias for -define"), llvm::cl::aliasopt(defines)};
 
 	llvm::cl::list<std::string> extraOptions{
 		"extra-option",
 		llvm::cl::desc("Extra option directly given to the clang parser"),
-		llvm::cl::value_desc("extra-option")};
+		llvm::cl::value_desc("extra-option"),
+		llvm::cl::cat(cccccCategory)};
 	llvm::cl::alias extraAlias{
 		"e", llvm::cl::desc("Alias for -extra-option"), llvm::cl::aliasopt(extraOptions)};
-	llvm::cl::list<std::string> includes{
-		"include-dir", llvm::cl::desc("Specify include path"), llvm::cl::value_desc("path")};
+	llvm::cl::list<std::string> includes{"include-dir",
+	                                     llvm::cl::desc("Specify include path"),
+	                                     llvm::cl::value_desc("path"),
+	                                     llvm::cl::cat(cccccCategory)};
 	llvm::cl::alias includeAlias{
 		"I", llvm::cl::desc("Alias for -include-dir"), llvm::cl::aliasopt(includes)};
 	llvm::cl::opt<std::string> templateFile{
@@ -88,23 +95,29 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 		llvm::cl::desc(
 			"template file to use for the report (default is template/html/template.tpl)"),
 		llvm::cl::value_desc("template-file"),
+		llvm::cl::cat(cccccCategory),
 		llvm::cl::init((cccccRoot / "template/html/template.tpl").string())};
-	llvm::cl::alias includeTemplate{
+	llvm::cl::alias templateFileAlias{
 		"t", llvm::cl::desc("Alias for -template-file"), llvm::cl::aliasopt(templateFile)};
-	llvm::cl::opt<std::string> pch{
-		"pch", llvm::cl::desc("Compiled header path"), llvm::cl::value_desc("pch-file")};
+	llvm::cl::opt<std::string> pch{"pch",
+	                               llvm::cl::desc("Compiled header path"),
+	                               llvm::cl::value_desc("pch-file"),
+	                               llvm::cl::cat(cccccCategory)};
 	llvm::cl::opt<std::string> sourceRoot{
 		"source-root",
 		llvm::cl::desc("source root directory (filename display would be relative to that path) "
 	                   "(default is current working directory)"),
 		llvm::cl::value_desc("source-root"),
+		llvm::cl::cat(cccccCategory),
 		llvm::cl::init(std::filesystem::current_path().string())};
 	llvm::cl::alias sourceRootAlias{
 		"R", llvm::cl::desc("Alias for -source-root"), llvm::cl::aliasopt(sourceRoot)};
-
 	llvm::cl::list<std::string> inputFilenames{
 		llvm::cl::Positional, llvm::cl::desc("<input files>"), llvm::cl::OneOrMore};
-	llvm::cl::SetVersionPrinter(ShowVersion);
+
+	HideUnrelatedOptions(cccccCategory);
+
+	llvm::cl::AddExtraVersionPrinter(ShowVersion);
 	llvm::cl::ParseCommandLineOptions(
 		argc, argv, "Compute metrics from input files and output the report");
 
@@ -132,6 +145,19 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	}
 	SetSourceRoot(std::string(sourceRoot));
 	SetTemplateFilename(std::string(templateFile));
+
+	defines.removeArgument();
+	includes.removeArgument();
+	inputFilenames.removeArgument();
+	extraOptions.removeArgument();
+	pch.removeArgument();
+	sourceRoot.removeArgument();
+	templateFile.removeArgument();
+	defineAlias.removeArgument();
+	includeAlias.removeArgument();
+	extraAlias.removeArgument();
+	sourceRootAlias.removeArgument();
+	templateFileAlias.removeArgument();
 }
 
 } // namespace ccccc
