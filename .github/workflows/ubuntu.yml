@@ -15,6 +15,8 @@ jobs:
 
     steps:
 
+    - uses: Jarod42/install-premake5@v1
+
     - name: gcc version
       run: |
           g++ --version
@@ -46,22 +48,8 @@ jobs:
 #          cmake .. && make
 #          sudo make install
 
-    - name: checkout premake5
-      uses: actions/checkout@v4
-      with:
-          repository: premake/premake-core
-          path: premake-build
-
-    - name: Build premake5
-      run: |
-        cd premake-build
-        make -f Bootstrap.mak linux CONFIG=release
-        cp bin/release/premake5 ../
-        cd ..
-        rm -Rf premake-build
-
     - name: premake gmake2
-      run: ./premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
+      run: premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
 
     - name: make config=release
       run: |
@@ -82,7 +70,7 @@ jobs:
     - name: run ccccc on itself
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
-        ./premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config --no-3rd export-compile-commands
+        premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config --no-3rd export-compile-commands
         ./bin/gmake2/Release/ccccc --template-file=template/ccccc_html/template.tpl project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html

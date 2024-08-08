@@ -24,27 +24,15 @@ jobs:
           mingw-w64-x86_64-clang 
           mingw-w64-x86_64-llvm
 
+    - uses: Jarod42/install-premake5@v1
+
     - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: checkout premake5
-      uses: actions/checkout@v4
-      with:
-          repository: premake/premake-core
-          path: premake-build
-
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
-
-    - name: Build premake5
-      run: |
-        $vcvarall_path = vswhere -find VC\Auxiliary\Build\vcvarsall.bat
-        cmd.exe /c "call ""$vcvarall_path"" x86_amd64 && cd premake-build && nmake -f Bootstrap.mak MSDEV=vs2022 windows-msbuild PLATFORM=Win32 CONFIG=release && cp bin/release/premake5.exe ../"
-
     - name: premake gmake2
       run: |
-          ./premake5.exe gmake2 --without-tinfo #--llvm-root=
+          premake5.exe gmake2 --without-tinfo #--llvm-root=
 
     - name: make config=release
       shell: msys2 {0}
