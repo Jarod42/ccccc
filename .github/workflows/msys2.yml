@@ -44,25 +44,25 @@ jobs:
           ./ccccc --version
           ./ccccc --help
 
+    - name: prepare for upload # upload-artifact requires a common root path
+      shell: msys2 {0}
+      run: |
+        mkdir ccccc
+        cp bin/gmake2/Release/ccccc.exe ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libffi-*.dll       ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libgcc_s_seh-*.dll ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libiconv-*.dll     ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libLLVM-*.dll      ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/liblzma-*.dll      ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libstdc++-*.dll    ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libwin*thread-*.dll ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libxml2-*.dll      ccccc/
+        cp /D/a/_temp/msys64/mingw64/bin/libzstd.dll        ccccc/ 
+        cp /D/a/_temp/msys64/mingw64/bin/zlib1.dll          ccccc/ 
+
     - name: Upload ccccc
       uses: actions/upload-artifact@v4
       with:
         name: ccccc
         path: |
-            bin/gmake2/Release/*.*
-
-    - name: Upload dll
-      uses: actions/upload-artifact@v4
-      with:
-        name: ccccc_dll
-        path: |
-            D:/a/_temp/msys64/mingw64/bin/libffi-*.dll        # libffi-8.dll
-            D:/a/_temp/msys64/mingw64/bin/libgcc_s_seh-*.dll  # libgcc_s_seh-1.dll
-            D:/a/_temp/msys64/mingw64/bin/libiconv-*.dll      # libiconv-2.dll
-            D:/a/_temp/msys64/mingw64/bin/libLLVM-*.dll       # libLLVM-18.dll
-            D:/a/_temp/msys64/mingw64/bin/liblzma-*.dll       # liblzma-5.dll
-            D:/a/_temp/msys64/mingw64/bin/libstdc++-*.dll     # libstdc++-6.dll
-            D:/a/_temp/msys64/mingw64/bin/libwinthread-*.dll  # libwinthread-1.dll
-            D:/a/_temp/msys64/mingw64/bin/libxml2-*.dll       # libxml2-2.dll
-            D:/a/_temp/msys64/mingw64/bin/libzstd.dll
-            D:/a/_temp/msys64/mingw64/bin/zlib1.dll
+            ccccc/*.*
