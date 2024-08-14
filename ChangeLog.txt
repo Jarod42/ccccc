@@ -1,4 +1,4 @@
-CCCCC v1.2 (In progress):
+CCCCC v2.0 (August, 2024):
 =======================================================================
 - [Feature] Add CallerCount/CallCount statistic
 - [Feature] Add knowledge about `explicit`/`virtual`/`override`/`static`/`const` about method
