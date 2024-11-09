@@ -12,11 +12,6 @@ newoption {
 	description = "run llvm-config from premake directly"
 }
 
-newoption {
-	trigger = "no-3rd",
-	description = "don't create 3rd party project"
-}
-
 -- tinfo is not part of msys
 newoption {
 	trigger = "without-tinfo",
@@ -29,7 +24,6 @@ end
 
 local LLVMRoot = _OPTIONS["llvm-root"]
 local ExpandLLVMConfig = _OPTIONS["expand-llvm-config"]
-local No3rd = _OPTIONS["no-3rd"]
 
 if (LLVMRoot == nil or LLVMRoot == "") then
 	-- assume llvm is installed in system
@@ -98,7 +92,7 @@ solution "ccccc"
 
 	filter {}
 	startproject "ccccc_app"
-if not No3rd then
+
 -- --------------------------------------
 	group "3rd"
 -- --------------------------------------
@@ -110,7 +104,7 @@ if not No3rd then
 
 		files { "%{ThirdRoot}/mstch/src/**.*", "%{ThirdRoot}/mstch/include/**.*" }
 		includedirs { "%{ThirdRoot}/mstch/src", "%{ThirdRoot}/mstch/include" }
-end
+
 -- --------------------------------------
 	group "ccccc"
 -- --------------------------------------

@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2022 Joris Dauphin
+** Copyright 2012-2024 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -28,12 +28,28 @@
 
 #include <filesystem>
 #include <iostream>
+#include <string>
 
 namespace ccccc
 {
 
 namespace
 {
+bool is_subpath(const std::filesystem::path& path, const std::filesystem::path& base)
+{
+	const auto rel = std::filesystem::relative(path, base);
+	return !rel.empty() && rel.native()[0] != '.';
+}
+
+bool withinDirectories(const std::filesystem::path& filename,
+                       const std::vector<std::filesystem::path>& directories)
+{
+	return std::any_of(
+		directories.begin(), directories.end(), [&](const std::filesystem::path& directory) {
+			return is_subpath(filename, directory);
+		});
+}
+
 void ShowVersion(llvm::raw_ostream& os)
 {
 	os << "CCCCC version 1.3\n";
@@ -52,12 +68,21 @@ void AddFilesFromDatabase(Parameters& parameters, std::filesystem::path compile_
 		return;
 	}
 
+	for (const auto& directory : parameters.GetExcludeDirectories()) {
+		std::cerr << "Exclude directory: " << std::filesystem::absolute(directory) << std::endl;
+	}
+
 	CXCompileCommands commands = clang_CompilationDatabase_getAllCompileCommands(db);
 	const unsigned size = clang_CompileCommands_getSize(commands);
 	for (unsigned int i = 0; i != size; ++i) {
 		const CXCompileCommand command = clang_CompileCommands_getCommand(commands, i);
-		parameters.AddFile(
-			use_clang::getStringAndDispose(clang_CompileCommand_getFilename(command)));
+		auto filename = use_clang::getStringAndDispose(clang_CompileCommand_getFilename(command));
+		if (!withinDirectories(filename, parameters.GetExcludeDirectories())) {
+			std::cerr << "Add " << filename << std::endl;
+			parameters.AddFile(filename);
+		} else {
+			std::cerr << "Exclude " << filename << std::endl;
+		}
 	}
 
 	clang_CompileCommands_dispose(commands);
@@ -112,6 +137,11 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 		llvm::cl::init(std::filesystem::current_path().string())};
 	llvm::cl::alias sourceRootAlias{
 		"R", llvm::cl::desc("Alias for -source-root"), llvm::cl::aliasopt(sourceRoot)};
+	llvm::cl::list<std::string> excludeDirectories{
+		"exclude-directory",
+		llvm::cl::desc("exclude input files from these directories"),
+		llvm::cl::value_desc("exclude-directory"),
+		llvm::cl::cat(cccccCategory)};
 	llvm::cl::list<std::string> inputFilenames{
 		llvm::cl::Positional, llvm::cl::desc("<input files>"), llvm::cl::OneOrMore};
 
@@ -120,6 +150,10 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	llvm::cl::AddExtraVersionPrinter(ShowVersion);
 	llvm::cl::ParseCommandLineOptions(
 		argc, argv, "Compute metrics from input files and output the report");
+
+	for (const auto& directory : excludeDirectories) {
+		AddExcludeDirectory(directory);
+	}
 
 	for (const std::filesystem::path f : inputFilenames) {
 		if (f.filename() == "compile_commands.json") {
@@ -149,6 +183,7 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	defines.removeArgument();
 	includes.removeArgument();
 	inputFilenames.removeArgument();
+	excludeDirectories.removeArgument();
 	extraOptions.removeArgument();
 	pch.removeArgument();
 	sourceRoot.removeArgument();

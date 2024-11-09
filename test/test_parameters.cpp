@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2022 Joris Dauphin
+** Copyright 2012-2024 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -75,6 +75,17 @@ TEST_CASE("PARAMETERS_ADD_PCH")
 	CHECK(pchFile == param.GetPch());
 }
 
+TEST_CASE("PARAMETERS_ADD_EXCLUDE_DIRECTORY")
+{
+	const std::vector<std::filesystem::path> directories{"3rd", "submodules"};
+	ccccc::Parameters param;
+
+	for (const auto& dir : directories) {
+		param.AddExcludeDirectory(dir);
+	}
+	CHECK(directories == param.GetExcludeDirectories());
+}
+
 TEST_CASE("PARAMETERS_PARSING_SHORT_OPTIONS")
 {
 	const std::string cccccRoot = ".";
@@ -129,11 +140,14 @@ TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 	const char* extraFlag = "-extra-option";
 	const char* pchFlag = "-pch";
 	const char* templateFlag = "-template-file";
+	const char* excludeDirFlag = "-exclude-directory";
 	const std::vector<std::filesystem::path> files{"a.c", "a.h"};
 	const std::vector<std::string> stringFiles{files[0].string(), files[1].string()};
 	const std::vector<std::string> includes{"includeDir1", "includeDir2"};
 	const std::vector<std::string> defines{"FOO", "BAR=42"};
 	const std::vector<std::string> extras{"-std=c++14"};
+	const std::vector<std::filesystem::path> dirs{"3rd", "exclude"};
+	const std::vector<std::string> stringDirs{dirs[0].string(), dirs[1].string()};
 	std::string pchFile = "pchFile";
 	std::string templateFile = "templateFile";
 	const char* argv[] = {argv0,
@@ -151,6 +165,10 @@ TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 	                      includes[1].c_str(),
 	                      templateFlag,
 	                      templateFile.c_str(),
+	                      excludeDirFlag,
+	                      stringDirs[0].c_str(),
+	                      excludeDirFlag,
+	                      stringDirs[1].c_str(),
 	                      stringFiles[0].c_str(),
 	                      stringFiles[1].c_str()};
 	ccccc::Parameters param;
@@ -162,5 +180,6 @@ TEST_CASE("PARAMETERS_PARSING_LONG_OPTIONS")
 	CHECK(defines == param.Defines());
 	CHECK(extras == param.Extras());
 	CHECK(pchFile == param.GetPch());
+	CHECK(dirs == param.GetExcludeDirectories());
 	CHECK(templateFile == param.GetTemplateFilename());
 }

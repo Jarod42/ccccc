@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2022 Joris Dauphin
+** Copyright 2012-2024 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -40,6 +40,10 @@ public:
 	void AddExtra(const std::string& extra) { m_extras.push_back(extra); }
 	void SetTemplateFilename(const std::filesystem::path& filename) { m_template = filename; }
 	void SetDatabaseRoot(const std::filesystem::path& directory) { m_databaseRoot = directory; }
+	void AddExcludeDirectory(const std::filesystem::path& directory)
+	{
+		m_excludeDirectories.push_back(directory);
+	}
 
 	const std::filesystem::path& GetSourceRoot() const { return m_sourceRoot; }
 	const std::vector<std::filesystem::path>& Filenames() const { return m_files; }
@@ -49,9 +53,11 @@ public:
 	const std::string& GetPch() const { return m_pch; }
 	const std::filesystem::path& GetTemplateFilename() const { return m_template; }
 	const std::filesystem::path& GetDatabaseRoot() const { return m_databaseRoot; }
+	const std::vector<std::filesystem::path>& GetExcludeDirectories() const { return m_excludeDirectories; }
 
 private:
 	std::filesystem::path m_sourceRoot;
+	std::vector<std::filesystem::path> m_excludeDirectories;
 	std::vector<std::filesystem::path> m_files;
 	std::vector<std::string> m_includePaths;
 	std::vector<std::string> m_defines;
