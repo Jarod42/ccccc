@@ -47,16 +47,7 @@ jobs:
       run: |
         mkdir ccccc
         cp bin/gmake2/Release/ccccc.exe ./
-        cp /D/a/_temp/msys64/mingw64/bin/libffi-*.dll        ./
-        cp /D/a/_temp/msys64/mingw64/bin/libgcc_s_seh-*.dll  ./
-        cp /D/a/_temp/msys64/mingw64/bin/libiconv-*.dll      ./
-        cp /D/a/_temp/msys64/mingw64/bin/libLLVM-*.dll       ./
-        cp /D/a/_temp/msys64/mingw64/bin/liblzma-*.dll       ./
-        cp /D/a/_temp/msys64/mingw64/bin/libstdc++-*.dll     ./
-        cp /D/a/_temp/msys64/mingw64/bin/libwin*thread-*.dll ./
-        cp /D/a/_temp/msys64/mingw64/bin/libxml2-*.dll       ./
-        cp /D/a/_temp/msys64/mingw64/bin/libzstd.dll         ./
-        cp /D/a/_temp/msys64/mingw64/bin/zlib1.dll           ./
+        python mingw_deploy.py ccccc.exe
 
     - name: Upload ccccc
       uses: actions/upload-artifact@v4
