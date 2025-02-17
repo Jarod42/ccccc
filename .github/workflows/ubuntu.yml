@@ -48,13 +48,13 @@ jobs:
 #          cmake .. && make
 #          sudo make install
 
-    - name: premake gmake2
-      run: premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake2
+    - name: premake gmake
+      run: premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
 
     - name: make config=release
       run: |
-          cd project/gmake2 && make config=release verbose=1
-          cd ../../bin/gmake2/Release
+          cd project/gmake && make config=release verbose=1
+          cd ../../bin/gmake/Release
           ./ccccc_test
           ./ccccc --version
           ./ccccc --help
@@ -71,7 +71,7 @@ jobs:
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
         premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config export-compile-commands
-        ./bin/gmake2/Release/ccccc --template-file=template/ccccc_html/template.tpl --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
+        ./bin/gmake/Release/ccccc --template-file=template/ccccc_html/template.tpl --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html
       uses: actions/upload-artifact@v4

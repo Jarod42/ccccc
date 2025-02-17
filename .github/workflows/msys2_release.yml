@@ -28,16 +28,16 @@ jobs:
       with:
         submodules: recursive
 
-    - name: premake gmake2
+    - name: premake gmake
       run: |
-          premake5.exe gmake2 --without-tinfo #--llvm-root=
+          premake5.exe gmake --without-tinfo #--llvm-root=
 
     - name: make config=release
       shell: msys2 {0}
       run: |
-          cd project/gmake2
+          cd project/gmake
           make config=release verbose=1
-          cd ../../bin/gmake2/Release
+          cd ../../bin/gmake/Release
           ./ccccc_test
           ./ccccc --version
           ./ccccc --help
@@ -46,7 +46,7 @@ jobs:
       shell: msys2 {0}
       run: |
         mkdir ccccc
-        cp bin/gmake2/Release/ccccc.exe ./
+        cp bin/gmake/Release/ccccc.exe ./
         python mingw_deploy.py ccccc.exe
 
     - name: Upload ccccc
