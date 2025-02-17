@@ -100,7 +100,7 @@ solution "ccccc"
 		kind "StaticLib"
 		targetdir "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}"
 		warnings "Extra"
-		flags { "FatalWarnings"}
+		fatalwarnings { "All" }
 
 		files { "%{ThirdRoot}/mstch/src/**.*", "%{ThirdRoot}/mstch/include/**.*" }
 		includedirs { "%{ThirdRoot}/mstch/src", "%{ThirdRoot}/mstch/include" }
@@ -113,7 +113,7 @@ solution "ccccc"
 		targetdir "%{Root}/bin/%{_ACTION}/%{cfg.buildcfg}"
 		targetname("ccccc")
 		warnings "Extra"
-		flags { "FatalWarnings"}
+		fatalwarnings { "All" }
 
 		files { "%{Root}/src/app/**.*" }
 		includedirs { "%{Root}/src/lib/" }
@@ -139,7 +139,7 @@ solution "ccccc"
 		targetdir "%{Root}/lib/%{_ACTION}/%{cfg.buildcfg}"
 		targetname("ccccc_lib")
 		warnings "Extra"
-		flags { "FatalWarnings"}
+		fatalwarnings { "All" }
 		files { "%{Root}/src/lib/**.*" }
 
 		Llvm_config_cpp_flags()
@@ -149,7 +149,7 @@ solution "ccccc"
 		kind "ConsoleApp"
 		targetdir "%{Root}/bin/%{_ACTION}/%{cfg.buildcfg}"
 		warnings "Extra"
-		flags { "FatalWarnings"}
+		fatalwarnings { "All" }
 
 		files { "%{Root}/test/**.*" }
 		includedirs { "%{Root}/src/lib/" }
@@ -171,7 +171,5 @@ solution "ccccc"
 -- --------------------------------------
 	project "sample"
 		kind "None"
-		warnings "Extra"
-		flags { "FatalWarnings" }
 
 		files { "%{Root}/samples/**.*" }
