@@ -15,7 +15,7 @@ jobs:
 
     steps:
 
-    - uses: Jarod42/install-premake5@v4
+    - uses: Jarod42/install-premake5@v5
 
     - name: gcc version
       run: |
