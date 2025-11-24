@@ -24,7 +24,7 @@ jobs:
 
     - uses: Jarod42/install-premake5@v6
 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
 

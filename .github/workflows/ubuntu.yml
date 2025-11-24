@@ -37,7 +37,7 @@ jobs:
       env:
           LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -61,7 +61,7 @@ jobs:
 
     # Create compile_commands.json
     - name: checkout premake-export-compile-commands
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
           repository: Jarod42/premake-export-compile-commands
           path: premake-export-compile-commands
