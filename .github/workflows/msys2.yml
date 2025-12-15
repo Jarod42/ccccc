@@ -52,14 +52,14 @@ jobs:
         python mingw_deploy.py ccccc/ccccc.exe
 
     - name: Upload ccccc
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ccccc
         path: |
             ccccc/*.exe
 
     - name: Upload ccccc dependencies
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ccccc_dll
         path: |
