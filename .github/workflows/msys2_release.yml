@@ -50,7 +50,7 @@ jobs:
         python mingw_deploy.py ccccc.exe
 
     - name: Upload ccccc
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ccccc
         path: |

@@ -74,7 +74,7 @@ jobs:
         ./bin/gmake/Release/ccccc --template-file=template/ccccc_html/template.tpl --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ccccc.html
         path: |
