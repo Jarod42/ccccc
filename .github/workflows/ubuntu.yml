@@ -10,7 +10,9 @@ on:
       - premake5.lua
 jobs:
   build:
-
+    strategy:
+      matrix:
+        version: [14, 19]
     runs-on: ubuntu-latest
 
     steps:
@@ -24,8 +26,8 @@ jobs:
     - name: aptget llvm
       id: LLVM
       run: |
-          sudo apt-get install clang-14 libclang-14-dev llvm-14-dev llvm-14-runtime llvm-14
-          echo "LLVM_ROOT=/usr/lib/llvm-14" >> $GITHUB_OUTPUT
+          sudo apt-get install clang-${{matrix.version}} libclang-${{matrix.version}}-dev llvm-${{matrix.version}}-dev llvm-${{matrix.version}}-runtime llvm-${{matrix.version}}
+          echo "LLVM_ROOT=/usr/lib/llvm-${{matrix.version}}" >> $GITHUB_OUTPUT
 
     - name: DEBUG llvm
       run: |
@@ -76,7 +78,7 @@ jobs:
     - name: Upload index.html
       uses: actions/upload-artifact@v6
       with:
-        name: ccccc.html
+        name: ccccc-llvm-${{matrix.version}}.html
         path: |
           index.html
           template/html/ccccc.js
