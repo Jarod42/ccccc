@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2022 Joris Dauphin
+** Copyright 2012-2026 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -88,6 +88,7 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	stat->m_lineCount.lineOfCode_comment = funcStatFeeder.m_lineCounter.getLineOfCode_comment();
 	stat->m_lineCount.lineOfCode_program = funcStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = funcStatFeeder.m_lineCounter.getLineOfCode_blank();
+	stat->m_parameterCount = clang_getNumArgTypes(clang_getCursorType(cursor));
 	stat->m_mcCabeCyclomaticNumber = funcStatFeeder.m_mvg.getValue();
 	funcStatFeeder.m_halsteadMetricTool.update(&stat->m_halsteadMetric);
 	stat->m_maintainabilityIndex.set(

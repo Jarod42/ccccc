@@ -1,8 +1,8 @@
 function setClassToSpecificColumnBadForLowValue(classid, low, high) {
 	var colNumber = -1;
 	$.each($('th.' + classid),function(idx,_val) {
-    var table = $(this).parent().parent();
-    colNumber = 1 + $(this).parent("tr").children().index($(this));
+		var table = $(this).parent().parent();
+		colNumber = 1 + $(this).parent("tr").children().index($(this));
 	});
 	$('table tr').each(function() {
 		var tr = $(this)
@@ -16,8 +16,8 @@ function setClassToSpecificColumnBadForLowValue(classid, low, high) {
 function setClassToSpecificColumnBadForHighValue(classid, low, high) {
 	var colNumber = -1;
 	$.each($('th.' + classid),function(idx,_val) {
-    var table = $(this).parent().parent();
-    colNumber = 1 + $(this).parent("tr").children().index($(this));
+		var table = $(this).parent().parent();
+		colNumber = 1 + $(this).parent("tr").children().index($(this));
 	});
 	$('table tr').each(function() {
 		var tr = $(this)
@@ -32,6 +32,7 @@ function setClassToColumn() {
 	setClassToSpecificColumnBadForHighValue('MVG', 10, 30);
 	setClassToSpecificColumnBadForHighValue('LOCpro', 25, 50);
 	setClassToSpecificColumnBadForHighValue('NestedBlockCount', 4, 5);
+	setClassToSpecificColumnBadForHighValue('ParameterCount', 4, 8);
 	setClassToSpecificColumnBadForHighValue('Halstead_V', 1000, 1200);
 	setClassToSpecificColumnBadForLowValue('Halstead_V', 10, 15);
 	setClassToSpecificColumnBadForHighValue('Halstead_B', 1, 2);

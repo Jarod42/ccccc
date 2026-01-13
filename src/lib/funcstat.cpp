@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2013 Joris Dauphin
+** Copyright 2012-2026 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -25,9 +25,7 @@ namespace ccccc
 
 FuncStat::FuncStat(const std::string& funcname, std::size_t line) :
 	m_name(funcname),
-	m_line(line),
-	m_mcCabeCyclomaticNumber(0),
-	m_nestedBlockCount(0)
+	m_line(line)
 {
 }
 

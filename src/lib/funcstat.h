@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2015 Joris Dauphin
+** Copyright 2012-2026 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -50,6 +50,7 @@ public:
 	bool isOverridden() const { return m_isOverridden; }
 	bool isExplicit() const { return m_isExplicit; }
 	const LineCount& getLineCount() const { return m_lineCount; }
+	std::size_t getParameterCount() const { return m_parameterCount; }
 	std::size_t getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
 	std::size_t getLineDefinition() const { return m_line; }
 	const HalsteadMetric& getHalsteadMetric() const { return m_halsteadMetric; }
@@ -66,11 +67,12 @@ private:
 	bool m_isOverridden = false;
 	bool m_isExplicit = false;
 	LineCount m_lineCount;
-	std::size_t m_line;
-	std::size_t m_mcCabeCyclomaticNumber; // MVG
+	std::size_t m_parameterCount = 0;
+	std::size_t m_line = 0;
+	std::size_t m_mcCabeCyclomaticNumber = 0; // MVG
 	HalsteadMetric m_halsteadMetric;
 	MaintainabilityIndex m_maintainabilityIndex;
-	std::size_t m_nestedBlockCount;
+	std::size_t m_nestedBlockCount = 0;
 	//  A Unified Symbol Resolution (USR) is a string
 	// that identifies a particular entity
 	std::string m_usr;

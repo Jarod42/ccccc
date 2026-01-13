@@ -1,5 +1,5 @@
 /*
-** Copyright 2012-2022 Joris Dauphin
+** Copyright 2012-2026 Joris Dauphin
 */
 /*
 **  This file is part of CCCCC.
@@ -35,6 +35,7 @@ mstch::map makeDict(const ccccc::FuncStat& funcStat,
 	                       {"namespacesName", namespacesName},
 	                       {"classesName", classesName},
 	                       {"lineDefinition", static_cast<int>(funcStat.getLineDefinition())},
+	                       {"parameterCount", static_cast<int>(funcStat.getParameterCount())},
 	                       {"LOCphy", static_cast<int>(lineCount.getLineOfCode_physic())},
 	                       {"LOCpro", static_cast<int>(lineCount.getLineOfCode_program())},
 	                       {"LOCcom", static_cast<int>(lineCount.getLineOfCode_comment())},
