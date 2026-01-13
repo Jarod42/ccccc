@@ -57,7 +57,7 @@ mstch::map makeDict(const ccccc::FuncStat& funcStat,
 	if (funcStat.isExplicit()) {
 		sectionDict["explicit"] = true;
 	}
-	if (funcStat.isOverriden()) {
+	if (funcStat.isOverridden()) {
 		sectionDict["override"] = true;
 	} else if (funcStat.isVirtual()) {
 		sectionDict["virtual"] = true;

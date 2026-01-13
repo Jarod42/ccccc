@@ -53,12 +53,12 @@ public:
 	LineCounter m_lineCounter;
 };
 
-bool IsOverridenMethod(const CXCursor& cursor)
+bool IsOverriddenMethod(const CXCursor& cursor)
 {
-	CXCursor* overriden = nullptr;
+	CXCursor* overridden = nullptr;
 	unsigned int count;
-	clang_getOverriddenCursors(cursor, &overriden, &count);
-	clang_disposeOverriddenCursors(overriden);
+	clang_getOverriddenCursors(cursor, &overridden, &count);
+	clang_disposeOverriddenCursors(overridden);
 	return count != 0;
 }
 
@@ -97,7 +97,7 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	stat->m_isConst = clang_CXXMethod_isConst(cursor);
 	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
 	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
-	stat->m_isOverriden = IsOverridenMethod(cursor);
+	stat->m_isOverridden = IsOverriddenMethod(cursor);
 #if CINDEX_VERSION >= 64
 	stat->m_isExplicit = clang_CXXMethod_isExplicit(cursor);
 #endif

@@ -47,7 +47,7 @@ public:
 	bool isConst() const { return m_isConst; }
 	bool isStatic() const { return m_isStatic; }
 	bool isVirtual() const { return m_isVirtual; }
-	bool isOverriden() const { return m_isOverriden; }
+	bool isOverridden() const { return m_isOverridden; }
 	bool isExplicit() const { return m_isExplicit; }
 	const LineCount& getLineCount() const { return m_lineCount; }
 	std::size_t getMcCabeCyclomaticNumber() const { return m_mcCabeCyclomaticNumber; }
@@ -63,7 +63,7 @@ private:
 	bool m_isConst = false;
 	bool m_isStatic = false;
 	bool m_isVirtual = false;
-	bool m_isOverriden = false;
+	bool m_isOverridden = false;
 	bool m_isExplicit = false;
 	LineCount m_lineCount;
 	std::size_t m_line;
