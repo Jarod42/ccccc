@@ -31,7 +31,7 @@ jobs:
     steps:
 
     # ccccc build
-    - uses: Jarod42/install-premake5@v6
+    - uses: Jarod42/install-premake5@v7
 
     - name: aptget llvm
       id: LLVM
