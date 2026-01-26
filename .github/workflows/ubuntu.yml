@@ -73,7 +73,7 @@ jobs:
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
         premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config export-compile-commands
-        ./bin/gmake/Release/ccccc --template-file=template/ccccc_html/template.tpl --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
+        ./bin/gmake/Release/ccccc --template-file=template/ccccc_html/template.tpl --source-root-url=https://github.com/Jarod42/ccccc/blob/master --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
 
     - name: Upload index.html
       uses: actions/upload-artifact@v6
@@ -81,5 +81,3 @@ jobs:
         name: ccccc-llvm-${{matrix.version}}.html
         path: |
           index.html
-          template/html/ccccc.js
-          template/html/ccccc.css

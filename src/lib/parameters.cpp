@@ -137,6 +137,12 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 		llvm::cl::init(std::filesystem::current_path().string())};
 	llvm::cl::alias sourceRootAlias{
 		"R", llvm::cl::desc("Alias for -source-root"), llvm::cl::aliasopt(sourceRoot)};
+	llvm::cl::opt<std::string> sourceRootUrl{
+		"source-root-url",
+		llvm::cl::desc("source root url (Would be passed verbatim as {{SourceRootUrl}}"),
+		llvm::cl::value_desc("source-root-url"),
+		llvm::cl::cat(cccccCategory),
+		llvm::cl::init(std::filesystem::current_path().string())};
 	llvm::cl::list<std::string> excludeDirectories{
 		"exclude-directory",
 		llvm::cl::desc("exclude input files from these directories"),
@@ -178,6 +184,7 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 		SetPch(pch);
 	}
 	SetSourceRoot(std::string(sourceRoot));
+	SetSourceRootUrl(sourceRootUrl);
 	SetTemplateFilename(std::string(templateFile));
 
 	defines.removeArgument();
@@ -187,6 +194,7 @@ void Parameters::Parse(const std::filesystem::path& cccccRoot, int argc, char** 
 	extraOptions.removeArgument();
 	pch.removeArgument();
 	sourceRoot.removeArgument();
+	sourceRootUrl.removeArgument();
 	templateFile.removeArgument();
 	defineAlias.removeArgument();
 	includeAlias.removeArgument();

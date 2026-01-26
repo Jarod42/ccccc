@@ -101,7 +101,7 @@ jobs:
     # ccccc runs
     - name: run ccccc on Codelite
       run: |
-        ccccc/bin/gmake/Release/ccccc --exclude-directory=codelite/build-release --exclude-directory=codelite/submodules --exclude-directory=codelite/sdk --template-file=ccccc/template/ccccc_html/template.tpl codelite/build-release/compile_commands.json > codelite-index.html
+        ccccc/bin/gmake/Release/ccccc --exclude-directory=codelite/build-release --exclude-directory=codelite/submodules --exclude-directory=codelite/sdk --template-file=ccccc/template/ccccc_html/template.tpl --source-root-url=https://github.com/eranif/codelite/blob/master  codelite/build-release/compile_commands.json > codelite-index.html
 
     - name: Upload index.html
       uses: actions/upload-artifact@v6
