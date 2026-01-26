@@ -1,0 +1,111 @@
+name: demo-codelite
+
+on:
+  workflow_call:
+    inputs:
+      codelite-option:
+        default: '-DWITH_MYSQL=1 -DWITH_POSTGRES=1'
+        type: string
+      llvm-version:
+        default: '19'
+        type: string
+      wx-version:
+        default: 'v3.2.8.1'
+        type: string
+  workflow_dispatch:
+    inputs:
+      codelite-option:
+        default: '-DWITH_MYSQL=1 -DWITH_POSTGRES=1'
+        type: string
+      llvm-version:
+        default: '19'
+        type: string
+      wx-version:
+        default: 'v3.2.8.1'
+        type: string
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # ccccc build
+    - uses: Jarod42/install-premake5@v6
+
+    - name: aptget llvm
+      id: LLVM
+      run: |
+          sudo apt-get install clang-${{ inputs.llvm-version }} libclang-${{ inputs.llvm-version }}-dev llvm-${{ inputs.llvm-version }}-dev llvm-${{ inputs.llvm-version }}-runtime llvm-${{ inputs.llvm-version }}
+          echo "LLVM_ROOT=/usr/lib/llvm-${{ inputs.llvm-version }}" >> $GITHUB_OUTPUT
+
+    - name: checkout ccccc
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+        repository: Jarod42/ccccc
+        path: ccccc
+
+    - name: premake gmake
+      run: |
+          cd ccccc
+          premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+
+    - name: make config=release
+      run: |
+          cd ccccc/project/gmake
+          make config=release verbose=1
+
+    # WxWidgets
+    - name: install dependencies for wxWidgets
+      run: sudo apt-get install build-essential cmake git libedit-dev libgtk-3-dev libhunspell-dev libsqlite3-dev libssh-dev pkg-config xterm
+
+    - name: Checkout WxWidgets
+      uses: actions/checkout@v6
+      with:
+        repository: wxWidgets/wxWidgets
+        ref: ${{ inputs.wx-version }}
+        submodules: recursive
+        path: codelite/wxWidgets
+
+    - name: build and install wxWidgets
+      run: |
+        mkdir -p codelite/wxWidgets/build-release
+        cd codelite/wxWidgets/build-release
+        ../configure --disable-debug_flag --with-gtk=3 --enable-stl
+        make -j$(nproc) && sudo make install
+
+    # Codelite
+    - name: install Codelite's dependencies
+      run: sudo apt-get install build-essential cmake git libpcre2-dev libsqlite3-dev libssh-dev bison flex
+
+    - name: Checkout Codelite
+      uses: actions/checkout@v6
+      with:
+        repository: eranif/codelite
+        submodules: recursive
+        path: codelite
+
+    - name: build, test and install Codelite
+      run: |
+        mkdir codelite/build-release
+        cd codelite/build-release
+        cmake -DCMAKE_BUILD_TYPE=Release .. -DCOPY_WX_LIBS=1 -DBUILD_TESTING=1 ${{ inputs.codelite-options }}
+        make -j$(nproc)
+        sudo make install
+        ctest --output-on-failure
+
+    - name: codelite --version
+      run: xvfb-run -a codelite --version || exit 0 # codelite --version returns -1
+
+    # ccccc runs
+    - name: run ccccc on Codelite
+      run: |
+        ccccc/bin/gmake/Release/ccccc --exclude-directory=codelite/build-release --exclude-directory=codelite/submodules --exclude-directory=codelite/sdk --template-file=ccccc/template/ccccc_html/template.tpl codelite/build-release/compile_commands.json > codelite-index.html
+
+    - name: Upload index.html
+      uses: actions/upload-artifact@v6
+      with:
+        name: codelite_ccccc
+        path: |
+          codelite-index.html
