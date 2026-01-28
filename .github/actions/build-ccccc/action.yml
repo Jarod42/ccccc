@@ -1,0 +1,74 @@
+name: 'Build ccccc'
+description: 'Build ccccc'
+inputs:
+  llvm-version:
+    description: 'Version of llvm to use'
+    required: false
+    default: '19'
+
+outputs:
+  llvm-root:
+    description: 'LLVM root'
+    value: ${{ steps.LLVM.outputs.LLVM_ROOT }}
+
+runs:
+  using: "composite"
+
+  steps:
+
+    - uses: Jarod42/install-premake5@v7
+
+    # To Create compile_commands.json
+    - name: checkout premake-export-compile-commands
+      uses: actions/checkout@v6
+      with:
+          repository: Jarod42/premake-export-compile-commands
+          path: premake-export-compile-commands
+          ref: Improvements
+
+    - name: aptget llvm for Linux
+      if: runner.os == 'Linux'
+      id: LLVM
+      run: |
+        sudo apt-get update 
+        sudo apt-get install clang-${{ inputs.llvm-version }} libclang-${{ inputs.llvm-version }}-dev llvm-${{ inputs.llvm-version }}-dev llvm-${{ inputs.llvm-version }}-runtime llvm-${{ inputs.llvm-version }}
+        echo "LLVM_ROOT=/usr/lib/llvm-${{ inputs.llvm-version }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: debug LLVM
+      if: runner.os == 'Linux'
+      run: |
+        echo "LLVM_ROOT:" $LLVM_ROOT
+        echo "================ ls $LLVM_ROOT/lib" && ls $LLVM_ROOT/lib
+        echo "================ ls $LLVM_ROOT/bin" && ls $LLVM_ROOT/bin
+        echo "================ llvm-config --cppflags" && $LLVM_ROOT/bin/llvm-config --cppflags
+        echo "================ llvm-config --ldflags" && $LLVM_ROOT/bin/llvm-config --system-libs --ldflags --libs all support
+      env:
+        LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
+      shell: bash
+
+#    - name: Build standalone mstch
+#      run: |
+#          mkdir 3rd/mstch/build
+#          cd 3rd/mstch/build
+#          cmake .. && make
+#          sudo make install
+
+    - name: build ccccc
+      run: |
+        premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
+        cd project/gmake && make config=release verbose=1
+        cp ../../bin/gmake/Release/ccccc ../..
+      shell: bash
+
+    - name: aptget llvm
+      if: runner.os == 'macOS'
+      run: |
+        echo NOT SUPPORTED YET && exit -1
+      shell: bash
+
+    - name: Build premake5
+      if: runner.os == 'Windows'
+      run: |
+        echo NOT SUPPORTED YET && exit -1
+      shell: powershell

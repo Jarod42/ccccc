@@ -1,0 +1,71 @@
+name: demo-maxr
+
+on:
+  workflow_call:
+    inputs:
+      llvm-version:
+        default: '19'
+        type: string
+  workflow_dispatch:
+    inputs:
+      llvm-version:
+        default: '19'
+        type: string
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: apt-get update
+      run: sudo apt-get update
+
+    - name: checkout ccccc
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+
+    - name: Install premake & build ccccc
+      uses: ./.github/actions/build-ccccc
+      with:
+          llvm-version: ${{ inputs.llvm-version }}
+
+    # MaxR
+    - name: Checkout Maxr
+      uses: actions/checkout@v6
+      with:
+        repository: maxr-dot-org/maxr
+        submodules: recursive
+        fetch-depth: 0
+        fetch-tags: true
+        path: maxr
+
+    - name: install dependencies
+      run: |
+        sudo apt-get install libsdl2-dev libsdl2-mixer-dev libsdl2-net-dev libogg-dev libvorbis-dev libvorbisenc2 libvorbisidec-dev
+
+    - name: generate compile_commands.json
+      run: |
+        echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
+        premake5 export-compile-commands --file=maxr/premake5.lua --to=project/export-compile-commands
+
+    - name: get maxr sha1
+      id: maxr_sha1
+      run: |
+        cd maxr
+        echo "sha1=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+    # ccccc runs
+    - name: run ccccc on Maxr
+      env:
+        MAXR_SHA1: ${{steps.maxr_sha1.outputs.sha1}}
+      run: |
+        ./ccccc --exclude-directory=maxr/submodules --template-file=template/ccccc_html/template.tpl --source-root=maxr --source-root-url=https://github.com/maxr-dot-org/maxr/blob/$MAXR_SHA1 maxr/project/export-compile-commands/release/compile_commands.json > maxr-index.html
+
+    - name: Upload index.html
+      uses: actions/upload-artifact@v6
+      with:
+        name: maxr_ccccc
+        path: |
+          maxr-index.html

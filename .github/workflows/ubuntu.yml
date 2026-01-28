@@ -12,72 +12,50 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [14, 19]
+        llvm-version: [14, 19]
     runs-on: ubuntu-latest
 
     steps:
-
-    - uses: Jarod42/install-premake5@v7
-
-    - name: gcc version
-      run: |
-          g++ --version
-
-    - name: aptget llvm
-      id: LLVM
-      run: |
-          sudo apt-get install clang-${{matrix.version}} libclang-${{matrix.version}}-dev llvm-${{matrix.version}}-dev llvm-${{matrix.version}}-runtime llvm-${{matrix.version}}
-          echo "LLVM_ROOT=/usr/lib/llvm-${{matrix.version}}" >> $GITHUB_OUTPUT
-
-    - name: DEBUG llvm
-      run: |
-          echo "LLVM_ROOT:" $LLVM_ROOT
-          echo "================ ls $LLVM_ROOT/lib" && ls $LLVM_ROOT/lib
-          echo "================ ls $LLVM_ROOT/bin" && ls $LLVM_ROOT/bin
-          echo "================ llvm-config --cppflags" && $LLVM_ROOT/bin/llvm-config --cppflags
-          echo "================ llvm-config --ldflags" && $LLVM_ROOT/bin/llvm-config --system-libs --ldflags --libs all support
-      env:
-          LLVM_ROOT: ${{steps.LLVM.outputs.LLVM_ROOT}}
 
     - uses: actions/checkout@v6
       with:
         submodules: recursive
 
-#    - name: Build standalone mstch
-#      run: |
-#          mkdir 3rd/mstch/build
-#          cd 3rd/mstch/build
-#          cmake .. && make
-#          sudo make install
-
-    - name: premake gmake
-      run: premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" gmake
-
-    - name: make config=release
+    - name: gcc version
       run: |
-          cd project/gmake && make config=release verbose=1
-          cd ../../bin/gmake/Release
+          g++ --version
+
+    - name: Install premake & build ccccc
+      uses: ./.github/actions/build-ccccc
+      id: LLVM
+      with:
+          llvm-version: ${{ matrix.llvm-version }}
+
+    - name: test ccccc
+      run: |
+          cd bin/gmake/Release
           ./ccccc_test
           ./ccccc --version
           ./ccccc --help
 
-    # Create compile_commands.json
-    - name: checkout premake-export-compile-commands
-      uses: actions/checkout@v6
-      with:
-          repository: Jarod42/premake-export-compile-commands
-          path: premake-export-compile-commands
-          ref: Improvements
+    - name: get sha1
+      id: ccccc_sha1
+      run: |
+        echo "sha1=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
     - name: run ccccc on itself
+      env:
+        LLVM_ROOT: ${{ steps.LLVM.outputs.llvm-root }}
+        CCCCC_SHA1: ${{steps.ccccc_sha1.outputs.sha1}}
       run: |
         echo "require 'premake-export-compile-commands/export-compile-commands'" >> premake-system.lua
-        premake5 --llvm-root="${{steps.LLVM.outputs.LLVM_ROOT}}" --expand-llvm-config export-compile-commands
-        ./bin/gmake/Release/ccccc --template-file=template/ccccc_html/template.tpl --source-root-url=https://github.com/Jarod42/ccccc/blob/master --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
+        premake5 --llvm-root="$LLVM_ROOT" --expand-llvm-config export-compile-commands
+        ./ccccc --template-file=template/ccccc_html/template.tpl --source-root-url=https://github.com/Jarod42/ccccc/blob/$CCCCC_SHA1 --exclude-directory=3rd project/export-compile-commands/release/compile_commands.json > index.html
+
 
     - name: Upload index.html
       uses: actions/upload-artifact@v6
       with:
-        name: ccccc-llvm-${{matrix.version}}.html
+        name: ccccc-llvm-${{matrix.llvm-version}}.html
         path: |
           index.html
