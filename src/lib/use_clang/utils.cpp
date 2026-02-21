@@ -85,8 +85,8 @@ bool isInFile(const std::filesystem::path& filename, CXCursor cursor)
 		clang_disposeString(cxCursorFilename);
 		return false;
 	}
-	clang_disposeString(cxCursorFilename);
 	const std::filesystem::path cursorFilename = cstr;
+	clang_disposeString(cxCursorFilename);
 	return cursorFilename == filename;
 }
 
