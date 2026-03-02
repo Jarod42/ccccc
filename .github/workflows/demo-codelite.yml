@@ -87,7 +87,7 @@ jobs:
         ./ccccc --exclude-directory=codelite/build-release --exclude-directory=codelite/submodules --exclude-directory=codelite/sdk --template-file=template/ccccc_html/template.tpl --source-root=codelite --source-root-url=https://github.com/eranif/codelite/blob/$CODELITE_SHA1 codelite/build-release/compile_commands.json > codelite-index.html
 
     - name: Upload index.html
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: codelite_ccccc
         path: |

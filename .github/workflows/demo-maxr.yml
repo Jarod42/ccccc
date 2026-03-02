@@ -64,7 +64,7 @@ jobs:
         ./ccccc --exclude-directory=maxr/submodules --template-file=template/ccccc_html/template.tpl --source-root=maxr --source-root-url=https://github.com/maxr-dot-org/maxr/blob/$MAXR_SHA1 maxr/project/export-compile-commands/release/compile_commands.json > maxr-index.html
 
     - name: Upload index.html
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: maxr_ccccc
         path: |
