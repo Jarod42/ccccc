@@ -52,16 +52,11 @@ public:
 class ClientData
 {
 public:
-	ClientData(CXTranslationUnit tu, GlobalData& globalData, FileStat* stat) :
-		m_stat(stat),
-		m_tu(tu),
-		m_globalData(globalData)
-	{}
+	ClientData(CXTranslationUnit tu, FileStat* stat) : m_stat(stat), m_tu(tu) {}
 
 	FileStat& getFileStat() { return *m_stat; }
 	const std::filesystem::path& getFilename() const { return m_stat->getFilename(); }
 	CXTranslationUnit getCXTranslationUnit() { return m_tu; }
-	GlobalData& getGlobalData() { return m_globalData; }
 
 	void PushNamespace(const std::string& name) { namespaceNames.push_back(name); }
 	void PopNamespace() { namespaceNames.pop_back(); }
@@ -70,7 +65,6 @@ public:
 private:
 	FileStat* m_stat;
 	CXTranslationUnit m_tu;
-	GlobalData& m_globalData;
 	std::vector<std::string> namespaceNames;
 };
 
@@ -221,7 +215,7 @@ void FileStatTool::Compute(const CXTranslationUnit& tu, GlobalData& globalData, 
 	stat->m_lineCount.lineOfCode_program = fileStatFeeder.m_lineCounter.getLineOfCode_program();
 	stat->m_lineCount.lineOfCode_blank = fileStatFeeder.m_lineCounter.getLineOfCode_blank();
 
-	ClientData clientData(tu, globalData, stat);
+	ClientData clientData(tu, stat);
 	clang_visitChildren(cursor, FileCursorVisitor, &clientData);
 
 #if 0
