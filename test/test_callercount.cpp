@@ -128,12 +128,13 @@ TEST_CASE("CALLER_COUNT_FILE")
 	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit()"));
 	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit(const Implicit &)"));
 	//CHECK(1 == getCallerCount(fileStat, "Implicit", "~Implicit()"));
-	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "DefaultCount()"));
-	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "DefaultCount(const DefaultCount &)"));
-	//CHECK(1 == getCallerCount(fileStat, "DefaultCount", "~DefaultCount()"));
+	CHECK(1 == getCallerCount(fileStat, "Default", "Default()"));
+	CHECK(1 == getCallerCount(fileStat, "Default", "Default(const Default &)"));
+	//CHECK(1 == getCallerCount(fileStat, "Default", "~Default()"));
 	CHECK(1 == getCallerCount(fileStat, "UserProvided", "UserProvided()"));
 	CHECK(1 == getCallerCount(fileStat, "UserProvided", "UserProvided(const UserProvided &)"));
 	//CHECK(1 == getCallerCount(fileStat, "UserProvided", "~UserProvided()"));
+	CHECK(1 == getCallerCount(fileStat, "DelegateConstructor", "DelegateConstructor(int)"));
 
 	CHECK(1 == getCallerCount(fileStat, "New", "New()"));
 	//CHECK(1 == getCallerCount(fileStat, "New", "~New()"));

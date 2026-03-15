@@ -110,6 +110,11 @@ void UserProvidedCount()
 	UserProvided c1;
 	UserProvided c2(c1);
 }
+struct DelegateConstructor
+{
+	DelegateConstructor() : DelegateConstructor(42) {}
+	DelegateConstructor(int) {}
+};
 #endif
 #if 1 // new/delete
 class New
