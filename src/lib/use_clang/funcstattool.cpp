@@ -53,13 +53,23 @@ public:
 	LineCounter m_lineCounter;
 };
 
-bool IsOverriddenMethod(const CXCursor& cursor)
+void AppendOverriddenMethods(const CXCursor& cursor, std::vector<std::string>* all)
 {
 	CXCursor* overridden = nullptr;
 	unsigned int count;
 	clang_getOverriddenCursors(cursor, &overridden, &count);
+	for (unsigned int i = 0; i != count; ++i) {
+		all->push_back(getStringAndDispose(clang_getCursorUSR(overridden[i])));
+		AppendOverriddenMethods(overridden[i], all);
+	}
 	clang_disposeOverriddenCursors(overridden);
-	return count != 0;
+}
+
+std::vector<std::string> CollectOverriddenMethodUSRs(const CXCursor& cursor)
+{
+	std::vector<std::string> res;
+	AppendOverriddenMethods(cursor, &res);
+	return res;
 }
 
 template <typename Map>
@@ -78,8 +88,7 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
                            const CXCursor& cursor,
                            FuncStat* stat)
 {
-	stat->m_usr = getStringAndDispose(clang_getCursorUSR(cursor));
-	stat->m_cursor = cursor;
+	stat->m_USR = getStringAndDispose(clang_getCursorUSR(cursor));
 
 	FuncStatFeeder funcStatFeeder(cursor);
 	processTokens(tu, cursor, funcStatFeeder);
@@ -98,7 +107,7 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 	stat->m_isConst = clang_CXXMethod_isConst(cursor);
 	stat->m_isStatic = clang_CXXMethod_isStatic(cursor);
 	stat->m_isVirtual = clang_CXXMethod_isVirtual(cursor);
-	stat->m_isOverridden = IsOverriddenMethod(cursor);
+	stat->m_overriddenUSRs = CollectOverriddenMethodUSRs(cursor);
 #if CINDEX_VERSION >= 64
 	stat->m_isExplicit = clang_CXXMethod_isExplicit(cursor);
 #endif
@@ -108,10 +117,11 @@ void FuncStatTool::Compute(const std::filesystem::path& filename,
 void FuncStatTool::PostFeed(const GlobalData& globalData, FuncStat* stat)
 {
 	const auto& data = globalData.m_callerCountData;
-	const std::size_t cursorCount = Value(data.m_counts, stat->m_cursor, 0u);
-	const std::size_t usrCount = Value(data.m_usrCounts, stat->m_usr, 0u);
 
-	stat->m_callerCount = std::max(usrCount, cursorCount);
+	stat->m_callerCount = Value(data.m_usrCounts, stat->m_USR, 0u);
+	for (auto& usr : stat->m_overriddenUSRs) {
+		stat->m_callerCount += Value(data.m_usrCounts, usr, 0u);
+	}
 }
 
 } // namespace ccccc::use_clang

@@ -107,13 +107,13 @@ TEST_CASE("CALLER_COUNT_FILE")
 	CHECK(0 == getCallerCount(fileStat, "f(T &)"));
 	CHECK(0 == getCallerCount(fileStat, "callADL(S &)"));
 
-	//CHECK(1 == getCallerCount(fileStat, "Base", "f1()"));
-	//CHECK(0 == getCallerCount(fileStat, "Base", "f2()"));
+	//CHECK(1 == getCallerCount(fileStat, "Base", "f1()")); // No entry
+	//CHECK(0 == getCallerCount(fileStat, "Base", "f2()")); // No entry
 	CHECK(1 == getCallerCount(fileStat, "Base", "f3()"));
 	CHECK(0 == getCallerCount(fileStat, "Base", "f4()"));
-	CHECK(0 == getCallerCount(fileStat, "Derived", "f1()"));
+	CHECK(1 == getCallerCount(fileStat, "Derived", "f1()")); // From Base
 	CHECK(1 == getCallerCount(fileStat, "Derived", "f2()"));
-	CHECK(0 == getCallerCount(fileStat, "Derived", "f3()"));
+	CHECK(1 == getCallerCount(fileStat, "Derived", "f3()")); // From Base
 	CHECK(1 == getCallerCount(fileStat, "Derived", "f4()"));
 
 	CHECK(0 == getCallerCount(fileStat, "UseOperator(Operator &)"));

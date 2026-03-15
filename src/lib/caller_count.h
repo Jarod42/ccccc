@@ -21,27 +21,24 @@
 #ifndef CALLER_COUNT_H
 #define CALLER_COUNT_H
 
-#include <unordered_map>
-#include <unordered_set>
+#include <clang-c/Index.h>
+
 #include <string>
 #include <tuple>
-
-#include <clang-c/Index.h>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace ccccc
 {
 
 struct CXCursorHash
 {
-	int operator ()(const CXCursor& cursor) const
-	{
-		return clang_hashCursor(cursor);
-	}
+	int operator()(const CXCursor& cursor) const { return clang_hashCursor(cursor); }
 };
 
 struct CXCursorEqual
 {
-	bool operator ()(const CXCursor& lhs, const CXCursor& rhs) const
+	bool operator()(const CXCursor& lhs, const CXCursor& rhs) const
 	{
 		return clang_equalCursors(lhs, rhs);
 	}
@@ -53,12 +50,11 @@ struct CallerCountData
 	// that identifies a particular entity)
 	// and the number of time function/method is called.
 	std::unordered_map<std::string, std::size_t> m_usrCounts;
-	std::unordered_map<CXCursor, std::size_t, CXCursorHash, CXCursorEqual> m_counts;
 
 	std::unordered_set<CXCursor, CXCursorHash, CXCursorEqual> m_templatedSpecializations;
 	std::unordered_set<CXCursor, CXCursorHash, CXCursorEqual> m_templatedVisited;
 };
 
-}
+} // namespace ccccc
 
 #endif // CALLER_COUNT_H

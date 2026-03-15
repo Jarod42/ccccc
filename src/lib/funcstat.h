@@ -28,6 +28,7 @@
 #include <clang-c/Index.h>
 
 #include <string>
+#include <vector>
 
 namespace ccccc
 {
@@ -47,7 +48,7 @@ public:
 	bool isConst() const { return m_isConst; }
 	bool isStatic() const { return m_isStatic; }
 	bool isVirtual() const { return m_isVirtual; }
-	bool isOverridden() const { return m_isOverridden; }
+	bool isOverridden() const { return !m_overriddenUSRs.empty(); }
 	bool isExplicit() const { return m_isExplicit; }
 	const LineCount& getLineCount() const { return m_lineCount; }
 	std::size_t getParameterCount() const { return m_parameterCount; }
@@ -64,7 +65,6 @@ private:
 	bool m_isConst = false;
 	bool m_isStatic = false;
 	bool m_isVirtual = false;
-	bool m_isOverridden = false;
 	bool m_isExplicit = false;
 	LineCount m_lineCount;
 	std::size_t m_parameterCount = 0;
@@ -75,8 +75,8 @@ private:
 	std::size_t m_nestedBlockCount = 0;
 	//  A Unified Symbol Resolution (USR) is a string
 	// that identifies a particular entity
-	std::string m_usr;
-	CXCursor m_cursor; // Identifier
+	std::string m_USR;
+	std::vector<std::string> m_overriddenUSRs; // List of USR of the overridden methods
 	std::size_t m_callCount = 0; // How many function this function call
 	std::size_t m_callerCount = 0; // How many time this function is called
 };

@@ -109,7 +109,6 @@ CallerCounterVisitor(CXCursor cursor, [[maybe_unused]] CXCursor parent, CXClient
 			}
 			callerCountData->m_templatedVisited.insert(cursor);
 			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
-			callerCountData->m_counts[referencedCursor]++;
 			callerCountData->m_usrCounts[usr]++;
 
 			if (clang_Cursor_getNumTemplateArguments(referencedCursor) != -1) {
@@ -119,7 +118,6 @@ CallerCounterVisitor(CXCursor cursor, [[maybe_unused]] CXCursor parent, CXClient
 					auto templateCursor = clang_getSpecializedCursorTemplate(referencedCursor);
 					const auto templateusr =
 						getStringAndDispose(clang_getCursorUSR(templateCursor));
-					callerCountData->m_counts[templateCursor]++;
 					callerCountData->m_usrCounts[templateusr]++;
 				}
 				// For template, follow the instantiation
@@ -143,7 +141,6 @@ CallerCounterVisitor(CXCursor cursor, [[maybe_unused]] CXCursor parent, CXClient
 			}
 			callerCountData->m_templatedVisited.insert(cursor);
 			const auto usr = getStringAndDispose(clang_getCursorUSR(referencedCursor));
-			callerCountData->m_counts[referencedCursor]++;
 			callerCountData->m_usrCounts[usr]++;
 		}
 	}
