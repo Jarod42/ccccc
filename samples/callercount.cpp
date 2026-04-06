@@ -80,6 +80,22 @@ void callSomeFunc()
 }
 
 #endif
+
+#if 1 // member function pointer
+struct MemberClass
+{
+	void f1(){}
+	void f2(){}
+};
+void call(void (MemberClass::*)());
+template <void (MemberClass::*)()> templateMethodCaller();
+void callSomeMethod()
+{
+	call(&MemberClass::f1);
+	templateMethodCaller<&MemberClass::f2>();
+}
+#endif
+
 #if 1 // constructor/destructor
 struct Implicit
 {};

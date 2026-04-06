@@ -124,6 +124,9 @@ TEST_CASE("CALLER_COUNT_FILE")
 	CHECK(1 == getCallerCount(fileStat, "someFunc()"));
 	CHECK(0 == getCallerCount(fileStat, "callSomeFunc()"));
 
+	CHECK(1 == getCallerCount(fileStat, "MemberClass", "f1()"));
+	CHECK(1 == getCallerCount(fileStat, "MemberClass", "f2()"));
+
 	// implicit destructors call doesn't count
 	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit()"));
 	//CHECK(1 == getCallerCount(fileStat, "Implicit", "Implicit(const Implicit &)"));
