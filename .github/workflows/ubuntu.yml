@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/**'
       - 'test/**'
+      - '3rd/**'
       - '.github/workflows/ubuntu.yml'
       - premake5.lua
 jobs:

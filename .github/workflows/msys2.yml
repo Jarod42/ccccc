@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/**'
       - 'test/**'
+      - '3rd/**'
       - '.github/workflows/msys2.yml'
       - premake5.lua
 jobs:
